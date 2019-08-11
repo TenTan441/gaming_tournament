@@ -1,24 +1,11 @@
-# README
+# gaming-tournaments
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+これはゲーム大会でリーグ戦、トーナメント戦を使って大会を進行するときの
+ゲーム大会進行管理システムです。
 
-Things you may want to cover:
+## 開発環境
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* AWS Cloud9
+* Ruby
+* Rails
+* Git(HTTPSからSSH通信へ変更)
