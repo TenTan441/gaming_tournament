@@ -10,7 +10,44 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190812153709) do
+ActiveRecord::Schema.define(version: 20190915104907) do
+
+  create_table "characters", force: :cascade do |t|
+    t.integer "game_title"
+    t.integer "main_character"
+    t.integer "sub_character1"
+    t.integer "sub_character2"
+    t.integer "sub_character3"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_characters_on_user_id"
+  end
+
+  create_table "participants", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "ranking"
+    t.integer "tournament_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tournament_id"], name: "index_participants_on_tournament_id"
+  end
+
+  create_table "tournaments", force: :cascade do |t|
+    t.integer "id_number"
+    t.string "name"
+    t.integer "game_title"
+    t.string "elimination_type"
+    t.datetime "start_time"
+    t.string "url"
+    t.text "description"
+    t.integer "particepants"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "private", default: true, null: false
+    t.string "status"
+    t.integer "master"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "name"
@@ -22,6 +59,8 @@ ActiveRecord::Schema.define(version: 20190812153709) do
     t.string "password_digest"
     t.string "remember_digest"
     t.boolean "admin", default: false
+    t.string "twitter_id"
+    t.boolean "twitter_private", default: true, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

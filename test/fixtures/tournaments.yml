@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  id_number: 1
+  name: MyString
+  game_title: 1
+  elimination_type: MyString
+  start_time: 2019-09-13 05:30:51
+
+two:
+  id_number: 1
+  name: MyString
+  game_title: 1
+  elimination_type: MyString
+  start_time: 2019-09-13 05:30:51
