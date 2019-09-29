@@ -11,7 +11,14 @@
 // about supported directives.
 //
 //= require rails-ujs
-//= require jquery
-//= require bootstrap
 //= require turbolinks
+//= require jquery3
+//= require popper
+//= require bootstrap
+//= require moment
+// If you require timezone data (see moment-timezone-rails for additional file options)
+//= require moment-timezone-with-data
+//= require moment
+//= require moment/ja.js
+//= require tempusdominus-bootstrap-4
 //= require_tree .

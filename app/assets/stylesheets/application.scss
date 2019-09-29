@@ -12,4 +12,10 @@
  *
  *= require_tree .
  *= require_self
+ *= require tempusdominus-bootstrap-4
  */
+ 
+@import "bootstrap";
+@import 'bootstrap-select';
+@import "font-awesome";
+@import "tempusdominus-bootstrap-4.css";

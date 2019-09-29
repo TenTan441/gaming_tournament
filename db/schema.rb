@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190915104907) do
+ActiveRecord::Schema.define(version: 20190923105637) do
 
   create_table "characters", force: :cascade do |t|
     t.integer "game_title"
@@ -25,12 +25,13 @@ ActiveRecord::Schema.define(version: 20190915104907) do
   end
 
   create_table "participants", force: :cascade do |t|
-    t.integer "user_id"
     t.integer "ranking"
+    t.integer "user_id"
     t.integer "tournament_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tournament_id"], name: "index_participants_on_tournament_id"
+    t.index ["user_id"], name: "index_participants_on_user_id"
   end
 
   create_table "tournaments", force: :cascade do |t|
@@ -47,6 +48,8 @@ ActiveRecord::Schema.define(version: 20190915104907) do
     t.boolean "private", default: true, null: false
     t.string "status"
     t.integer "master"
+    t.boolean "group_stage_enabled"
+    t.boolean "hold_third_place_match", default: false, null: false
   end
 
   create_table "users", force: :cascade do |t|
