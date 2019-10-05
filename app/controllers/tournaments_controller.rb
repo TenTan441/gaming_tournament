@@ -43,6 +43,8 @@ class TournamentsController < ApplicationController
     debugger
 =end
     if @tournament.save && t.save # && s.save
+      @tournament.id_number = t.id
+      @tournament.save
       flash[:success] = '新規作成に成功しました。'
       redirect_to @tournament
     else

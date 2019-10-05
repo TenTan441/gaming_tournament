@@ -11,7 +11,6 @@
 // about supported directives.
 //
 //= require rails-ujs
-//= require turbolinks
 //= require jquery3
 //= require popper
 //= require bootstrap
@@ -21,4 +20,10 @@
 //= require moment
 //= require moment/ja.js
 //= require tempusdominus-bootstrap-4
+//= require jquery
+//= require jquery.turbolinks
+//= require jquery_ujs
+//= require select2
+//= require turbolinks
 //= require_tree .
+

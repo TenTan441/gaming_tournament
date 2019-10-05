@@ -20,6 +20,9 @@ gem 'jbuilder',     '~> 2.5'
 gem 'momentjs-rails'
 gem "font-awesome-rails"
 gem 'bootstrap4-datetime-picker-rails'
+gem 'activerecord-import'
+gem "jquery-turbolinks" # Turbolinksで遷移したときもjQuery.ready()を呼び出してくれる
+gem "select2-rails"
 
 group :development, :test do
   gem 'sqlite3'

@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  get 'participants/new'
+
   root 'static_pages#top'
   get '/signup', to: 'users#new'
   
@@ -8,7 +10,9 @@ Rails.application.routes.draw do
   post   '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
   
-  resources :users
+  resources :users do
+    resources :characters
+  end
   resources :tournaments do
     resources :participants
   end

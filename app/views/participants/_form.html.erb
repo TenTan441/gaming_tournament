@@ -1,0 +1,6 @@
+<%= form_with(model: @participant, url: tournament_participants_path, local: true, method: :post) do |f| %>
+
+  <%= f.label '参加者（１行登録）' %>
+  <%= f.text_area :users, class: "form-control" %>
+  <%= f.submit "参加者追加", class: "btn btn-primary btn-block btn-login" %>
+<% end %>

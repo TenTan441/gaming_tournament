@@ -1,5 +1,5 @@
 <% provide(:title, @tournament.name) %>
 <div>
-  <%= link_to "参加者の追加", new_tournament_path, class: "btn btn-lg btn-success" %>
+  <%= link_to "参加者の追加", new_tournament_participant_path(@tournament), class: "btn btn-lg btn-success" %>
   <%= link_to "大会を削除する", tournament_path, method: :delete, data: { confirm: "削除してよろしいですか？" }, class: "btn btn-lg btn-primary"%>
 </div>
