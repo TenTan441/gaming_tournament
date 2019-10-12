@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
-
-  get 'participants/new'
-
+  
   root 'static_pages#top'
   get '/signup', to: 'users#new'
   
@@ -16,4 +14,6 @@ Rails.application.routes.draw do
   resources :tournaments do
     resources :participants
   end
+  
+  resources :fileuploads, only: [:index, :create, :new]
 end

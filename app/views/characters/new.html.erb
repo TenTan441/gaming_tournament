@@ -1,0 +1,85 @@
+<% provide(:title, "使用キャラクター登録") %>
+<h1>使用キャラクター登録</h1>
+
+<div class="row">
+  <div class="col-md-12 col-md-offset-0">
+    <%= form_with(model: @character, url: user_characters_path, local: true, method: :post) do |f| %>
+
+      <%= f.label :game_title %>
+      <%= f.select :game_title, Character.game_titles.keys.to_a, { include_blank: true }, id: 'game_title', class: "form-control" %>
+
+      <div id="title-one">
+        <%= f.select :main_character_64 , @main_character_64 , {:include_blank => true}, {:class => "image-picker show-html form-control"} %>
+      </div>
+      <div id="title-two">
+        <%= f.select :main_character_DX , @main_character_DX , {:include_blank => true}, {:class => "image-picker show-html form-control"} %>
+      </div>
+      <div id="title-three">
+        <%= f.select :main_character_X  , @main_character_X  , {:include_blank => true}, {:class => "image-picker show-html form-control"} %>
+      </div>
+      <div id="title-four">
+        <%= f.select :main_character_for, @main_character_for, {:include_blank => true}, {:class => "image-picker show-html form-control"} %>
+      </div>
+      <div id="title-five">
+        <%= f.select :main_character_SP , @main_character_SP , {:include_blank => true}, {:class => "image-picker show-html form-control"} %>
+      </div>
+
+      <%= f.submit "キャラ追加", class: "btn btn-primary btn-block btn-login" %>
+    <% end %>
+    
+  </div>
+</div>
+
+<script>
+  $(".image-picker").imagepicker()
+  
+  $('#game_title').change( function() {
+    var title = $(this).val();
+    switch (title) {
+      case "ニンテンドウオールスター！大乱闘スマッシュブラザーズ":
+        $('#title-one').show("slow");
+        $('#title-two').hide("slow");
+        $('#title-three').hide("slow");
+        $('#title-four').hide("slow");
+        $('#title-five').hide("slow");
+      break;
+      case "大乱闘スマッシュブラザーズDX":
+        $('#title-one').hide("slow");
+        $('#title-two').show("slow");
+        $('#title-three').hide("slow");
+        $('#title-four').hide("slow");
+        $('#title-five').hide("slow");
+      break;
+      case "大乱闘スマッシュブラザーズX":
+        $('#title-one').hide("slow");
+        $('#title-two').hide("slow");
+        $('#title-three').show("slow");
+        $('#title-four').hide("slow");
+        $('#title-five').hide("slow");
+      break;
+      case "大乱闘スマッシュブラザーズ for Nintendo 3DS":
+      case "大乱闘スマッシュブラザーズ for Wii U":
+        $('#title-one').hide("slow");
+        $('#title-two').hide("slow");
+        $('#title-three').hide("slow");
+        $('#title-four').show("slow");
+        $('#title-five').hide("slow");
+      break;
+      case "大乱闘スマッシュブラザーズ SPECIAL":
+        $('#title-one').hide("slow");
+        $('#title-two').hide("slow");
+        $('#title-three').hide("slow");
+        $('#title-four').hide("slow");
+        $('#title-five').show("slow");
+      break;
+      default:
+        $('#title-one').hide("slow");
+        $('#title-two').hide("slow");
+        $('#title-three').hide("slow");
+        $('#title-four').hide("slow");
+        $('#title-five').hide("slow");
+      break;
+    }
+  });
+
+</script>

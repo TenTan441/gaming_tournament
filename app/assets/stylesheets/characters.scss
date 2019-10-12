@@ -1,0 +1,26 @@
+// Place all the styles related to the Characters controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+div.thumbnail img {
+  width: 100px;
+}
+
+div.thumbnail img:hover  {
+  width: 100px;
+  border-bottom-color: transparent;
+  transform: scale(1.1);
+  transition-duration: 0.3s;
+}
+
+div.selected {
+  img {
+    border-bottom-color: transparent;
+    //transform: translateY(0.1875em);
+    transform: scale(1.1);
+  }
+}
+
+#title-one, #title-two, #title-three, #title-four, #title-five {
+  display: none;
+}

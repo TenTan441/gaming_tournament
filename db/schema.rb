@@ -10,7 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190929143303) do
+ActiveRecord::Schema.define(version: 20191009120226) do
+
+  create_table "character_images", force: :cascade do |t|
+    t.string "name"
+    t.string "image"
+    t.boolean "one", default: false, null: false
+    t.boolean "two", default: false, null: false
+    t.boolean "three", default: false, null: false
+    t.boolean "four", default: false, null: false
+    t.boolean "five", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "characters", force: :cascade do |t|
     t.integer "game_title"

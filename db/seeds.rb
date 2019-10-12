@@ -15,3 +15,300 @@ User.create!(name: "Sample User",
                password: password,
                password_confirmation: password)
 end
+
+CharacterImage.create!(name: "マリオ",
+                       image: "Mario",
+                       one: true,
+                       two: true,
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "ドンキーコング",
+                       image: "Donkey",
+                       one: true,
+                       two: true,
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "リンク",
+                       image: "Link",
+                       one: true,
+                       two: true,
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "サムス",
+                       image: "Samus",
+                       one: true,
+                       two: true,
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "ダークサムス",
+                       image: "SamusDark")
+CharacterImage.create!(name: "ヨッシー",
+                       image: "Yoshi",
+                       one: true,
+                       two: true,
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "カービィ",
+                       image: "Kirby",
+                       one: true,
+                       two: true,
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "フォックス",
+                       image: "Fox",
+                       one: true,
+                       two: true,
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "ピカチュウ",
+                       image: "Pikachu",
+                       one: true,
+                       two: true,
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "ルイージ",
+                       image: "Luigi",
+                       one: true,
+                       two: true,
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "ネス",
+                       image: "Ness",
+                       one: true,
+                       two: true,
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "キャプテン・ファルコン",
+                       image: "CaptainFalcon",
+                       one: true,
+                       two: true,
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "プリン",
+                       image: "Purin",
+                       one: true,
+                       two: true,
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "ピーチ",
+                       image: "Peach",
+                       two: true,
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "デイジー",
+                       image: "Daisy")
+CharacterImage.create!(name: "クッパ",
+                       image: "Koopa",
+                       two: true,
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "アイスクライマー",
+                       image: "IceClimber",
+                       two: true,
+                       three: true)
+CharacterImage.create!(name: "シーク",
+                       image: "Sheik",
+                       two: true,
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "ゼルダ",
+                       image: "Zelda",
+                       two: true,
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "ドクターマリオ",
+                       image: "MarioDr",
+                       two: true,
+                       four: true)
+CharacterImage.create!(name: "ピチュー",
+                       image: "Pichu",
+                       two: true)
+CharacterImage.create!(name: "ファルコ",
+                       image: "Falco",
+                       two: true,
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "マルス",
+                       image: "Marth",
+                       two: true,
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "ルキナ",
+                       image: "Lucina",
+                       four: true)
+CharacterImage.create!(name: "こどもリンク",
+                       image: "YoungLink",
+                       two: true)
+CharacterImage.create!(name: "ガノンドロフ",
+                       image: "Ganondolf",
+                       two: true,
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "ミュウツー",
+                       image: "Mewtwo",
+                       two: true,
+                       four: true)
+CharacterImage.create!(name: "ロイ",
+                       image: "Roy",
+                       two: true,
+                       four: true)
+CharacterImage.create!(name: "クロム",
+                       image: "Chrom")
+CharacterImage.create!(name: "Mr.ゲーム&ウォッチ",
+                       image: "Gamewatch",
+                       two: true,
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "メタナイト",
+                       image: "Metaknight",
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "ピット",
+                       image: "Pit",
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "ブラックピット",
+                       image: "PitBlack",
+                       four: true)
+CharacterImage.create!(name: "ゼロスーツサムス",
+                       image: "ZeroSuiteSamus",
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "ワリオ",
+                       image: "Wario",
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "スネーク",
+                       image: "Snake",
+                       three: true)
+CharacterImage.create!(name: "アイク",
+                       image: "Ike",
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "ゼニガメ",
+                       image: "Squirtle",
+                       three: true)
+CharacterImage.create!(name: "フシギソウ",
+                       image: "Ivysaur",
+                       three: true)
+CharacterImage.create!(name: "リザードン",
+                       image: "Charizard",
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "ディディーコング",
+                       image: "Diddy",
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "リュカ",
+                       image: "Lucas",
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "ソニック",
+                       image: "Sonic",
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "デデデ",
+                       image: "Dedede",
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "ピクミン&オリマー",
+                       image: "Pikmin",
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "ルカリオ",
+                       image: "Lucario",
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "ロボット",
+                       image: "Robot",
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "トゥーンリンク",
+                       image: "ToonLink",
+                       three: true,
+                       four: true)
+CharacterImage.create!(name: "ウルフ",
+                       image: "Wolf",
+                       three: true)
+CharacterImage.create!(name: "むらびと",
+                       image: "Murabito",
+                       four: true)
+CharacterImage.create!(name: "Wii Fit トレーナー",
+                       image: "Wiifittrainer",
+                       four: true)
+CharacterImage.create!(name: "ロゼッタ&チコ",
+                       image: "Rosetta",
+                       four: true)
+CharacterImage.create!(name: "リトル・マック",
+                       image: "Littlemac",
+                       four: true)
+CharacterImage.create!(name: "ゲッコウガ",
+                       image: "Gekkouga",
+                       four: true)
+CharacterImage.create!(name: "Miiファイター 格闘",
+                       image: "Miifighter",
+                       four: true)
+CharacterImage.create!(name: "Miiファイター 剣術",
+                       image: "Miiswordsman",
+                       four: true)
+CharacterImage.create!(name: "Miiファイター 射撃",
+                       image: "Miigunner",
+                       four: true)
+CharacterImage.create!(name: "パルテナ",
+                       image: "Palutena",
+                       four: true)
+CharacterImage.create!(name: "パックマン",
+                       image: "Pacman",
+                       four: true)
+CharacterImage.create!(name: "ルフレ",
+                       image: "Reflet",
+                       four: true)
+CharacterImage.create!(name: "シュルク",
+                       image: "Shulk",
+                       four: true)
+CharacterImage.create!(name: "クッパJr",
+                       image: "Koopajr",
+                       four: true)
+CharacterImage.create!(name: "ダックハント",
+                       image: "Duckhunt",
+                       four: true)
+CharacterImage.create!(name: "リュウ",
+                       image: "Ryu",
+                       four: true)
+CharacterImage.create!(name: "ケン",
+                       image: "Ken",
+                       four: true)
+CharacterImage.create!(name: "クラウド",
+                       image: "Cloud",
+                       four: true)
+CharacterImage.create!(name: "カムイ",
+                       image: "Kamui",
+                       four: true)
+CharacterImage.create!(name: "ベヨネッタ",
+                       image: "Bayonetta",
+                       four: true)
+CharacterImage.create!(name: "インクリング",
+                       image: "Inkling")
+CharacterImage.create!(name: "リドリー",
+                       image: "Ridley")
+CharacterImage.create!(name: "シモン",
+                       image: "Simon")
+CharacterImage.create!(name: "リヒター",
+                       image: "Richter")
+CharacterImage.create!(name: "キングクルール",
+                       image: "KingKrool")
+CharacterImage.create!(name: "しずえ",
+                       image: "Shizue")
+CharacterImage.create!(name: "ガオガエン",
+                       image: "Gaogaen")
+CharacterImage.create!(name: "パックンフラワー",
+                       image: "Piranhaplant")
+CharacterImage.create!(name: "ジョーカー",
+                       image: "Joker")
+CharacterImage.create!(name: "勇者",
+                       image: "Hero")
+CharacterImage.create!(name: "バンジョー&カズーイ",
+                       image: "BanjoKazooie")
+CharacterImage.create!(name: "テリー",
+                       image: "Terry")
+

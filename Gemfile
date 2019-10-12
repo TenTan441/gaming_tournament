@@ -23,6 +23,7 @@ gem 'bootstrap4-datetime-picker-rails'
 gem 'activerecord-import'
 gem "jquery-turbolinks" # Turbolinksで遷移したときもjQuery.ready()を呼び出してくれる
 gem "select2-rails"
+gem 'image-picker-rails'
 
 group :development, :test do
   gem 'sqlite3'
