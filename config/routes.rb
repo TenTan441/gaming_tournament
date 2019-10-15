@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   post   '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
   
+  match 'select_title', to: 'characters#select_titles', via: [:get, :post]
+  
   resources :users do
     resources :characters
   end
