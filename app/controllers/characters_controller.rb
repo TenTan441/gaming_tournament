@@ -1,7 +1,6 @@
 class CharactersController < ApplicationController
   def new
     @character = Character.new
-    @main_character_64 = CharacterImage.where(one:   true).map { |fi| [fi.name, fi.id, { 'data-img-src' => "/Character/#{fi.image}.png"}] }
   end
   
   def select_titles

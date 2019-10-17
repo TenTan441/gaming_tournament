@@ -10,11 +10,14 @@
       <%= f.select :game_title, Character.game_titles.keys.to_a, { prompt: '選択してください' }, id: 'game_title', data: {remote: true, url: select_title_path}, class: "form-control" %>
 
       <div id="select-character">
+        <%#= render 'select_character', object: @characters, f: f %>
       </div>
-
+<!--
       <div id="title-one">
         <%#= f.select :main_character, @main_character_64 , {:include_blank => true}, {:class => "image-picker show-html form-control"} %>
+        <%#= select :main_character, :character_id, @characters, {:include_blank => true}, class: "image-picker show-html form-control" %>
       </div>
+!-->
       <%= f.submit "キャラ追加", class: "btn btn-primary btn-block btn-login" %>
     <% end %>
     
@@ -22,9 +25,20 @@
 </div>
 
 <script>
-  $(".image-picker").imagepicker()
-  
-  $("#game_title").channge(function(){
-    $('title-one').show();
+/*
+  $('#select-character').on("click", function() {
+    $(".image-picker").imagepicker({
+      show_label  : true
+    })
   });
+  */
+  $(function() {
+    $('#character-id').each(function() {
+      $('.image-picker').imagepicker({
+        show_label  : true
+      })
+    });
+  });
+  
+  
 </script>
