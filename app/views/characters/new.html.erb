@@ -9,15 +9,12 @@
       <%= f.label :game_title %>
       <%= f.select :game_title, Character.game_titles.keys.to_a, { prompt: '選択してください' }, id: 'game_title', data: {remote: true, url: select_title_path}, class: "form-control" %>
 
-      <div id="select-character">
-        <%#= render 'select_character', object: @characters, f: f %>
-      </div>
-<!--
-      <div id="title-one">
-        <%#= f.select :main_character, @main_character_64 , {:include_blank => true}, {:class => "image-picker show-html form-control"} %>
-        <%#= select :main_character, :character_id, @characters, {:include_blank => true}, class: "image-picker show-html form-control" %>
-      </div>
-!-->
+      <%= f.label "メインキャラ" %>
+      <div id="main-character"></div>
+      
+      <%= f.label "サブキャラ（3キャラまで）" %>
+      <div id="sub-characters"></div>
+      
       <%= f.submit "キャラ追加", class: "btn btn-primary btn-block btn-login" %>
     <% end %>
     
@@ -32,13 +29,24 @@
     })
   });
   */
-  $(function() {
-    $('#character-id').each(function() {
-      $('.image-picker').imagepicker({
-        show_label  : true
-      })
-    });
+/*
+  // 子要素の追加を監視
+  var plugin = function (el) {
+    // dummy
+    el.textContent += ':plugin applied.';
+  };
+  var callback = function (e) {
+    // 追加されたノードはe[0].addedNodesに入っている
+    var added = e[0].addedNodes;
+    // プラグイン適用
+    for (var i = 0; i < added.length; i++) {
+      plugin(added[i]);
+    }
+  };
+  */
+  $('body').on("mouseenter", function() {
+    $("#main-character").find(".image-picker").imagepicker();
+    $("#sub-characters").find(".image-picker").imagepicker({limit: 3, limit_reached: function(){alert('選べるのは3キャラまでです。')}});
   });
-  
   
 </script>

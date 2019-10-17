@@ -1,1 +1,2 @@
-$('#select-character').html("<%= escape_javascript( render 'select_character', object: @characters) %>");
+$('#main-character').html('<%= escape_javascript( render 'select_main_character', object: @characters) %>');
+$('#sub-characters').html('<%= escape_javascript( render 'select_sub_characters', object: @characters) %>');

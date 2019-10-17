@@ -20,10 +20,18 @@ class CharactersController < ApplicationController
   end
   
   def create
+    debugger
     title = Character.game_titles[params[:character][:game_title]]
     main = params[:main_character][:character_id]
+    sub_characters = params[:sub_characters][:character_ids]
     user = params[:user_id]
-    @character = Character.new(game_title: title, main_character: main, user_id: user)
+    characters = []
+    sub_characters.each do |subs|
+      unless subs.blank?
+        characters.push(subs)
+      end
+    end
+    @character = Character.new(game_title: title, main_character: main, sub_character1: characters[0], sub_character2: characters[1], sub_character3: characters[2], user_id: user)
     if @character.save
       flash[:success] = "新規作成しました"
       redirect_to new_user_character_path
