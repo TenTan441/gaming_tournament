@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   
+  get 'matches/report'
+
   root 'static_pages#top'
   get '/signup', to: 'users#new'
   
@@ -15,6 +17,15 @@ Rails.application.routes.draw do
   end
   resources :tournaments do
     resources :participants
+    get 'reload', to: 'participants#reload'
+    get 'randomize', to: 'participants#randomize'
+    
+    get 'start', to: 'tournaments#start'
+    get 'reset', to: 'tournaments#reset'
+    get 'finalize', to: 'tournaments#finalize'
+    
+    get 'report', to: 'matches#report'
+    post 'update', to: 'matches#update'
   end
   
   resources :fileuploads, only: [:index, :create, :new]

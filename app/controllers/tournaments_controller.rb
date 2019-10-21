@@ -2,9 +2,10 @@ require 'net/http'
 require 'uri'
 require 'json'
 
+
 class TournamentsController < ApplicationController
   
-  before_action :set_tournament, only: [:show, :edit, :update, :destroy]
+  before_action :set_tournament, only: [:show, :edit, :update, :destroy, :reload, :start, :reset, :finalize]
   
   def index
   end
@@ -56,6 +57,39 @@ class TournamentsController < ApplicationController
   end
   
   def show
+    @participants = Participant.where(tournament_id: @tournament)
+    tournament = get_challonge_api({}, "/#{@t.id}")
+    # 開催中のマッチングを取得
+    @matches_opening = get_challonge_api({:state => "open"}, "/#{@t.id}/matches")
+    if tournament["tournament"]["state"] == "pending"
+      @started = false
+    else
+      @started = true
+    end
+    #ms.select {|hash| hash.state == "open"}
+    @t.reload
+  end
+  
+  def start
+    @t.start!
+    flash[:success] = "大会開始！"
+    redirect_to @tournament
+  end
+  
+  def reset
+    @t.reset!
+    flash[:info] = "大会がやり直されました。"
+    redirect_to @tournament
+  end
+  
+  def finalize
+    bool, access_token = post_challonge_api({}, "/#{@t.id}/finalize")
+    if bool
+      flash[:info] = "大会お疲れさまでした。"
+    else
+      flash[:danger] = "送信に失敗しました。管理者へ連絡してください。"
+    end
+    redirect_to @tournament
   end
   
   def update
@@ -74,6 +108,11 @@ class TournamentsController < ApplicationController
     end
     
     def set_tournament
-      @tournament = Tournament.find(params[:id])
+      if params[:id].present?
+        @tournament = Tournament.find(params[:id])
+      elsif params[:tournament_id].present?
+        @tournament = Tournament.find(params[:tournament_id])
+      end
+      @t = Challonge::Tournament.find(@tournament.id_number)
     end
 end

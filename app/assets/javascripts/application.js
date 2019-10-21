@@ -27,3 +27,4 @@
 //= require turbolinks
 //= require_tree .
 //= require image-picker
+//= require bootstrap-sprockets

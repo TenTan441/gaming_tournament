@@ -1,5 +1,48 @@
 <% provide(:title, @tournament.name) %>
-<div>
-  <%= link_to "参加者の追加", new_tournament_participant_path(@tournament), class: "btn btn-lg btn-success" %>
+<div class="col-md-10 col-md-offset-1">
+  <% unless @started %>
+    <%= link_to "参加者の追加", new_tournament_participant_path(@tournament), class: "btn btn-lg btn-success" %>
+  <% end %>
   <%= link_to "大会を削除する", tournament_path, method: :delete, data: { confirm: "削除してよろしいですか？" }, class: "btn btn-lg btn-primary"%>
+
+  <table class="table table-condensed table-hover" id="table-tournament">
+    <thead>
+      <tr>
+        <th><%= image_tag @t.live_image_url %></th>
+      </tr>
+      <tr>
+        <th><%= link_to "トーナメント画像の更新", tournament_reload_path(@tournament), class: "btn btn-lg btn-success" %></th>
+        <% unless @started %>
+          <th><%= link_to "参加者を並び替える", tournament_randomize_path(@tournament), class: "btn btn-lg btn-success" %></th>
+          <th><%= link_to "大会を始める", tournament_start_path(@tournament), method: :get, data: { confirm: "大会を始めてもいいですか？" }, class: "btn btn-lg btn-success" %></th>
+        <% else %>
+          <th><%= link_to "大会をやり直す", tournament_reset_path(@tournament), method: :get, data: { confirm: "大会をやり直してもいいですか？" }, class: "btn btn-lg btn-success" %></th>
+          <th><%= link_to "大会を終了させる", tournament_finalize_path(@tournament), method: :get, data: { confirm: "大会を終了させてもいいですか？" }, class: "btn btn-lg btn-success" %></th>
+        <% end %>
+      </tr>
+      <tr>
+        <th>
+          現在開催中のマッチ<br>
+          <% @matches_opening.each do |matches| %>
+            <%= return_user_from_participant(matches["match"]["player1_id"]).name + " vs " + return_user_from_participant(matches["match"]["player2_id"]).name + "  " %><%= link_to "勝敗報告をする", tournament_report_path(@tournament, matches), remote: true, class: "btn btn-success" %><br>
+          <% end %>
+        </th>
+      </tr>
+    </thead>
+
+    <% @participants.each do |participant| %>
+      <tr>
+        <td><%= link_to User.find(participant.user_id).name, User.find(participant.user_id) %></td>
+        <td>
+          <%# if current_user.admin? && !current_user?(user) %>
+            <%#= link_to "削除", user, method: :delete,
+                data: { confirm: "削除してよろしいですか？" },
+                class: "btn btn-danger" %>
+          <%# end %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
 </div>
+  
+<div id="report-match" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

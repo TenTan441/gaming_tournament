@@ -20,7 +20,6 @@ class CharactersController < ApplicationController
   end
   
   def create
-    debugger
     title = Character.game_titles[params[:character][:game_title]]
     main = params[:main_character][:character_id]
     sub_characters = params[:sub_characters][:character_ids]

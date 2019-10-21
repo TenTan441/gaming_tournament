@@ -1,0 +1,87 @@
+<div class="modal-dialog modal-sm modal-dialog-center">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <h3 class="modal-title center">【勝敗報告】</h3>
+    </div>
+    <div class="modal-body">
+      <!--
+      <div class="row">
+        <div class="col-md-12">
+          <%# if Attendance.where(superior_id_for_overtime: params[:id], status_id_overtime: '申請中').present? %>
+            <%#= form_with(model: @attendances, url: attendances_update_overtimes_user_path, local: true, method: :patch) do |f| %>
+              <%# @users.each do |user| %>
+                <%# if Attendance.where(user_id: user.id, status_id_overtime: '申請中').present? %>
+                  <h2>【<%#= user.name %>からの残業申請】</h2>
+                  <div>
+                    <table class="table table-bordered table-condensed table-hover" id="table-attendances">
+                      <thead>
+                        <tr>
+                          <th>日付</th>
+                          <th>曜日</th>
+                          <th>終了予定時間</th>
+                          <th>指定勤務終了時間</th>
+                          <th>時間外時間</th>
+                          <th>業務処理内容</th>
+                          <th>指示者確認印</th>
+                          <th>変更</th>
+                          <th>勤怠を確認する</th>
+                        </tr>
+                      </thead>
+                    
+                      <tbody>
+                        <%# @attendance = Attendance.where(user_id: user.id, status_id_overtime: '申請中') %>
+                        <%# @attendance.each do |day| %>
+                          <%#= f.fields_for "overtimes[]", day do |overtime| %>
+                      　　    <tr>
+                              <td><%#= l(day.worked_on, format: :short) %></td>
+                              <td class="<%#= calender_color(day.worked_on.wday) %>"><%#= $days_of_the_week[day.worked_on.wday] %></td>
+                              <td><%#= l(day.end_overtime, format: :time) %></td>
+                              <td><%#= l(user.designated_work_end_time, format: :time)%></td>
+                              <td><%#= str_times = working_times(user.designated_work_end_time.change(year: day.worked_on.year, month: day.worked_on.month, day: day.worked_on.day), day.end_overtime, day.next_day_for_overtime) %></td>
+                              <td><%#= day.business_content %></td>
+                              <td><%#= overtime.select :status_id_overtime, Attendance.status_id_overtimes.keys.to_a, { include_blank: true }, class: "form-control" %></td>
+                              <td><%#= overtime.check_box :permit %></td>
+                              <td><%#= link_to "確認", user_path(id: user, date: day.worked_on.beginning_of_month), class: "btn btn-primary", :target => "_blank" %></td>
+                            </tr>
+                          <%# end %>
+                        <%# end %>
+                      </tbody>
+                    </table>
+                  </div>
+                <%# end %>
+              <%# end %>
+              <div class="center">
+                <%#= f.submit "変更を送信する", class: "btn btn-lg btn-primary center" %>
+              </div>
+            <%# end %>
+          <%# else %>
+            <h2>残業申請はありません。</h2>
+          <%# end %>
+        </div>
+      </div>
+      !-->
+      <div class="row">
+        <div class="col-sm-8 col-sm-offset-2">
+          <%= form_with(url: tournament_update_path, method: :post) do |f| %>
+            <%= f.hidden_field :match_id, value: @match_id %>
+            <%= f.hidden_field :tournamentid, value: @tournament_id %>
+            <%#= f.hidden_field :tournament, value: @tournament %>
+            
+            <%= f.label return_user_from_participant(@player1).name, class: "form-control" %>
+            <%= f.hidden_field :player1, value: @player1 %>
+            <%= f.number_field :player1_score, class: "form-control" %>
+            
+            <%= f.label return_user_from_participant(@player2).name, class: "form-control" %>
+            <%= f.hidden_field :player2, value: @player2 %>
+            <%= f.number_field :player2_score, class: "form-control" %>
+            
+            <%= f.submit "スコア報告", class: "btn btn-primary btn-block btn-login" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

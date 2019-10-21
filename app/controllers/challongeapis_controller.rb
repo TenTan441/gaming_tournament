@@ -1,0 +1,2 @@
+class ChallongeapisController < ApplicationController
+end
