@@ -9,9 +9,6 @@ class MatchesController < ApplicationController
   end
   
   def update
-    #max = params[:player1_score] > params[:player2_score] ? params[:player1] : params[:player2]
-    #bool, access_token = post_challonge_api({:match => {:scores_csv => "#{params[:player1_score]}-#{params[:player2_score]}", :winner_id => max}},
-    #                                        "/#{params[:tournamentid]}/matches/#{params[:match_id]}")
     m = Challonge::Tournament.find(params[:tournamentid]).matches[params[:match_id].to_i]
     m.scores_csv = "#{params[:player1_score]}-#{params[:player2_score]}"
     m.winner_id = params[:player1_score] > params[:player2_score] ? params[:player1] : params[:player2]

@@ -34,3 +34,62 @@
     vertical-align: middle;
   }  
 }
+
+.game-titles {
+  display: flex;  
+  padding-bottom: 20px;
+}
+
+.show-character-area-main {
+  background-color:  #444;    /* 背景色指定 */
+  padding:  20px;             /* 余白指定 */
+  height: 200px;              /* 高さ指定 */
+  width: 30%;
+}
+
+.show-character-area-subs {
+  background-color:  #444;    /* 背景色指定 */
+  padding:  20px;             /* 余白指定 */
+  height: 200px;              /* 高さ指定 */
+  width: 70%;
+}
+
+.character-image {
+  background-color: #888;
+  padding: 10px;
+}
+
+.character-image-sub-index {
+  background-color: #888;
+  display: flex;
+  padding:  10px;
+}
+
+.character-image-main {
+  width: 100px;
+  height: 100px;
+  margin:  10px;
+  border-radius:  10px;
+  background-color: #444;
+}
+
+.character-image-sub {
+  width: 100px;
+  height: 100px;
+  //padding: 10px;
+  margin:  10px;              /* 外側の余白 */
+  border-radius:  10px;
+  background-color: #444;
+}
+
+.character-image-main:hover {
+  border-bottom-color: transparent;
+  transform: scale(1.1);
+  transition-duration: 0.3s;
+}
+
+.character-image-sub:hover {
+  border-bottom-color: transparent;
+  transform: scale(1.1);
+  transition-duration: 0.3s;
+}

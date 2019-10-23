@@ -3,4 +3,5 @@ class ApplicationController < ActionController::Base
   include SessionsHelper
   include ChallongeapisHelper
   include ParticipantsHelper
+  include CharactersHelper
 end
