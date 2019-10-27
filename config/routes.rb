@@ -15,6 +15,8 @@ Rails.application.routes.draw do
   
   resources :users do
     resources :characters
+    
+    post 'send_dm', to: 'users#send_dm'
   end
   resources :tournaments do
     resources :participants

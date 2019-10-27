@@ -32,6 +32,12 @@
       </div>
     <% end %>
   </div>
+  
+  <%= form_with(model: @user, url: user_send_dm_path(@user), local: true, method: :post) do |f| %>
+    <%= f.text_field :text, class: "form-control" %>
+    
+    <%= f.submit "このユーザにDMを送る", class: "btn btn-primary btn-block btn-login" %>
+  <% end %>
 </div>
 
 <script>

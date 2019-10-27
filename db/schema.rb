@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191025052841) do
+ActiveRecord::Schema.define(version: 20191027091705) do
 
   create_table "character_images", force: :cascade do |t|
     t.string "name"
@@ -63,6 +63,11 @@ ActiveRecord::Schema.define(version: 20191025052841) do
     t.integer "master"
     t.boolean "group_stage_enabled"
     t.boolean "hold_third_place_match", default: false, null: false
+  end
+
+  create_table "twitter_apis", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|

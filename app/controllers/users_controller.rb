@@ -44,6 +44,14 @@ class UsersController < ApplicationController
     flash[:success] = "#{@user.name}のデータを削除しました。"
     redirect_to users_url
   end
+  
+  def send_dm
+    user = User.find(params[:user_id])
+    text = params[:user][:text]
+    result = TwitterApi.new(user.uid, text).call
+    result ? flash[:success] = "DM送信に成功しました。" : flash[:danger] = "DM送信に失敗しました。繰り返される場合は管理者へ連絡してください。"
+    redirect_to user
+  end
 
   private
 
