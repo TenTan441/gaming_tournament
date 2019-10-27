@@ -14,6 +14,12 @@ class SessionsController < ApplicationController
     end
   end
   
+  def twitter_login
+    user = User.find_or_create_from_auth(request.env['omniauth.auth'])
+    log_in user
+    redirect_to user
+  end
+  
   def destroy
     # ログイン中の場合のみログアウト処理を実行します。
     log_out if logged_in?

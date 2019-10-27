@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   # ログイン機能
   get    '/login', to: 'sessions#new'
   post   '/login', to: 'sessions#create'
+  get '/auth/twitter/callback', to: 'sessions#twitter_login'
   delete '/logout', to: 'sessions#destroy'
   
   match 'select_title', to: 'characters#select_titles', via: [:get, :post]

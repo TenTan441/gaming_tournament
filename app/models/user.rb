@@ -1,13 +1,25 @@
 class User < ApplicationRecord
-  before_save { self.email = email.downcase }
+  before_save { self.email = email.downcase } unless :twitter_auth?
   
   validates :name,  presence: true, length: { maximum: 50 }
-  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  validates :email, presence: true, length: { maximum: 100 },
-                    format: { with: VALID_EMAIL_REGEX },
-                    uniqueness: true
-  has_secure_password
-  validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
+  has_secure_password validations: false
+  
+  with_options if: :email_auth? do
+    VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+    validates :email, presence: true, length: { maximum: 100 },
+                      format: { with: VALID_EMAIL_REGEX },
+                      uniqueness: true
+    
+    validates :password, presence: true, 
+                         length: { minimum: 6 }, 
+                         allow_nil: true
+  end
+  
+  # twitter認証ではhas_secure_passwordのバリデーション機能をoffにする必要がある
+  with_options if: :twitter_auth? do
+    validates :provider, presence: true
+    validates :uid, presence: true
+  end
   
   # 渡された文字列のハッシュ値を返します。
   def User.digest(string)
@@ -42,4 +54,35 @@ class User < ApplicationRecord
   def forget
     update_attribute(:remember_digest, nil)
   end
+  
+  def self.find_or_create_from_auth(auth)
+    provider = auth[:provider]
+    uid = auth[:uid]
+    #nickname = auth[:info][:nickname]
+    name = auth[:info][:name]
+    twitter_url = auth[:info][:urls][:Twitter]
+    #image_url = auth[:info][:image]
+    #description = auth[:info][:description]
+    
+    self.find_or_create_by(provider: provider, uid: uid) do |user|
+      #user.nickname = nickname
+      user.name = name
+      user.twitter_url = twitter_url
+      #user.description = description
+    end
+  end
+  
+  #email認証「A」かTwitter認証「B」のどちらかを済ませていればどちらかは空白でも構わない
+  # A || B を満たせれば良い
+  private
+
+    def email_auth?
+      return true if (email.present? && password.present? && password_digest.present?)
+      false
+    end
+    
+    def twitter_auth?
+      return true if (provider.present? && uid.present?)
+      false
+    end
 end
