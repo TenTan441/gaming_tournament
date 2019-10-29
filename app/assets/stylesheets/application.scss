@@ -12,13 +12,22 @@
  *
  *= require select2
  *= require select2-bootstrap
- *= require_tree .
  *= require_self
  *= require tempusdominus-bootstrap-4
  *= require image-picker
+ *= require font-awesome
+ *= require jquery-ui
+ *= require_tree .
  */
  
-@import "bootstrap";
 @import 'bootstrap-select';
+
+// for Bootstrap4
+@import "bootstrap";
+
+// for font-awesome
 @import "font-awesome";
+
+// for TempusDominus
 @import "tempusdominus-bootstrap-4.css";
+

@@ -18,15 +18,16 @@ gem 'coffee-rails', '~> 4.2'
 gem 'turbolinks',   '~> 5'
 gem 'jbuilder',     '~> 2.5'
 gem 'momentjs-rails'
-gem "font-awesome-rails"
+gem 'font-awesome-rails'
 gem 'bootstrap4-datetime-picker-rails'
 gem 'activerecord-import'
-gem "jquery-turbolinks" # Turbolinksで遷移したときもjQuery.ready()を呼び出してくれる
-gem "select2-rails"
+gem 'jquery-turbolinks' # Turbolinksで遷移したときもjQuery.ready()を呼び出してくれる
+gem 'select2-rails'
 gem 'image-picker-rails'
 gem 'omniauth'
 gem 'omniauth-twitter'
 gem 'dotenv-rails'
+gem 'jquery-ui-rails'
 
 group :development, :test do
   gem 'sqlite3'

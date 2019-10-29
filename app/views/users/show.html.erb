@@ -34,6 +34,7 @@
   </div>
   
   <%= form_with(model: @user, url: user_send_dm_path(@user), local: true, method: :post) do |f| %>
+    <%= f.label "DM送信" %>
     <%= f.text_field :text, class: "form-control" %>
     
     <%= f.submit "このユーザにDMを送る", class: "btn btn-primary btn-block btn-login" %>

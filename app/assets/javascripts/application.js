@@ -11,20 +11,26 @@
 // about supported directives.
 //
 //= require rails-ujs
-//= require bootstrap-sprockets
-//= require jquery3
-//= require popper
 //= require bootstrap
 //= require moment
 // If you require timezone data (see moment-timezone-rails for additional file options)
 //= require moment-timezone-with-data
-//= require moment
-//= require moment/ja.js
-//= require tempusdominus-bootstrap-4
+
+
 //= require jquery
 //= require jquery.turbolinks
 //= require jquery_ujs
+//= require jquery-ui
 //= require select2
 //= require turbolinks
-//= require_tree .
 //= require image-picker
+//= require jquery3
+
+//= require popper
+//= require bootstrap-sprockets
+
+//= require moment
+//= require moment/ja.js
+
+//= require tempusdominus-bootstrap-4.js
+//= require_tree .
