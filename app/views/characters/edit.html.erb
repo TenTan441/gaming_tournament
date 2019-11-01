@@ -1,0 +1,142 @@
+<% provide(:title, "使用キャラクター登録") %>
+<h1>使用キャラクター編集</h1>
+
+<div class="row">
+  <div class="col-md-12 col-md-offset-0">
+    <%= form_with(model: @character, url: user_characters_update_path, local: true, method: :put) do |f| %>
+      <%= render 'shared/error_messages_character', object: @character %>
+      
+      <%= f.label :game_title %>
+      <%= f.select :game_title, Character.game_titles.keys.to_a, { prompt: '選択してください' }, id: 'game_title', data: {remote: true, url: user_characters_select_title_path}, class: "form-control" %>
+      
+      <%#= f.select :main_character, @characters, {:include_blank => true}, {:id => "smash", :class => "image-picker show-html form-control"} %>
+      
+      <div id="using-character"></div>
+      
+      <div id="characters">
+        <%= f.label "メインキャラ" %>
+        <div id="main-character"></div>
+        
+        <%= f.label "サブキャラ（3キャラまで）" %>
+        <div id="sub-characters"></div>
+      </div>
+      
+      <%= f.submit "キャラ追加", class: "btn btn-primary btn-block btn-login" %>
+    <% end %>
+    
+  </div>
+</div>
+
+<script>
+/*
+  $('#game_title').on("click", function() {
+    $(".image-picker").imagepicker({
+      show_label  : true
+    })
+  });
+
+  // 子要素の追加を監視
+  var plugin = function (el) {
+    // dummy
+    el.textContent += ':plugin applied.';
+  };
+  var callback = function (e) {
+    // 追加されたノードはe[0].addedNodesに入っている
+    var added = e[0].addedNodes;
+    // プラグイン適用
+    for (var i = 0; i < added.length; i++) {
+      plugin(added[i]);
+    }
+  };
+  */
+/*  
+  (function($) {
+    var origAppend = $.fn.change;
+
+    $.fn.change = function () {
+        return origAppend.apply(this, arguments).trigger("change");
+    };
+  })(jQuery);
+
+  $('#game_title').on("change", function() {
+    $("#main-character").find(".image-picker").imagepicker();
+    $("#sub-characters").find(".image-picker").imagepicker({limit: 3, limit_reached: function(){alert('選べるのは3キャラまでです。')}});
+  });
+  */
+  /*
+  (function($) {
+
+      var origAppend = $.fn.append;
+
+      $.fn.append = function () {
+          return origAppend.apply(this, arguments).trigger("append");
+      };
+  })(jQuery);
+
+  $("#game_title").bind("append", function() {
+    //alert('Hello, world!'); 
+    $("#main-character").find(".image-picker").imagepicker();
+    $("#sub-characters").find(".image-picker").imagepicker({limit: 3, limit_reached: function(){alert('選べるのは3キャラまでです。')}});
+  });
+
+  $("#game_title").append("<span>");
+  */
+ /* 
+  $('body').on("click", function() {
+    $("#main-character").find(".image-picker").imagepicker();
+    $("#sub-characters").find(".image-picker").imagepicker({limit: 3, limit_reached: function(){alert('選べるのは3キャラまでです。')}});
+  });
+  */
+  //$("#smash").imagepicker();
+  /*
+  $("#characters").on("DOMSubtreeModified propertychange", function() {
+    $("#main-character").find(".image-picker").imagepicker();
+    $("#sub-characters").find(".image-picker").imagepicker({limit: 3, limit_reached: function(){alert('選べるのは3キャラまでです。')}});
+  });
+/*
+  $("#sub-characters").on("DOMSubtreeModified propertychange", function() {
+    $(this).find(".image-picker").imagepicker({limit: 3, limit_reached: function(){alert('選べるのは3キャラまでです。')}});
+  });
+  */
+  //$("#main-character").append("<span>");
+  
+  /*
+  const target = document.getElementById('characters');
+  
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      console.log('おじさん');
+      $("#main-character").find(".image-picker").imagepicker();
+      $("#sub-characters").find(".image-picker").imagepicker({limit: 3, limit_reached: function(){alert('選べるのは3キャラまでです。')}});
+    });
+  });
+  
+  const config = {
+    childList: true
+  };
+  
+  observer.observe(target, config);
+  */
+  
+  // 対象とするノードを取得
+  const target = document.getElementById('characters');
+   
+  // オブザーバインスタンスを作成
+  var observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      // 一度監視を中止
+      observer.disconnect();
+      $("#main-character").find(".image-picker").imagepicker();
+      $("#sub-characters").find(".image-picker").imagepicker({limit: 3, limit_reached: function(){alert('選べるのは3キャラまでです。')}});
+      // 監視再開
+      observer.observe(target, config);
+    });    
+  });
+   
+  // オブザーバの設定
+  const config = { attributes: true, childList: true, subtree: true, characterData: true };
+   
+  // 対象ノードとオブザーバの設定を渡す
+  observer.observe(target, config);
+
+</script>

@@ -36,8 +36,8 @@
   
   <%= f.label :group_stage_enabled, class: "label-#{yield(:class_text)}" %>
   <div class="radio">
-    <label><%= f.radio_button :group_stage_enabled, false, :value => false, :checked => true, :onclick => "tournament_type();" %><span>通常の形式</span></label>
-    <label><%= f.radio_button :group_stage_enabled, true, :value => true, :onclick => "tournament_type();" %><span>2ステージトーナメント — グループステージとファイナルステージを別々の方式で実施</span></label>
+    <label><%= f.radio_button :group_stage_enabled, false, :value => false, :checked => true, :onclick => "tournament_type();", class: "radio-control" %><span>通常の形式　</span></label>
+    <label><%= f.radio_button :group_stage_enabled, true, :value => true, :disabled => true, :onclick => "tournament_type();", class: "radio-control" %><span>2ステージトーナメント【API仕様により使用不可】</span></label>
   </div>
   
   <div class="form-group" id="normal-tournament">
@@ -45,16 +45,7 @@
     <%= f.select :elimination_type, options_for_select([["シングルイリミネーション","single elimination"],["ダブルイリミネーション","double elimination"],["総当たり戦", "round robin"]]), {}, class: "form-control" %>
     <%= f.check_box :hold_third_place_match %><span>3位決定戦を行う</span>
   </div>
-<!--  
-  <div class="form-group" id="two-stage-tournament">
-    <%#= f.label "開発中のため選択不可", class: "label-#{yield(:class_text)}" %>
-    
-    
-    <%#= f.label "ファイナルステージ", class: "label-#{yield(:class_text)}" %>
-    <%#= f.select :elimination_type, ["シングルイリミネーション","ダブルイリミネーション","総当たり戦"], {}, class: "form-control" %>
-    <%#= f.check_box :hold_third_place_match %><span>3位決定戦を行う</span>
-  </div>
-!-->
+
   <div class="input-group" data-target-input="nearest">
     <%= f.label :start_time, class: "label-#{yield(:class_text)}" %>
     <%= f.text_field :start_time, id: "start_time", class: "form-control datepicker", data: {target: "#start_time"} %>

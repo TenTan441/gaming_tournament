@@ -23,7 +23,7 @@
 //= require jquery-ui
 //= require select2
 //= require turbolinks
-//= require image-picker
+
 //= require jquery3
 
 //= require popper
@@ -33,4 +33,5 @@
 //= require moment/ja.js
 
 //= require tempusdominus-bootstrap-4.js
+//= require image-picker
 //= require_tree .

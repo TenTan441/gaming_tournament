@@ -276,8 +276,7 @@ CharacterImage.create!(name: "リュウ",
                        image: "Ryu",
                        four: true)
 CharacterImage.create!(name: "ケン",
-                       image: "Ken",
-                       four: true)
+                       image: "Ken")
 CharacterImage.create!(name: "クラウド",
                        image: "Cloud",
                        four: true)

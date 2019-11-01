@@ -9,7 +9,8 @@ class MatchesController < ApplicationController
   end
   
   def update
-    m = Challonge::Tournament.find(params[:tournamentid]).matches[params[:match_id].to_i]
+    t_id = params[:tournamentid]
+    m = Challonge::Tournament.find(t_id).matches[params[:match_id].to_i]
     m.scores_csv = "#{params[:player1_score]}-#{params[:player2_score]}"
     m.winner_id = params[:player1_score] > params[:player2_score] ? params[:player1] : params[:player2]
     if m.save
@@ -18,7 +19,7 @@ class MatchesController < ApplicationController
       flash[:danger] = "スコア送信に失敗しました。繰り返される場合は管理者へ問い合わせてください。"
     end
     
-    @tournament = Tournament.find(params[:tournament_id])
+    @tournament = Tournament.find(t_id)
     redirect_to @tournament
   end
 end

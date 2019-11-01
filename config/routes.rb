@@ -11,10 +11,15 @@ Rails.application.routes.draw do
   get '/auth/twitter/callback', to: 'sessions#twitter_login'
   delete '/logout', to: 'sessions#destroy'
   
-  match 'select_title', to: 'characters#select_titles', via: [:get, :post]
+  
   
   resources :users do
+    get 'characters/edit', to: 'characters#edit'
+    put 'characters/update', to: 'characters#update'
+    match 'characters/select_title', to: 'characters#select_titles', via: [:get, :post]
     resources :characters
+    
+    
     
     post 'send_dm', to: 'users#send_dm'
   end
