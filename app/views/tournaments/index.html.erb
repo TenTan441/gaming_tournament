@@ -2,3 +2,26 @@
 <% provide(:class_text, 'tournament-index') %>
 <% provide(:button_text, "一覧") %>
 <h1>トーナメント一覧</h1>
+
+<div class="col-md-10 col-md-offset-1">
+  <%= will_paginate %>
+  <table class="table table-condensed table-hover" id="table-users">
+    <thead>
+      <tr>
+        <th><%= Tournament.human_attribute_name :name %></th>
+        <th><%= Tournament.human_attribute_name :master %></th>
+      </tr>
+    </thead>
+    
+    <tbody>
+      <% @tournaments.each do |tournament| %>
+        <% master = master_tournament(tournament) %>
+        <tr>
+          <td><%= link_to tournament.name, tournament %></td>
+          <td><%= link_to master.name, master %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= will_paginate %>
+</div>

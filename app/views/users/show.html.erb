@@ -1,7 +1,7 @@
 <% provide(:title, @user.name) %>
 <div>
   <%= link_to "新しく大会を作る", new_tournament_path, class: "btn btn-lg btn-success" %>
-  <%= link_to "大会に参加する", '#', class: "btn btn-lg btn-primary" %>
+  <%= link_to "大会に参加する", tournaments_path, class: "btn btn-lg btn-primary" %>
   <%= link_to "使用キャラを登録・更新する", user_characters_edit_path(@user), class: "btn btn-lg btn-primary" %>
   <div>使用キャラ</div>
   

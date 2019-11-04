@@ -5,6 +5,14 @@ module ParticipantsHelper
     return user
   end
   
-  def return_participant
+  def return_users_from_participants(participants)
+    users = []
+    unless participants.blank?
+      participants.each do |participant|
+        user = User.find(participant.user_id)
+        users.push(user)
+      end
+    end
+    return users
   end
 end

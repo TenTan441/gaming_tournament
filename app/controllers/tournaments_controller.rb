@@ -8,6 +8,8 @@ class TournamentsController < ApplicationController
   before_action :set_tournament, only: [:show, :edit, :update, :destroy, :reload, :start, :reset, :finalize]
   
   def index
+    @tournaments = Tournament.paginate(page: params[:page])
+    #@users = User.paginate(page: params[:page])
   end
   
   def new
@@ -43,12 +45,17 @@ class TournamentsController < ApplicationController
     res = http.request(req)
     debugger
 =end
-    if @tournament.save && t.save # && s.save
+    if t.save # && s.save
       @tournament.id_number = t.id
-      @tournament.save
-      flash[:success] = '新規作成に成功しました。'
-      redirect_to @tournament
+      if @tournament.save
+        flash[:success] = '新規作成に成功しました。'
+        redirect_to @tournament
+      else
+        flash[:danger] = "新規作成に失敗しました。"
+        render :new
+      end
     else
+      flash[:danger] = "Challengeにトーナメントを作れませんでした。"
       render :new
     end
   end
@@ -68,6 +75,10 @@ class TournamentsController < ApplicationController
     end
     #ms.select {|hash| hash.state == "open"}
     @t.reload
+    
+    @participant = Participant.new()
+    @not_yet_participants = Participant.where.not(tournament_id: @tournament)
+    @users = return_users_from_participants(@not_yet_participants)
   end
   
   def start
@@ -104,7 +115,7 @@ class TournamentsController < ApplicationController
   private
   
     def tournament_params
-      params.require(:tournament).permit(:name, :private, :game_title, :url, :description, :group_stage_enabled, :elimination_type, :hold_third_place_match, :start_time)
+      params.require(:tournament).permit(:master, :name, :private, :game_title, :url, :description, :group_stage_enabled, :elimination_type, :hold_third_place_match, :start_time)
     end
     
     def set_tournament

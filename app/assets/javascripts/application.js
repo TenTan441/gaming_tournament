@@ -21,7 +21,7 @@
 //= require jquery.turbolinks
 //= require jquery_ujs
 //= require jquery-ui
-//= require select2
+
 //= require turbolinks
 
 //= require jquery3
@@ -34,4 +34,7 @@
 
 //= require tempusdominus-bootstrap-4.js
 //= require image-picker
+
+//= require select2
+//= require select2_locale_ja
 //= require_tree .

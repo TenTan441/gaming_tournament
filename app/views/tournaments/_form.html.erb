@@ -2,6 +2,7 @@
 <%#= form_with(url: 'https://api.challonge.com/v1/tournaments', method: :post) do |f| %>
   <%= render 'shared/error_messages_tournament', object: @tournament %>
   
+  <%= f.hidden_field :master, :value => current_user.id %>
   <div class="form-group">
     <%= f.label :name, class: "label-#{yield(:class_text)}" %>
     <%= f.text_field :name, class: "form-control" %>
@@ -37,7 +38,7 @@
   <%= f.label :group_stage_enabled, class: "label-#{yield(:class_text)}" %>
   <div class="radio">
     <label><%= f.radio_button :group_stage_enabled, false, :value => false, :checked => true, :onclick => "tournament_type();", class: "radio-control" %><span>通常の形式　</span></label>
-    <label><%= f.radio_button :group_stage_enabled, true, :value => true, :disabled => true, :onclick => "tournament_type();", class: "radio-control" %><span>2ステージトーナメント【API仕様により使用不可】</span></label>
+    <label><%= f.radio_button :group_stage_enabled, true, :value => true, :disabled => true, :onclick => "tournament_type();", class: "radio-control" %><span>2ステージトーナメント【API仕様により選択不可】</span></label>
   </div>
   
   <div class="form-group" id="normal-tournament">

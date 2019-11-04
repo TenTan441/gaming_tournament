@@ -1,5 +1,5 @@
 <% provide(:title, @tournament.name) %>
-<div class="col-md-10 col-md-offset-1">
+<div class="col-md-12">
   <% unless @started %>
     <%= link_to "参加者の追加", new_tournament_participant_path(@tournament), class: "btn btn-lg btn-success" %>
   <% end %>
@@ -8,16 +8,22 @@
   <table class="table table-condensed table-hover" id="table-tournament">
     <thead>
       <tr>
-        <th><%= image_tag @t.live_image_url %></th>
+        <% unless @participants.blank? %>
+          <th><%= image_tag @t.live_image_url, width: "100%", class: "mx-auto" %></th>
+        <% else %>
+          <th>参加者が登録されていないため参加者の追加を行ってください。</th>
+        <% end %>
       </tr>
       <tr>
-        <th><%= link_to "トーナメント画像の更新", tournament_reload_path(@tournament), class: "btn btn-lg btn-success" %></th>
-        <% unless @started %>
-          <th><%= link_to "参加者を並び替える", tournament_randomize_path(@tournament), class: "btn btn-lg btn-success" %></th>
-          <th><%= link_to "大会を始める", tournament_start_path(@tournament), method: :get, data: { confirm: "大会を始めてもいいですか？" }, class: "btn btn-lg btn-success" %></th>
-        <% else %>
-          <th><%= link_to "大会をやり直す", tournament_reset_path(@tournament), method: :get, data: { confirm: "大会をやり直してもいいですか？" }, class: "btn btn-lg btn-success" %></th>
-          <th><%= link_to "大会を終了させる", tournament_finalize_path(@tournament), method: :get, data: { confirm: "大会を終了させてもいいですか？" }, class: "btn btn-lg btn-success" %></th>
+        <% unless @participants.blank? %>
+          <th><%= link_to "トーナメント画像の更新", tournament_reload_path(@tournament), class: "btn btn-lg btn-success" %></th>
+          <% unless @started %>
+            <th><%= link_to "参加者を並び替える", tournament_randomize_path(@tournament), class: "btn btn-lg btn-success" %></th>
+            <th><%= link_to "大会を始める", tournament_start_path(@tournament), method: :get, data: { confirm: "大会を始めてもいいですか？" }, class: "btn btn-lg btn-success" %></th>
+          <% else %>
+            <th><%= link_to "大会をやり直す", tournament_reset_path(@tournament), method: :get, data: { confirm: "大会をやり直してもいいですか？" }, class: "btn btn-lg btn-success" %></th>
+            <th><%= link_to "大会を終了させる", tournament_finalize_path(@tournament), method: :get, data: { confirm: "大会を終了させてもいいですか？" }, class: "btn btn-lg btn-success" %></th>
+          <% end %>
         <% end %>
       </tr>
       <tr>
@@ -43,6 +49,13 @@
       </tr>
     <% end %>
   </table>
+  
+  <%= form_with(model: @participant, url: tournament_participants_path(@tournament), method: :post) do |f| %>
+
+    <%= f.label '参加者追加' %>
+    <%= select_tag :players, options_from_collection_for_select(@users, :id, :name), include_blank: true, multiple: true, class: "form-control searchable" %>
+    <%= f.submit "参加者追加", class: "btn btn-primary btn-block btn-login" %>
+  <% end %>
 </div>
   
 <div id="report-match" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

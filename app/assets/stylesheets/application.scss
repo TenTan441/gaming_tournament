@@ -12,12 +12,12 @@
  *
  *= require select2
  *= require select2-bootstrap
- *= require_self
  *= require image-picker
  *= require tempusdominus-bootstrap-4
  *= require font-awesome
  *= require jquery-ui
  *= require_tree .
+ *= require_self
  */
  
 @import 'bootstrap-select';

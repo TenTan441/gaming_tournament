@@ -117,10 +117,13 @@
   
   observer.observe(target, config);
   */
-  
+$(function(){
   // 対象とするノードを取得
   const target = document.getElementById('characters');
-   
+  
+  // オブザーバの設定
+  const config = { attributes: true, childList: true, subtree: true, characterData: true };
+  
   // オブザーバインスタンスを作成
   var observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
@@ -133,10 +136,7 @@
     });    
   });
    
-  // オブザーバの設定
-  const config = { attributes: true, childList: true, subtree: true, characterData: true };
-   
   // 対象ノードとオブザーバの設定を渡す
   observer.observe(target, config);
-
+});
 </script>

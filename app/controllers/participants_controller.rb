@@ -5,6 +5,8 @@ require 'json'
 class ParticipantsController < ApplicationController
   def new
     @participant = Participant.new()
+    @participants = Participant.where.not(tournament_id: params[:tournament_id])
+    @users = return_users_from_participants(@participants)
   end
   
   def create
@@ -18,7 +20,9 @@ class ParticipantsController < ApplicationController
       pa.challonge_participant_id = chapa.id
       pa.save
     end
-    redirect_to tournament_participants_url
+    
+    tournament = Tournament.find(t_id)
+    redirect_to tournament
   end
   
   def index
@@ -100,5 +104,25 @@ class ParticipantsController < ApplicationController
   
   def show
 
+  end
+  
+  def update
+    #登録の処理を書き込む
+    players = params[:players] # user_idが記録されている
+    t_id = params[:tournament_id]
+    
+    # 登録されているキャラ
+    registered_players = return_users_from_participants(Participant.where(tournament_id: t_id))
+    
+    #players = users.rstrip.split(/\r?\n/).map {|player| player.chomp}
+    players.each do |player|
+      pa = Participant.new(tournament_id: t_id, user_id: player)
+      chapa = Challonge::Participant.create(:name => "#{User.find(player).name}", :tournament => Challonge::Tournament.find(Tournament.find(t_id).id_number))
+      pa.challonge_participant_id = chapa.id
+      pa.save
+    end
+    
+    tournament = Tournament.find(t_id)
+    redirect_to tournament
   end
 end
