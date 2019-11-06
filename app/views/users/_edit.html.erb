@@ -1,0 +1,20 @@
+<% provide(:class_text, 'user--edit') %>
+<% provide(:button_text, '更新') %>
+
+<div class="modal-dialog modal-md modal-dialog-center">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <h3 class="modal-title center">【ユーザー情報の更新】</h3>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <%= render 'form' %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

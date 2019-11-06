@@ -1,0 +1,59 @@
+<div class="modal-dialog modal-lg modal-dialog-center">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <h3 class="modal-title center">【使用キャラクター編集】</h3>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-12 col-md-offset-0">
+          <%= form_with(model: @character, url: user_characters_update_path, local: true, method: :put) do |f| %>
+            <%= render 'shared/error_messages_character', object: @character %>
+            
+            <%= f.label :game_title %>
+            <%= f.select :game_title, Character.game_titles.keys.to_a, { prompt: '選択してください' }, id: 'game_title', data: {remote: true, url: user_characters_select_title_path}, class: "form-control" %>
+            
+            <div id="using-character" style="display:none"></div>
+            
+            <div id="characters" style="display:none">
+              <%= f.label "メインキャラ" %>
+              <div id="main-character"></div>
+              
+              <%= f.label "サブキャラ（3キャラまで）" %>
+              <div id="sub-characters"></div>
+              
+              <%= f.submit "キャラ編集", class: "btn btn-primary btn-block btn-login" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(function(){
+  // 対象とするノードを取得
+  const target = document.getElementById('characters');
+  
+  // オブザーバの設定
+  const config = { attributes: true, childList: true, subtree: true, characterData: true };
+  
+  // オブザーバインスタンスを作成
+  var observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      // 一度監視を中止
+      observer.disconnect();
+      $("#main-character").find(".image-picker").imagepicker();
+      $("#sub-characters").find(".image-picker").imagepicker({limit: 3, limit_reached: function(){alert('選べるのは3キャラまでです。')}});
+      // 監視再開
+      observer.observe(target, config);
+    });    
+  });
+   
+  // 対象ノードとオブザーバの設定を渡す
+  observer.observe(target, config);
+});
+</script>

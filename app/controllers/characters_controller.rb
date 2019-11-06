@@ -67,19 +67,17 @@ class CharactersController < ApplicationController
       @character = Character.new(game_title: title, main_character: main, sub_character1: characters[0], sub_character2: characters[1], sub_character3: characters[2], user_id: user)
       if @character.save
         flash[:success] = "新規作成しました"
-        redirect_to @user
       else
         flash[:danger] = "作成に失敗しました"
-        render :edit
       end
     else #更新
       if @character.update_attributes(main_character: main, sub_character1: characters[0], sub_character2: characters[1], sub_character3: characters[2])
         flash[:success] = "更新に成功しました"
-        redirect_to @user
       else
         flash[:danger] = "更新に失敗しました"
-        render :edit
       end
     end
+    
+    redirect_to @user
   end
 end

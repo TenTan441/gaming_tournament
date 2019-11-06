@@ -68,8 +68,7 @@
           <%= form_with(url: tournament_update_path, method: :post) do |f| %>
             <%= f.hidden_field :match_id, value: @match_id %>
             <%= f.hidden_field :tournamentid, value: @tournament_id %>
-            <%#= f.hidden_field :tournament, value: @tournament %>
-            
+
             <%= f.label return_user_from_participant(@player1).name, class: "form-control" %>
             <%= f.hidden_field :player1, value: @player1 %>
             <%= f.number_field :player1_score, class: "form-control" %>

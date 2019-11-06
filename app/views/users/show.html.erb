@@ -2,8 +2,7 @@
 <div>
   <%= link_to "新しく大会を作る", new_tournament_path, class: "btn btn-lg btn-success" %>
   <%= link_to "大会に参加する", tournaments_path, class: "btn btn-lg btn-primary" %>
-  <%= link_to "使用キャラを登録・更新する", user_characters_edit_path(@user), class: "btn btn-lg btn-primary" %>
-  
+
   <!-- ピル部分 -->
   <ul class="nav nav-tabs nav-justified" id="tabs-tab" role="tablist">
     <li class="nav-item">
@@ -19,8 +18,8 @@
       <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
         編集 <span class="caret"></span>
         <ul class="dropdown-menu" role="menu">
-          <li><%= link_to "設定", edit_user_path(current_user), class: "dropdown-item" %></li>
-          <li><%= link_to "使用キャラクター", user_characters_edit_path(@user), class: "dropdown-item" %></li>
+          <li><%= link_to "設定", edit_user_path(current_user), remote: true, class: "dropdown-item" %></li>
+          <li><%= link_to "使用キャラクター", user_characters_edit_path(@user), remote: true, class: "dropdown-item" %></li>
         </ul>
       </a>
     </li>
@@ -52,11 +51,6 @@
       </ul>
       
       <div id="title-character"></div>
-      <!--
-      <div class="tab-content" id="characters-tabContent">
-        <div class="tab-pane show active" id="title-character" role="tabpanel" aria-labelledby="tabs-home-tab"></div>
-      </div>
-      !-->
     </div>
     <div class="tab-pane fade" id="tabs-contact" role="tabpanel" aria-labelledby="tabs-contact-tab">コンタクトの文章です。...
       <%= form_with(model: @user, url: user_send_dm_path(@user), local: true, method: :post) do |f| %>
@@ -66,8 +60,13 @@
         <%= f.submit "このユーザにDMを送る", class: "btn btn-primary btn-block btn-login" %>
       <% end %>
     </div>
+
+    <blockquote class="twitter-tweet"><p lang="ja" dir="ltr">本格的に勉学に励むようにするためスマブラ休止します<br>ツイート頻度も減りますがツイート自体は見てるのでこれからもよろしく☺️</p>&mdash; 恬淡@てんたん　スマブラ休止中 (@TenTan441) <a href="https://twitter.com/TenTan441/status/1162389910612934658?ref_src=twsrc%5Etfw">August 16, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
   </div>
 </div>
+
+<div id="character-edit-page" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="user-edit-page" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 
 <script>
 </script>
