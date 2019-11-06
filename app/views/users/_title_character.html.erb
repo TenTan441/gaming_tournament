@@ -1,0 +1,29 @@
+<% if @character %>
+  <span><%= @character.game_title %></span>
+  <div class="game-titles">
+    <div class="show-character-area-main">
+      <span>メインキャラクター</span><br>
+      <div class="character-image">
+        <%= image_tag "/Character/#{characterimage_from_character(@character.main_character)}.png", class: "character-image-main" %>
+      </div>
+    </div>
+    <div class="show-character-area-subs">
+      <span>サブキャラクター</span><br>
+      <div class="character-image-sub-index">
+        <% if @character.sub_character1 %>
+          <%= image_tag "/Character/#{characterimage_from_character(@character.sub_character1)}.png", class: "character-image-sub" %>
+        <% end %>
+        <% if @character.sub_character2 %>
+          <%= image_tag "/Character/#{characterimage_from_character(@character.sub_character2)}.png", class: "character-image-sub" %>
+        <% end %>
+        <% if @character.sub_character3 %>
+          <%= image_tag "/Character/#{characterimage_from_character(@character.sub_character3)}.png", class: "character-image-sub" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="game-titles">
+    登録されているキャラクターはありません。
+  </div>
+<% end %>

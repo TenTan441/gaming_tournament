@@ -3,42 +3,70 @@
   <%= link_to "新しく大会を作る", new_tournament_path, class: "btn btn-lg btn-success" %>
   <%= link_to "大会に参加する", tournaments_path, class: "btn btn-lg btn-primary" %>
   <%= link_to "使用キャラを登録・更新する", user_characters_edit_path(@user), class: "btn btn-lg btn-primary" %>
-  <div>使用キャラ</div>
   
-  <div id="character-images">
-    <% @characters.each do |character| %>
-      <span><%= character.game_title %></span>
-      <div class="game-titles">
-        <div class="show-character-area-main">
-          <span>メインキャラクター</span><br>
-          <div class="character-image">
-            <%= image_tag "/Character/#{characterimage_from_character(character.main_character)}.png", class: "character-image-main" %>
-          </div>
-        </div>
-        <div class="show-character-area-subs">
-          <span>サブキャラクター</span><br>
-          <div class="character-image-sub-index">
-            <% if character.sub_character1 %>
-              <%= image_tag "/Character/#{characterimage_from_character(character.sub_character1)}.png", class: "character-image-sub" %>
-            <% end %>
-            <% if character.sub_character2 %>
-              <%= image_tag "/Character/#{characterimage_from_character(character.sub_character2)}.png", class: "character-image-sub" %>
-            <% end %>
-            <% if character.sub_character3 %>
-              <%= image_tag "/Character/#{characterimage_from_character(character.sub_character3)}.png", class: "character-image-sub" %>
-            <% end %>
-          </div>
-        </div>
+  <!-- ピル部分 -->
+  <ul class="nav nav-tabs nav-justified" id="tabs-tab" role="tablist">
+    <li class="nav-item">
+      <%= link_to "ホーム", "#tabs-home", id: "tabs-home-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-home", "aria-selected" => "true", class: "nav-link" %>
+    </li>
+    <li class="nav-item">
+      <%= link_to "使用キャラクター", "#tabs-profile", id: "tabs-profile-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-profile", class: "nav-link" %>
+    </li>
+    <li class="nav-item">
+      <%= link_to "コンタクト", "#tabs-contact", id: "tabs-contact-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-contact", class: "nav-link" %>
+    </li>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        編集 <span class="caret"></span>
+        <ul class="dropdown-menu" role="menu">
+          <li><%= link_to "設定", edit_user_path(current_user), class: "dropdown-item" %></li>
+          <li><%= link_to "使用キャラクター", user_characters_edit_path(@user), class: "dropdown-item" %></li>
+        </ul>
+      </a>
+    </li>
+  </ul>
+  
+  <!-- パネル部分 -->
+  <div class="tab-content" id="pills-tabContent">
+    <div class="tab-pane fade" id="tabs-home" role="tabpanel" aria-labelledby="tabs-home-tab">ホームの文章です。...</div>
+    <div class="tab-pane fade" id="tabs-profile" role="tabpanel" aria-labelledby="tabs-profile-tab">
+      <ul class="nav nav-tabs nav-justified" id="tabs-title" role="tablist">
+        <li class="nav-item">
+          <%= link_to "64", user_title_character_path(user_id: @user, game_title: '0'), remote: true, id: "tabs-title-64", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-64", class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "DX", user_title_character_path(user_id: @user, game_title: '1'), remote: true, id: "tabs-title-DX", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-DX", class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "X", user_title_character_path(user_id: @user, game_title: '2'), remote: true, id: "tabs-title-X", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-X", class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "3DS", user_title_character_path(user_id: @user, game_title: '3'), remote: true, id: "tabs-title-3DS", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-3DS", class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Wii U", user_title_character_path(user_id: @user, game_title: '4'), remote: true, id: "tabs-title-WiiU", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-WiiU", class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "SP", user_title_character_path(user_id: @user, game_title: '5'), remote: true, id: "tabs-title-SP", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-SP", class: "nav-link" %>
+        </li>
+      </ul>
+      
+      <div id="title-character"></div>
+      <!--
+      <div class="tab-content" id="characters-tabContent">
+        <div class="tab-pane show active" id="title-character" role="tabpanel" aria-labelledby="tabs-home-tab"></div>
       </div>
-    <% end %>
+      !-->
+    </div>
+    <div class="tab-pane fade" id="tabs-contact" role="tabpanel" aria-labelledby="tabs-contact-tab">コンタクトの文章です。...
+      <%= form_with(model: @user, url: user_send_dm_path(@user), local: true, method: :post) do |f| %>
+        <%= f.label "DM送信" %>
+        <%= f.text_field :text, class: "form-control" %>
+        
+        <%= f.submit "このユーザにDMを送る", class: "btn btn-primary btn-block btn-login" %>
+      <% end %>
+    </div>
   </div>
-  
-  <%= form_with(model: @user, url: user_send_dm_path(@user), local: true, method: :post) do |f| %>
-    <%= f.label "DM送信" %>
-    <%= f.text_field :text, class: "form-control" %>
-    
-    <%= f.submit "このユーザにDMを送る", class: "btn btn-primary btn-block btn-login" %>
-  <% end %>
 </div>
 
 <script>

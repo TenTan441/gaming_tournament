@@ -52,6 +52,11 @@ class UsersController < ApplicationController
     result ? flash[:success] = "DM送信に成功しました。" : flash[:danger] = "DM送信に失敗しました。繰り返される場合は管理者へ連絡してください。"
     redirect_to user
   end
+  
+  def title_character
+    title = params[:game_title]
+    @character = Character.find_by(game_title: title, user_id: params[:user_id])
+  end
 
   private
 

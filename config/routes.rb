@@ -20,7 +20,7 @@ Rails.application.routes.draw do
     resources :characters
     
     
-    
+    get 'title_character', to: 'users#title_character'
     post 'send_dm', to: 'users#send_dm'
   end
   resources :tournaments do
