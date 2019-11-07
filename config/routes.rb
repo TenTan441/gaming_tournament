@@ -19,7 +19,7 @@ Rails.application.routes.draw do
     match 'characters/select_title', to: 'characters#select_titles', via: [:get, :post]
     resources :characters
     
-    
+    get 'contact', to: 'users#contact'
     get 'title_character', to: 'users#title_character'
     post 'send_dm', to: 'users#send_dm'
   end

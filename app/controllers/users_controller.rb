@@ -57,6 +57,10 @@ class UsersController < ApplicationController
     title = params[:game_title]
     @character = Character.find_by(game_title: title, user_id: params[:user_id])
   end
+  
+  def contact
+    @user = User.find(params[:user_id])
+  end
 
   private
 

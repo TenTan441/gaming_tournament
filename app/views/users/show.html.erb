@@ -27,7 +27,10 @@
   
   <!-- パネル部分 -->
   <div class="tab-content" id="pills-tabContent">
-    <div class="tab-pane fade" id="tabs-home" role="tabpanel" aria-labelledby="tabs-home-tab">ホームの文章です。...</div>
+    <div class="tab-pane fade" id="tabs-home" role="tabpanel" aria-labelledby="tabs-home-tab">
+      ホームの文章です。...
+      <a href="https://twitter.com/intent/tweet?screen_name=TenTan441&ref_src=twsrc%5Etfw" class="twitter-mention-button" data-size="large" data-show-count="false" style="width:170px; height:28px">Tweet to @TenTan441</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </div>
     <div class="tab-pane fade" id="tabs-profile" role="tabpanel" aria-labelledby="tabs-profile-tab">
       <ul class="nav nav-tabs nav-justified" id="tabs-title" role="tablist">
         <li class="nav-item">
@@ -52,16 +55,10 @@
       
       <div id="title-character"></div>
     </div>
-    <div class="tab-pane fade" id="tabs-contact" role="tabpanel" aria-labelledby="tabs-contact-tab">コンタクトの文章です。...
-      <%= form_with(model: @user, url: user_send_dm_path(@user), local: true, method: :post) do |f| %>
-        <%= f.label "DM送信" %>
-        <%= f.text_field :text, class: "form-control" %>
-        
-        <%= f.submit "このユーザにDMを送る", class: "btn btn-primary btn-block btn-login" %>
-      <% end %>
-    </div>
 
-    <blockquote class="twitter-tweet"><p lang="ja" dir="ltr">本格的に勉学に励むようにするためスマブラ休止します<br>ツイート頻度も減りますがツイート自体は見てるのでこれからもよろしく☺️</p>&mdash; 恬淡@てんたん　スマブラ休止中 (@TenTan441) <a href="https://twitter.com/TenTan441/status/1162389910612934658?ref_src=twsrc%5Etfw">August 16, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <div class="tab-pane fade" id="tabs-contact" role="tabpanel" aria-labelledby="tabs-contact-tab">
+      <div id="user-contact"></div>
+    </div>
   </div>
 </div>
 
@@ -69,4 +66,26 @@
 <div id="user-edit-page" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 
 <script>
+$(function(){
+  // 対象とするノードを取得
+  const target = document.getElementById('tabs-contact');
+  
+  // オブザーバの設定
+  const config = { attributes: true, childList: true, characterData: true };
+  
+  // オブザーバインスタンスを作成
+  var observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      // 一度監視を中止
+      observer.disconnect();
+      $('#user-contact').html('');
+      $('#user-contact').html('<%= escape_javascript( render 'contact', object: @user) %>');
+      // 監視再開
+      observer.observe(target, config);
+    });    
+  });
+   
+  // 対象ノードとオブザーバの設定を渡す
+  observer.observe(target, config);
+});
 </script>
