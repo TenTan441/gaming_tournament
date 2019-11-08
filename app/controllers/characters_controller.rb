@@ -14,6 +14,8 @@ class CharactersController < ApplicationController
         @characters = CharacterImage.where(four:   true).map { |fi| [fi.name, fi.id, { 'data-img-src' => "/Character/#{fi.image}.png"}] }
       when '大乱闘スマッシュブラザーズ SPECIAL'
         @characters = CharacterImage.where(five:   true).map { |fi| [fi.name, fi.id, { 'data-img-src' => "/Character/#{fi.image}.png"}] }
+      else
+        @characters = nil
     end
   end
   

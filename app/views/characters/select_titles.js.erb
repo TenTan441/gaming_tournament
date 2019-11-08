@@ -1,4 +1,4 @@
-<% if @character %>
+<% if @characters %>
   $('#using-character').show();
   $('#characters').show();
   $('#using-character').html('<%= escape_javascript( render 'using_character', object: @character) %>');
