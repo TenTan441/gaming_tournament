@@ -28,8 +28,13 @@
   <!-- パネル部分 -->
   <div class="tab-content" id="pills-tabContent">
     <div class="tab-pane fade" id="tabs-home" role="tabpanel" aria-labelledby="tabs-home-tab">
-      ホームの文章です。...
-      <a href="https://twitter.com/intent/tweet?screen_name=TenTan441&ref_src=twsrc%5Etfw" class="twitter-mention-button" data-size="large" data-show-count="false" style="width:170px; height:28px">Tweet to @TenTan441</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+      <% if @user.image? %>
+        <%= image_tag @user.image.to_s, class: "img-fluid img-thumbnail rounded", :style => "width:100px; height:100px;"  %>
+      <% else %>
+        <%= image_tag "no-profile-image.png", class: "img-fluid img-thumbnail rounded", :style => "width:100px; height:100px;" %>
+      <% end %>
+      
+      名前：<%= @user.name %>
     </div>
     <div class="tab-pane fade" id="tabs-profile" role="tabpanel" aria-labelledby="tabs-profile-tab">
       <ul class="nav nav-tabs nav-justified" id="tabs-title" role="tablist">

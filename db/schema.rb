@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191027091705) do
+ActiveRecord::Schema.define(version: 20191108112027) do
 
   create_table "character_images", force: :cascade do |t|
     t.string "name"
@@ -84,6 +84,7 @@ ActiveRecord::Schema.define(version: 20191027091705) do
     t.boolean "twitter_private", default: true, null: false
     t.string "provider"
     t.string "uid"
+    t.string "image"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

@@ -4,6 +4,8 @@ class User < ApplicationRecord
   validates :name,  presence: true, length: { maximum: 50 }
   has_secure_password validations: false
   
+  mount_uploader :image, PictureUploader
+  
   with_options if: :email_auth? do
     VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
     validates :email, presence: true, length: { maximum: 100 },

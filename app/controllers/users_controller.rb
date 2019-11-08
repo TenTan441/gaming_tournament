@@ -65,7 +65,7 @@ class UsersController < ApplicationController
   private
 
     def user_params
-      params.require(:user).permit(:name, :email, :password, :password_confirmation)
+      params.require(:user).permit(:name, :email, :password, :password_confirmation, :image)
     end
 
     # beforeフィルター
@@ -92,5 +92,9 @@ class UsersController < ApplicationController
     # システム管理権限所有かどうか判定します。
     def admin_user
       redirect_to root_url unless current_user.admin?
+    end
+    
+    def user_image_params
+      params.require(:user).permit(:image)
     end
 end

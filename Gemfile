@@ -28,6 +28,8 @@ gem 'omniauth'
 gem 'omniauth-twitter'
 gem 'dotenv-rails'
 gem 'jquery-ui-rails'
+gem 'carrierwave'
+gem 'mini_magick'
 
 group :development, :test do
   gem 'sqlite3'
