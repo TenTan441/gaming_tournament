@@ -29,9 +29,9 @@
   <div class="tab-content" id="pills-tabContent">
     <div class="tab-pane fade" id="tabs-home" role="tabpanel" aria-labelledby="tabs-home-tab">
       <% if @user.image? %>
-        <%= image_tag @user.image.to_s, class: "img-fluid img-thumbnail rounded", :style => "width:100px; height:100px;"  %>
+        <%= image_tag @user.image.to_s, class: "img-fluid img-thumbnail rounded", :style => "width:200px; height:200px;"  %>
       <% else %>
-        <%= image_tag "no-profile-image.png", class: "img-fluid img-thumbnail rounded", :style => "width:100px; height:100px;" %>
+        <%= image_tag "no-profile-image.png", class: "img-fluid img-thumbnail rounded", :style => "width:200px; height:200px;" %>
       <% end %>
       
       名前：<%= @user.name %>
