@@ -6,13 +6,18 @@ module ParticipantsHelper
   end
   
   def return_users_from_participants(participants)
-    users = []
+    users = User.all
+
+    # 参加者がいる状態では未参加者のみを抽出する
     unless participants.blank?
+      already_participants = []
       participants.each do |participant|
-        user = User.find(participant.user_id)
-        users.push(user)
+        already_participants.push(User.find(participant.user_id))
       end
+      
+      return users - already_participants
     end
+    
     return users
   end
 end

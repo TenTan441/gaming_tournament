@@ -19,7 +19,7 @@ class MatchesController < ApplicationController
       flash[:danger] = "スコア送信に失敗しました。繰り返される場合は管理者へ問い合わせてください。"
     end
     
-    @tournament = Tournament.find(t_id)
+    @tournament = Tournament.find(params[:tournament_id])
     redirect_to @tournament
   end
 end

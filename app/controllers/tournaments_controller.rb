@@ -77,8 +77,8 @@ class TournamentsController < ApplicationController
     @t.reload
     
     @participant = Participant.new()
-    @not_yet_participants = Participant.where.not(tournament_id: @tournament)
-    @users = return_users_from_participants(@not_yet_participants)
+    @participants = Participant.where(tournament_id: @tournament)
+    @not_yet_users = return_users_from_participants(@participants)
   end
   
   def start

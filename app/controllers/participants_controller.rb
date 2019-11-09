@@ -125,4 +125,22 @@ class ParticipantsController < ApplicationController
     tournament = Tournament.find(t_id)
     redirect_to tournament
   end
+  
+  def destroy
+    participant = Participant.find(params[:id])
+    tournament = Tournament.find(params[:tournament_id])
+
+    bool, access_token = delete_challonge_api({}, "/#{tournament.id_number}/participants/#{participant.challonge_participant_id}")
+    
+    if bool
+      flash[:success] = "参加を取り消しました。"
+      participant.destroy
+      puts access_token
+    else
+      flash[:danger] = "参加の取り消しに失敗しました。"
+      puts access_token
+    end
+
+    redirect_to tournament
+  end
 end

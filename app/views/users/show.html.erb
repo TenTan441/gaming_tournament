@@ -1,7 +1,8 @@
 <% provide(:title, @user.name) %>
 <div>
+  <h1>【<%= @user.name %>】</h1>
   <%= link_to "新しく大会を作る", new_tournament_path, class: "btn btn-lg btn-success" %>
-  <%= link_to "大会に参加する", tournaments_path, class: "btn btn-lg btn-primary" %>
+  <%= link_to "俺より強い奴に会いに行く", tournaments_path, class: "btn btn-lg btn-primary" %>
 
   <!-- ピル部分 -->
   <ul class="nav nav-tabs nav-justified" id="tabs-tab" role="tablist">
