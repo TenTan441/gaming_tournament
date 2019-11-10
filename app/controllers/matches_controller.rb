@@ -22,4 +22,18 @@ class MatchesController < ApplicationController
     @tournament = Tournament.find(params[:tournament_id])
     redirect_to @tournament
   end
+  
+  def reset
+    t_id = params[:match][:tournament_id]
+    m_id = params[:match][:id]
+    bool, access_token = post_challonge_api({}, "/#{t_id}/matches/#{m_id}/reopen")
+    if bool
+      flash[:success] = "マッチがやり直されました。"
+    else
+      flash[:danger] = "マッチのやり直しに失敗しました。繰り返される場合は管理者へ問い合わせてください。"
+    end
+    
+    @tournament = Tournament.find(params[:tournament_id])
+    redirect_to @tournament
+  end
 end

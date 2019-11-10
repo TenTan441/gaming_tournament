@@ -143,4 +143,21 @@ class ParticipantsController < ApplicationController
 
     redirect_to tournament
   end
+  
+  def clear
+    tournament = Tournament.find(params[:tournament_id])
+    
+    bool, access_token = delete_challonge_api({}, "/#{tournament.id_number}/participants/clear")
+    
+    if bool
+      flash[:success] = "参加者を全て取り消しました。"
+      Participant.where(tournament_id: tournament).destroy_all
+      puts access_token
+    else
+      flash[:danger] = "取り消しに失敗しました。"
+      puts access_token
+    end
+
+    redirect_to tournament
+  end
 end

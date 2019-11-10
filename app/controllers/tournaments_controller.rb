@@ -68,6 +68,7 @@ class TournamentsController < ApplicationController
     tournament = get_challonge_api({}, "/#{@t.id}")
     # 開催中のマッチングを取得
     @matches_opening = get_challonge_api({:state => "open"}, "/#{@t.id}/matches")
+    @matches_complete = get_challonge_api({:state => "complete"}, "/#{@t.id}/matches")
     if tournament["tournament"]["state"] == "pending"
       @started = false
     else
@@ -77,7 +78,6 @@ class TournamentsController < ApplicationController
     @t.reload
     
     @participant = Participant.new()
-    @participants = Participant.where(tournament_id: @tournament)
     @not_yet_users = return_users_from_participants(@participants)
   end
   
@@ -107,9 +107,19 @@ class TournamentsController < ApplicationController
   end
   
   def destroy
-    @tournament.destroy
-    flash[:success] = "#{@tournament.name}のデータを削除しました。"
-    redirect_to current_user
+
+    bool, access_token = delete_challonge_api({}, "/#{@tournament.id_number}")
+    
+    if bool
+      flash[:success] = "#{@tournament.name}のデータを削除しました。"
+      puts access_token
+      @tournament.destroy
+      redirect_to current_user
+    else
+      flash[:danger] = "取り消しに失敗しました。"
+      puts access_token
+      redirect_to @tournament
+    end
   end
   
   private

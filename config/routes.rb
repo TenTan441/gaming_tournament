@@ -24,7 +24,9 @@ Rails.application.routes.draw do
     post 'send_dm', to: 'users#send_dm'
   end
   resources :tournaments do
+    delete 'participants/clear', to: 'participants#clear'
     resources :participants
+    
     get 'reload', to: 'participants#reload'
     get 'randomize', to: 'participants#randomize'
     
@@ -34,6 +36,7 @@ Rails.application.routes.draw do
     
     get 'report', to: 'matches#report'
     post 'update', to: 'matches#update'
+    get 'reset_match', to: 'matches#reset'
   end
   
   resources :fileuploads, only: [:index, :create, :new]
