@@ -9,7 +9,6 @@ class TournamentsController < ApplicationController
   
   def index
     @tournaments = Tournament.paginate(page: params[:page])
-    #@users = User.paginate(page: params[:page])
   end
   
   def new
@@ -47,6 +46,7 @@ class TournamentsController < ApplicationController
 =end
     if t.save # && s.save
       @tournament.id_number = t.id
+      @tournament.status = '準備中'
       if @tournament.save
         flash[:success] = '新規作成に成功しました。'
         redirect_to @tournament
@@ -78,17 +78,21 @@ class TournamentsController < ApplicationController
     @t.reload
     
     @participant = Participant.new()
-    @not_yet_users = return_users_from_participants(@participants)
+    @not_yet_users = return_users_from_non_participants(@participants)
   end
   
   def start
     @t.start!
+    @tournament.status = '進行中'
+    @tournament.save
     flash[:success] = "大会開始！"
     redirect_to @tournament
   end
   
   def reset
     @t.reset!
+    @tournament.status = '準備中'
+    @tournament.save
     flash[:info] = "大会がやり直されました。"
     redirect_to @tournament
   end
@@ -97,6 +101,8 @@ class TournamentsController < ApplicationController
     bool, access_token = post_challonge_api({}, "/#{@t.id}/finalize")
     if bool
       flash[:info] = "大会お疲れさまでした。"
+      @tournament.status = '終了'
+      @tournament.save
     else
       flash[:danger] = "送信に失敗しました。管理者へ連絡してください。"
     end
@@ -111,7 +117,7 @@ class TournamentsController < ApplicationController
     bool, access_token = delete_challonge_api({}, "/#{@tournament.id_number}")
     
     if bool
-      flash[:success] = "#{@tournament.name}のデータを削除しました。"
+      flash[:success] = "#{@tournament.name}の大会を削除しました。"
       puts access_token
       @tournament.destroy
       redirect_to current_user

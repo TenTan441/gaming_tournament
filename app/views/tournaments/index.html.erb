@@ -5,11 +5,13 @@
 
 <div class="col-md-10 col-md-offset-1">
   <%= will_paginate %>
-  <table class="table table-condensed table-hover" id="table-users">
+  <table class="table table-hover" id="table-users">
     <thead>
       <tr>
         <th><%= Tournament.human_attribute_name :name %></th>
         <th><%= Tournament.human_attribute_name :master %></th>
+        <th><%= "開催予定日時" %></th>
+        <th><%= "大会ステータス" %></th>
       </tr>
     </thead>
     
@@ -18,7 +20,9 @@
         <% master = master_tournament(tournament) %>
         <tr>
           <td><%= link_to tournament.name, tournament %></td>
-          <td><%= link_to master.name, master %></td>
+          <td><%= link_to image_tag(master.image.to_s, class: "img-fluid img-thumbnail rounded", :style => "width:100px; height:100px;"), master %><%= link_to master.name, master %></td>
+          <td><%= l(tournament.start_time, format: :short) %></td>
+          <td><%= tournament.status %></td>
         </tr>
       <% end %>
     </tbody>
