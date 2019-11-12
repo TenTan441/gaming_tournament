@@ -68,7 +68,7 @@ class User < ApplicationRecord
     
     self.find_or_create_by(provider: provider, uid: uid) do |user|
       #user.nickname = nickname
-      user.name = name
+      user.name = name if user.name.nil?
       user.twitter_url = twitter_url
       #user.description = description
     end

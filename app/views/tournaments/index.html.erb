@@ -8,10 +8,10 @@
   <table class="table table-hover" id="table-users">
     <thead>
       <tr>
-        <th><%= Tournament.human_attribute_name :name %></th>
-        <th><%= Tournament.human_attribute_name :master %></th>
-        <th><%= "開催予定日時" %></th>
-        <th><%= "大会ステータス" %></th>
+        <th colspan="4"><%= Tournament.human_attribute_name :name %></th>
+        <th colspan="4"><%= Tournament.human_attribute_name :master %></th>
+        <th colspan="2"><%= Tournament.human_attribute_name :start_time %></th>
+        <th colspan="2"><%= Tournament.human_attribute_name :status %></th>
       </tr>
     </thead>
     
@@ -19,10 +19,10 @@
       <% @tournaments.each do |tournament| %>
         <% master = master_tournament(tournament) %>
         <tr>
-          <td><%= link_to tournament.name, tournament %></td>
-          <td><%= link_to image_tag(master.image.to_s, class: "img-fluid img-thumbnail rounded", :style => "width:100px; height:100px;"), master %><%= link_to master.name, master %></td>
-          <td><%= l(tournament.start_time, format: :short) %></td>
-          <td><%= tournament.status %></td>
+          <td colspan="4"><%= link_to tournament.name, tournament %></td>
+          <td colspan="4"><%= link_to image_tag(master.image.to_s, class: "img-fluid img-thumbnail rounded", :style => "width:100px; height:100px; margin:5px"), master %><%= link_to master.name, master %></td>
+          <td colspan="2"><%= l(tournament.start_time, format: :short) %></td>
+          <td colspan="2"><%= tournament.status %></td>
         </tr>
       <% end %>
     </tbody>

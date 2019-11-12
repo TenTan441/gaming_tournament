@@ -1,20 +1,46 @@
 <%= form_with(model: @user, local: true) do |f| %>
   <%= render 'shared/error_messages_user', object: @user %>
 
+  <%= f.label :image, class: "label-#{yield(:class_text)}" %>
+  <%= f.file_field :image %>
+  
   <%= f.label :name, class: "label-#{yield(:class_text)}" %>
   <%= f.text_field :name, class: "form-control" %>
-
-  <%= f.label :email, class: "label-#{yield(:class_text)}" %>
-  <%= f.email_field :email, class: "form-control" %>
-
-  <%= f.label :password, class: "label-#{yield(:class_text)}" %>
-  <%= f.password_field :password, class: "form-control" %>
-
-  <%= f.label :password_confirmation, class: "label-#{yield(:class_text)}" %>
-  <%= f.password_field :password_confirmation, class: "form-control" %>
   
-  <%= f.label :image, 'image' %>
-  <%= f.file_field :image %>
+  <% if @user.email.present? || @user.provider.nil? %>
+    <%= f.label :email, class: "label-#{yield(:class_text)}" %>
+    <%= f.email_field :email, class: "form-control" %>
+  
+    <%= f.label :password, class: "label-#{yield(:class_text)}" %>
+    <%= f.password_field :password, class: "form-control" %>
+  
+    <%= f.label :password_confirmation, class: "label-#{yield(:class_text)}" %>
+    <%= f.password_field :password_confirmation, class: "form-control" %>
+  <% else %>
+    <div class="form-group">
+      <%= f.label :twitter_private, class: "label-#{yield(:class_text)}" %>
+      <div class="col-sm-12 btn-group" data-toggle="buttons">
+        <% if @user.twitter_private %>
+          <label class="btn btn-outline-secondary btn-success active" style="width:50%">
+            <%= f.radio_button :twitter_private, true, checked: true %> 公開
+          </label>
+          <label class="btn btn-outline-secondary btn-success" style="width:50%">
+            <%= f.radio_button :twitter_private, false, {} %> 非公開
+          </label>
+        <% else %>
+          <label class="btn btn-outline-secondary btn-success" style="width:50%">
+            <%= f.radio_button :twitter_private, true, {} %> 公開
+          </label>
+          <label class="btn btn-outline-secondary btn-success active" style="width:50%">
+            <%= f.radio_button :twitter_private, false, checked: true %> 非公開
+          </label>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+  
+  <%= f.label :description, class: "label-#{yield(:class_text)}" %>
+  <%= f.text_area :description, class: "form-control" %>
 
   <%= f.submit yield(:button_text), class: "btn btn-primary btn-block btn-#{yield(:class_text)}" %>
 <% end %>

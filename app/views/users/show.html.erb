@@ -1,8 +1,10 @@
 <% provide(:title, @user.name) %>
 <div>
   <h1>【<%= @user.name %>】</h1>
-  <%= link_to "新しく大会を作る", new_tournament_path, class: "btn btn-lg btn-success" %>
-  <%= link_to "俺より強い奴に会いに行く", tournaments_path, class: "btn btn-lg btn-primary" %>
+  <% if @user == current_user %>
+    <%= link_to "新しく大会を作る", new_tournament_path, class: "btn btn-lg btn-success" %>
+    <%= link_to "俺より強い奴に会いに行く", tournaments_path, class: "btn btn-lg btn-primary" %>
+  <% end %>
 
   <!-- ピル部分 -->
   <ul class="nav nav-tabs nav-justified" id="tabs-tab" role="tablist">
@@ -12,18 +14,34 @@
     <li class="nav-item">
       <%= link_to "使用キャラクター", "#tabs-profile", id: "tabs-profile-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-profile", class: "nav-link" %>
     </li>
-    <li class="nav-item">
-      <%= link_to "コンタクト", "#tabs-contact", id: "tabs-contact-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-contact", class: "nav-link" %>
-    </li>
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-        編集 <span class="caret"></span>
-        <ul class="dropdown-menu" role="menu">
-          <li><%= link_to "設定", edit_user_path(current_user), remote: true, class: "dropdown-item" %></li>
-          <li><%= link_to "使用キャラクター", user_characters_edit_path(@user), remote: true, class: "dropdown-item" %></li>
-        </ul>
-      </a>
-    </li>
+    <% if @user.twitter_private == true %>
+      <li class="nav-item">
+        <% if @user == current_user %>
+          <%= link_to "Twitter情報公開設定中", "#", 'tabindex' => "-1", 'aria-disabled' => "true", class: "nav-link disabled" %>
+        <% else %>
+          <%= link_to "コンタクト", "#tabs-contact", id: "tabs-contact-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-contact", class: "nav-link" %>
+        <% end %>
+      </li>
+    <% else %>
+      <li class="nav-item">
+        <% if @user == current_user %>
+          <%= link_to "Twitter情報非公開設定中", "#", 'tabindex' => "-1", 'aria-disabled' => "true", class: "nav-link disabled" %>
+        <% else %>
+          <%= link_to "Twitter情報非公開です。", "#", 'tabindex' => "-1", 'aria-disabled' => "true", class: "nav-link disabled" %>
+        <% end %>
+      </li>
+    <% end %>
+    <% if @user == current_user %>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+          編集 <span class="caret"></span>
+          <ul class="dropdown-menu" role="menu">
+            <li><%= link_to "設定", edit_user_path(current_user), remote: true, class: "dropdown-item" %></li>
+            <li><%= link_to "使用キャラクター", user_characters_edit_path(@user), remote: true, class: "dropdown-item" %></li>
+          </ul>
+        </a>
+      </li>
+    <% end %>
   </ul>
   
   <!-- パネル部分 -->
@@ -36,6 +54,7 @@
       <% end %>
       
       名前：<%= @user.name %>
+      紹介：<%= @user.description %>
     </div>
     <div class="tab-pane fade" id="tabs-profile" role="tabpanel" aria-labelledby="tabs-profile-tab">
       <ul class="nav nav-tabs nav-justified" id="tabs-title" role="tablist">

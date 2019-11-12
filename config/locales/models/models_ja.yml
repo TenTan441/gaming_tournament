@@ -12,6 +12,9 @@ ja:
         password_confirmation: パスワード再入力
         created_at: 作成日
         updated_at: 更新日
+        image: アイコン
+        twitter_private: Twitter公開
+        description: 自己紹介
       tournament:
         start_time: 開始日時
         private: 公開設定
@@ -21,7 +24,7 @@ ja:
         elimination_type: 対戦方式
         description: 大会説明
         master: 管理者
-        status: ステータス
+        status: 大会ステータス
         particepants: 参加者
         group_stage_enabled: 形式
       participant:
