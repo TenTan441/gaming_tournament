@@ -2,14 +2,15 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-/* ユーザー情報テーブル */
+
+// ユーザー情報テーブル
 
 .user-table {
   vertical-align: middle;
   text-align: center;
 }
 
-/* 入力フォーム */
+// 入力フォーム
 
 .label-signup {
   margin-top: 5px;
@@ -27,7 +28,7 @@
   margin-top: 10px;
 }
 
-/* ユーザー一覧ページ */
+// ユーザー一覧ページ
 
 #table-users {
   td {
@@ -36,21 +37,21 @@
 }
 
 .game-titles {
-  display: flex;  
+  //display: flex;  
   padding-bottom: 20px;
 }
 
 .show-character-area-main {
-  background-color:  #444;    /* 背景色指定 */
-  padding:  20px;             /* 余白指定 */
-  height: 200px;              /* 高さ指定 */
+  background-color:  #444;    // 背景色指定 
+  padding:  20px;             // 余白指定 
+  height: 200px;              // 高さ指定 
   width: 30%;
 }
 
 .show-character-area-subs {
-  background-color:  #444;    /* 背景色指定 */
-  padding:  20px;             /* 余白指定 */
-  height: 200px;              /* 高さ指定 */
+  background-color:  #444;    // 背景色指定
+  padding:  20px;             // 余白指定 
+  height: 200px;              // 高さ指定 
   width: 70%;
 }
 
@@ -61,7 +62,6 @@
 
 .character-image-sub-index {
   background-color: #888;
-  display: flex;
   padding:  10px;
 }
 
@@ -77,7 +77,7 @@
   width: 100px;
   height: 100px;
   //padding: 10px;
-  margin:  10px;              /* 外側の余白 */
+  margin:  10px;              // 外側の余白
   border-radius:  10px;
   background-color: #444;
 }

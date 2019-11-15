@@ -10,28 +10,20 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require rails-ujs
-//= require bootstrap
-//= require moment
-// If you require timezone data (see moment-timezone-rails for additional file options)
-//= require moment-timezone-with-data
-
 
 //= require jquery
 //= require jquery.turbolinks
 //= require jquery_ujs
 //= require jquery-ui
-
 //= require turbolinks
 
 //= require jquery3
-
 //= require popper
 //= require bootstrap-sprockets
 
 //= require moment
 //= require moment/ja.js
-
+//= require moment-timezone-with-data
 //= require tempusdominus-bootstrap-4.js
 //= require image-picker
 
