@@ -1,67 +1,45 @@
-<% if @character %>
-  <span><%= @character.game_title %></span>
-  <div class="d-flex">
-    <div class="col-5 bg-success">
-      <span>メインキャラクター</span><br>
-      <div class="p-2 bd-highlight">
-        <%= image_tag "/Character/#{characterimage_from_character(@character.main_character)}.png", class: "character-image-main" %>
-      </div>
-    </div>
-    <div class="container-fluid">
-      <span>サブキャラクター</span><br>
-        <div class="row justify-content-around">
-          <% if @character.sub_character1 %>
-            <div class="m-2 bd-highlight">
-              <%= image_tag "/Character/#{characterimage_from_character(@character.sub_character1)}.png", class: "character-image-sub" %>
-            </div>
-          <% end %>
-          <% if @character.sub_character2 %>
-            <div class="m-2 bd-highlight">
-              <%= image_tag "/Character/#{characterimage_from_character(@character.sub_character2)}.png", class: "character-image-sub" %>
-            </div>
-          <% end %>
-          <% if @character.sub_character3 %>
-            <div class="m-2 bd-highlight">
-              <%= image_tag "/Character/#{characterimage_from_character(@character.sub_character3)}.png", class: "character-image-sub" %>
-            </div>
-          <% end %>
-        </div>
-    </div>
-  </div>
-<% else %>
-  <div class="game-titles">
-    登録されているキャラクターはありません。
-  </div>
-<% end %>
-
 <div class="container-fluid">
   <div class="col-xl-10 offset-xl-1 col-12">
-    <span>大乱闘スマッシュブラザーズ</span>
-    <div class="row justify-content-around bg-primary">
-      <div class="col-md-4 m-2 bg-success">
-        <span>メインキャラクター</span><br>
-        <div class="my-3">
-          <div class="col-8 offset-2 m-auto text-center bg-danger" style="max-height:170px;">
-            <img src="https://pbs.twimg.com/profile_images/1077745403775184896/CW54AOJW_400x400.jpg" alt="" class="rounded img-thumbnail my-2 img-fluid" style="max-height:150px;" />
-          </div>
-        </div>
+    <% if @character %>
+      <div class="mt-2">
+        <span><%= @character.game_title %></span>
       </div>
-      <div class="col-md-7 m-2 bg-success">
-        <span>サブキャラクター</span><br>
-        <div class="my-3">
-          <div class="row justify-content-around">
-            <div class="col-4 m-auto text-center bg-danger" style="max-height:140px;">
-              <img src="https://pbs.twimg.com/profile_images/1077745403775184896/CW54AOJW_400x400.jpg" alt="" class="rounded img-thumbnail my-2 img-fluid" style="max-height:120px;" />
-            </div>
-            <div class="col-4 m-auto text-center bg-danger" style="max-height:140px;">
-              <img src="https://pbs.twimg.com/profile_images/1077745403775184896/CW54AOJW_400x400.jpg" alt="" class="rounded img-thumbnail my-2 img-fluid" style="max-height:120px;" />
-            </div>
-            <div class="col-4 m-auto text-center bg-danger" style="max-height:140px;">
-              <img src="https://pbs.twimg.com/profile_images/1077745403775184896/CW54AOJW_400x400.jpg" alt="" class="rounded img-thumbnail my-2 img-fluid" style="max-height:120px;" />
+      <div class="row justify-content-around">
+        <div class="col-md-4 m-2 bg-dark">
+          <span>メインキャラクター</span><br>
+          <div class="my-3">
+            <div class="col-8 offset-2 m-auto text-center" style="max-height:170px;">
+              <%= image_tag "/Character/#{characterimage_from_character(@character.main_character)}.png", class: "rounded img-thumbnail my-2 img-fluid", :style => "max-height:150px;" %>
             </div>
           </div>
         </div>
+        <div class="col-md-7 m-2 bg-dark">
+          <span>サブキャラクター</span><br>
+          <div class="my-3">
+            <div class="row justify-content-around">
+              <% if @character.sub_character1 %>
+                <div class="col-4 m-auto text-center" style="max-height:140px;">
+                  <%= image_tag "/Character/#{characterimage_from_character(@character.sub_character1)}.png", class: "rounded img-thumbnail my-2 img-fluid", :style => "max-height:120px;" %>
+                </div>
+              <% end %>
+              <% if @character.sub_character2 %>
+                <div class="col-4 m-auto text-center" style="max-height:140px;">
+                  <%= image_tag "/Character/#{characterimage_from_character(@character.sub_character2)}.png", class: "rounded img-thumbnail my-2 img-fluid", :style => "max-height:120px;" %>
+                </div>
+              <% end %>
+              <% if @character.sub_character3 %>
+                <div class="col-4 m-auto text-center" style="max-height:140px;">
+                  <%= image_tag "/Character/#{characterimage_from_character(@character.sub_character3)}.png", class: "rounded img-thumbnail my-2 img-fluid", :style => "max-height:120px;" %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    <% else %>
+      <div class="text-center m-2">
+        登録されているキャラクターはありません。
+      </div>
+    <% end %>
   </div>
 </div>
