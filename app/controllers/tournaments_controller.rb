@@ -5,7 +5,8 @@ require 'json'
 
 class TournamentsController < ApplicationController
   
-  before_action :set_tournament, only: [:show, :edit, :update, :destroy, :reload, :start, :reset, :finalize]
+  before_action :set_tournament, only: [:show, :edit, :update, :destroy, :reload, :start, :reset, :finalize, :tournament_master]
+  before_action :tournament_master, only: [:start, :edit, :reset, :finalize, :destroy]
   
   def index
     @tournaments = Tournament.paginate(page: params[:page])
@@ -141,5 +142,12 @@ class TournamentsController < ApplicationController
         @tournament = Tournament.find(params[:tournament_id])
       end
       @t = Challonge::Tournament.find(@tournament.id_number)
+    end
+    
+    def tournament_master
+      unless User.find(@tournament.master) == current_user
+        flash[:danger] = "権限がありません。"
+        redirect_to current_user
+      end
     end
 end

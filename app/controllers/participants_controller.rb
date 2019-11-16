@@ -3,6 +3,10 @@ require 'uri'
 require 'json'
 
 class ParticipantsController < ApplicationController
+  
+  before_action :set_tournament, only: [:create, :reload, :randomize, :destroy, :update, :clear, :tournament_master]
+  before_action :tournament_master, only: [:randomize, :destroy, :clear]
+  
   def new
     @participant = Participant.new()
     @participants = Participant.where.not(tournament_id: params[:tournament_id])
@@ -12,17 +16,17 @@ class ParticipantsController < ApplicationController
   def create
     #登録の処理を書き込む
     players = params[:players]
-    t_id = params[:tournament_id]
+    #t_id = params[:tournament_id]
     #players = users.rstrip.split(/\r?\n/).map {|player| player.chomp}
     players.each do |player|
-      pa = Participant.new(tournament_id: t_id, user_id: player)
+      pa = Participant.new(tournament_id: @tournament, user_id: player)
       chapa = Challonge::Participant.create(:name => "#{User.find(player).name}", :tournament => Challonge::Tournament.find(Tournament.find(t_id).id_number))
       pa.challonge_participant_id = chapa.id
       pa.save
     end
     
-    tournament = Tournament.find(t_id)
-    redirect_to tournament
+    #@tournament = Tournament.find(t_id)
+    redirect_to @tournament
   end
   
   def index
@@ -30,16 +34,16 @@ class ParticipantsController < ApplicationController
   end
   
   def reload
-    tournament = Tournament.find(params[:tournament_id])
-    t = Challonge::Tournament.find(tournament.id_number)
+    #@tournament = Tournament.find(params[:tournament_id])
+    t = Challonge::Tournament.find(@tournament.id_number)
     t.reload
     flash[:success] = "トーナメント情報を更新しました。"
-    redirect_to tournament
+    redirect_to @tournament
   end
   
   def randomize
-    tournament = Tournament.find(params[:tournament_id])
-    t = Challonge::Tournament.find(tournament.id_number)
+    #@tournament = Tournament.find(params[:tournament_id])
+    t = Challonge::Tournament.find(@tournament.id_number)
 =begin
     url = URI.parse("https://api.challonge.com/v1/tournaments/#{tournament.id_number}/participants/randomize")
     req = Net::HTTP::Post.new(url.path)
@@ -89,7 +93,7 @@ class ParticipantsController < ApplicationController
     end
 =end
 
-    bool, access_token = post_challonge_api({:tournament => t.id}, "/#{tournament.id_number}/participants/randomize")
+    bool, access_token = post_challonge_api({:tournament => t.id}, "/#{@tournament.id_number}/participants/randomize")
   
     if bool
       flash[:success] = "並び替えました。"
@@ -99,7 +103,7 @@ class ParticipantsController < ApplicationController
       puts access_token
     end
     t.reload
-    redirect_to tournament
+    redirect_to @tournament
   end
   
   def show
@@ -109,10 +113,10 @@ class ParticipantsController < ApplicationController
   def update
     #登録の処理を書き込む
     players = params[:players] # user_idが記録されている
-    t_id = params[:tournament_id]
+    #t_id = params[:tournament_id]
     
     # 登録されているキャラ
-    registered_players = return_users_from_participants(Participant.where(tournament_id: t_id))
+    registered_players = return_users_from_participants(Participant.where(tournament_id: @tournament))
     
     #players = users.rstrip.split(/\r?\n/).map {|player| player.chomp}
     players.each do |player|
@@ -122,15 +126,15 @@ class ParticipantsController < ApplicationController
       pa.save
     end
     
-    tournament = Tournament.find(t_id)
-    redirect_to tournament
+    #@tournament = Tournament.find(t_id)
+    redirect_to @tournament
   end
   
   def destroy
     participant = Participant.find(params[:id])
-    tournament = Tournament.find(params[:tournament_id])
+    #@tournament = Tournament.find(params[:tournament_id])
 
-    bool, access_token = delete_challonge_api({}, "/#{tournament.id_number}/participants/#{participant.challonge_participant_id}")
+    bool, access_token = delete_challonge_api({}, "/#{@tournament.id_number}/participants/#{participant.challonge_participant_id}")
     
     if bool
       flash[:success] = "参加を取り消しました。"
@@ -141,23 +145,40 @@ class ParticipantsController < ApplicationController
       puts access_token
     end
 
-    redirect_to tournament
+    redirect_to @tournament
   end
   
   def clear
-    tournament = Tournament.find(params[:tournament_id])
-    
-    bool, access_token = delete_challonge_api({}, "/#{tournament.id_number}/participants/clear")
+    #@tournament = Tournament.find(params[:tournament_id])
+    bool, access_token = delete_challonge_api({}, "/#{@tournament.id_number}/participants/clear")
     
     if bool
       flash[:success] = "参加者を全て取り消しました。"
-      Participant.where(tournament_id: tournament).destroy_all
+      Participant.where(tournament_id: @tournament).destroy_all
       puts access_token
     else
       flash[:danger] = "取り消しに失敗しました。"
       puts access_token
     end
 
-    redirect_to tournament
+    redirect_to @tournament
   end
+  
+  private
+  
+    def set_tournament
+      if params[:id].present?
+        @tournament = Tournament.find(params[:id])
+      elsif params[:tournament_id].present?
+        @tournament = Tournament.find(params[:tournament_id])
+      end
+      @t = Challonge::Tournament.find(@tournament.id_number)
+    end
+    
+    def tournament_master
+      unless User.find(@tournament.master) == current_user
+        flash[:danger] = "権限がありません。"
+        redirect_to current_user
+      end
+    end
 end
