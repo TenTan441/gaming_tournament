@@ -18,9 +18,16 @@ class ParticipantsController < ApplicationController
     players = params[:players]
     #t_id = params[:tournament_id]
     #players = users.rstrip.split(/\r?\n/).map {|player| player.chomp}
-    players.each do |player|
-      pa = Participant.new(tournament_id: @tournament, user_id: player)
-      chapa = Challonge::Participant.create(:name => "#{User.find(player).name}", :tournament => Challonge::Tournament.find(Tournament.find(t_id).id_number))
+    if players.instance_of?(Array)
+      players.each do |player|
+        pa = Participant.new(tournament_id: @tournament.id, user_id: player)
+        chapa = Challonge::Participant.create(:name => "#{User.find(player).name}", :tournament => Challonge::Tournament.find(@tournament.id_number))
+        pa.challonge_participant_id = chapa.id
+        pa.save
+      end
+    else
+      pa = Participant.new(tournament_id: @tournament.id, user_id: players)
+      chapa = Challonge::Participant.create(:name => "#{User.find(players).name}", :tournament => Challonge::Tournament.find(@tournament.id_number))
       pa.challonge_participant_id = chapa.id
       pa.save
     end
@@ -116,12 +123,12 @@ class ParticipantsController < ApplicationController
     #t_id = params[:tournament_id]
     
     # 登録されているキャラ
-    registered_players = return_users_from_participants(Participant.where(tournament_id: @tournament))
+    registered_players = return_users_from_participants(Participant.where(tournament_id: @tournament.id))
     
     #players = users.rstrip.split(/\r?\n/).map {|player| player.chomp}
     players.each do |player|
-      pa = Participant.new(tournament_id: t_id, user_id: player)
-      chapa = Challonge::Participant.create(:name => "#{User.find(player).name}", :tournament => Challonge::Tournament.find(Tournament.find(t_id).id_number))
+      pa = Participant.new(tournament_id: @tournament.id, user_id: player)
+      chapa = Challonge::Participant.create(:name => "#{User.find(player).name}", :tournament => Challonge::Tournament.find(@tournament.id_number))
       pa.challonge_participant_id = chapa.id
       pa.save
     end
@@ -154,7 +161,7 @@ class ParticipantsController < ApplicationController
     
     if bool
       flash[:success] = "参加者を全て取り消しました。"
-      Participant.where(tournament_id: @tournament).destroy_all
+      Participant.where(tournament_id: @tournament.id).destroy_all
       puts access_token
     else
       flash[:danger] = "取り消しに失敗しました。"

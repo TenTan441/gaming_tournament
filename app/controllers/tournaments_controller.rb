@@ -5,7 +5,7 @@ require 'json'
 
 class TournamentsController < ApplicationController
   
-  before_action :set_tournament, only: [:show, :edit, :update, :destroy, :reload, :start, :reset, :finalize, :tournament_master]
+  before_action :set_tournament, only: [:show, :edit, :update, :destroy, :reload, :start, :reset, :finalize, :tournament_master, :master_or_party]
   before_action :tournament_master, only: [:start, :edit, :reset, :finalize, :destroy]
   
   def index

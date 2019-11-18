@@ -1,6 +1,9 @@
 require 'json'
 
 class MatchesController < ApplicationController
+  
+  before_action :master_or_party, only: [:report]
+  
   def report
     @match_id = params[:match][:suggested_play_order].to_i - 1
     @tournament_id = params[:match][:tournament_id]
@@ -36,4 +39,15 @@ class MatchesController < ApplicationController
     @tournament = Tournament.find(params[:tournament_id])
     redirect_to @tournament
   end
+  
+  private
+  
+    # 大会の管理者か当事者でないと更新作業ができないようにする
+    def master_or_party
+      # 現在のユーザ 管理者or当事者であればよい
+      @tournament = Tournament.find(params[:tournament_id])
+      unless master_or_party?(@tournament, params[:match][:player1_id], params[:match][:player2_id])
+        redirect_to @tournament
+      end
+    end
 end

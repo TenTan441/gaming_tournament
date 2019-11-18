@@ -1,8 +1,7 @@
 module ParticipantsHelper
   
   def return_user_from_participant(participant)
-    user = User.find(Participant.find_by(challonge_participant_id: participant).user_id)
-    return user
+    return User.find(Participant.find_by(challonge_participant_id: participant).user_id)
   end
   
   # 参加者の一覧をユーザ情報へ変換する

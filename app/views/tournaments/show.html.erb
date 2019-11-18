@@ -1,9 +1,11 @@
 <% provide(:title, @tournament.name) %>
 <div class="col-md-12">
-  <% unless @started %>
-    <%= link_to "参加者を全て取り消す", tournament_participants_clear_path(@tournament), method: :delete, data: { confirm: "取り消ししてよろしいですか？" }, class: "btn btn-lg btn-primary" %>
+  <% if master?(@tournament) %>
+    <% unless @started %>
+      <%= link_to "参加者を全て取り消す", tournament_participants_clear_path(@tournament), method: :delete, data: { confirm: "取り消ししてよろしいですか？" }, class: "btn btn-lg btn-primary" %>
+    <% end %>
+    <%= link_to "大会を削除する", tournament_path, method: :delete, data: { confirm: "削除してよろしいですか？" }, class: "btn btn-lg btn-primary" %>
   <% end %>
-  <%= link_to "大会を削除する", tournament_path, method: :delete, data: { confirm: "削除してよろしいですか？" }, class: "btn btn-lg btn-primary" %>
   
   <table class="table table-condensed table-hover" id="table-tournament">
     <thead>
@@ -17,26 +19,31 @@
       <tr>
         <% unless @participants.blank? %>
           <th><%= link_to "トーナメント画像の更新", tournament_reload_path(@tournament), class: "btn btn-lg btn-success" %></th>
-          <% unless @started %>
-            <th><%= link_to "参加者を並び替える", tournament_randomize_path(@tournament), class: "btn btn-lg btn-success" %></th>
-            <th><%= link_to "大会を始める", tournament_start_path(@tournament), method: :get, data: { confirm: "大会を始めてもいいですか？" }, class: "btn btn-lg btn-success" %></th>
-          <% else %>
-            <th><%= link_to "大会をやり直す", tournament_reset_path(@tournament), method: :get, data: { confirm: "大会をやり直してもいいですか？" }, class: "btn btn-lg btn-success" %></th>
-            <th><%= link_to "大会を終了させる", tournament_finalize_path(@tournament), method: :get, data: { confirm: "大会を終了させてもいいですか？" }, class: "btn btn-lg btn-success" %></th>
+          <% if master?(@tournament) %>
+            <% unless @started %>
+              <th><%= link_to "参加者を並び替える", tournament_randomize_path(@tournament), data: { confirm: "並び替えてもいいですか？" }, class: "btn btn-lg btn-success" %></th>
+              <th><%= link_to "大会を始める", tournament_start_path(@tournament), method: :get, data: { confirm: "大会を始めてもいいですか？" }, class: "btn btn-lg btn-success" %></th>
+            <% else %>
+              <th><%= link_to "大会をやり直す", tournament_reset_path(@tournament), method: :get, data: { confirm: "大会をやり直してもいいですか？" }, class: "btn btn-lg btn-success" %></th>
+              <th><%= link_to "大会を終了させる", tournament_finalize_path(@tournament), method: :get, data: { confirm: "大会を終了させてもいいですか？" }, class: "btn btn-lg btn-success" %></th>
+            <% end %>
           <% end %>
+          <th><%= link_to "開催者：#{master_tournament(@tournament).name}", master_tournament(@tournament), class: "btn btn-lg btn-success" %></th>
         <% end %>
       </tr>
       <tr>
         <th>
           現在開催中のマッチ<br>
           <% @matches_opening.each do |matches| %>
-            <%= return_user_from_participant(matches["match"]["player1_id"]).name + " vs " + return_user_from_participant(matches["match"]["player2_id"]).name + "  " %><%= link_to "勝敗報告をする", tournament_report_path(@tournament, matches), remote: true, class: "btn btn-success" %><br>
+            <%= return_user_from_participant(matches["match"]["player1_id"]).name + " vs " + return_user_from_participant(matches["match"]["player2_id"]).name + "  " %>
+            <%= link_to "勝敗報告をする", tournament_report_path(@tournament, matches), remote: true, class: "btn btn-success" if master_or_party?(@tournament, matches["match"]["player1_id"], matches["match"]["player2_id"]) %><br>
           <% end %>
         </th>
         <th>
           終了済みのマッチ<br>
           <% @matches_complete.each do |matches| %>
-            <%= return_user_from_participant(matches["match"]["player1_id"]).name + " vs " + return_user_from_participant(matches["match"]["player2_id"]).name + "  " %><%= link_to "報告をやり直す", tournament_reset_match_path(@tournament, matches), method: :get, data: { confirm: "やり直しをしてもいいですか？" }, class: "btn btn-primary" %><br>
+            <%= return_user_from_participant(matches["match"]["player1_id"]).name + " vs " + return_user_from_participant(matches["match"]["player2_id"]).name + "  " %>
+            <%= link_to "報告をやり直す", tournament_reset_match_path(@tournament, matches), method: :get, data: { confirm: "やり直しをしてもいいですか？" }, class: "btn btn-primary" if master?(@tournament) %><br>
           <% end %>
         </th>
       </tr>
@@ -46,21 +53,30 @@
       <tr>
         <td><%= link_to User.find(participant.user_id).name, User.find(participant.user_id) %></td>
         <td>
-          <%# if current_user.admin? && !current_user?(user) %>
+          <% if master?(@tournament) %>
             <%= link_to "削除", tournament_participant_path(@tournament, participant), method: :delete,
                 data: { confirm: "削除してよろしいですか？" },
                 class: "btn btn-danger" %>
-          <%# end %>
+          <% end %>
         </td>
       </tr>
     <% end %>
   </table>
   
   <% unless @started %>
-    <%= form_with(model: @participant, url: tournament_participants_path(@tournament), method: :post) do |f| %>
-      <%= f.label '参加者追加' %>
-      <%= select_tag :players, options_from_collection_for_select(@not_yet_users, :id, :name), include_blank: true, multiple: true, class: "form-control searchable" %>
-      <%= f.submit "参加者追加", class: "btn btn-primary btn-block btn-login" %>
+    <% if master?(@tournament) #開催者用追加フォーム %>
+      <%= form_with(model: @participant, url: tournament_participants_path(@tournament), method: :post) do |f| %>
+        <%= f.label '参加者追加' %>
+        <%= select_tag :players, options_from_collection_for_select(@not_yet_users, :id, :name), include_blank: true, multiple: true, class: "form-control searchable" %>
+        <%= f.submit "参加者追加", class: "btn btn-primary btn-block btn-login" %>
+      <% end %>
+    <% else #参加者用追加フォーム %>
+      <% unless Participant.find_by(tournament_id: @tournament.id, user_id: current_user.id) %>
+        <%= form_with(model: @participant, url: tournament_participants_path(@tournament), method: :post) do |f| %>
+          <%= hidden_field_tag :players, current_user.id %>
+          <%= f.submit "この大会に参加する", data: { confirm: "大会に参加しますか？" }, class: "btn btn-primary btn-block btn-login" %>
+        <% end %>
+      <% end %>
     <% end %>
   <% end %>
 </div>

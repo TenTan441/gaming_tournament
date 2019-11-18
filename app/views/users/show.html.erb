@@ -32,14 +32,14 @@
       </li>
     <% end %>
     <% if @user == current_user %>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-          編集 <span class="caret"></span>
-          <ul class="dropdown-menu" role="menu">
-            <li><%= link_to "設定", edit_user_path(current_user), remote: true, class: "dropdown-item" %></li>
-            <li><%= link_to "使用キャラクター", user_characters_edit_path(@user), remote: true, class: "dropdown-item" %></li>
-          </ul>
+      <li class="nav-item active dropdown">
+        <a href="#" class="nav-link dropdown-toggle" id="userpageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          編集
         </a>
+        <div class="dropdown-menu" aria-labelledby="userpageDropdown">
+          <%= link_to "設定", edit_user_path(current_user), remote: true, class: "dropdown-item" %>
+          <%= link_to "使用キャラクター", user_characters_edit_path(@user), remote: true, class: "dropdown-item" %>
+        </div>
       </li>
     <% end %>
   </ul>
