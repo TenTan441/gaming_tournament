@@ -21,6 +21,10 @@
                 <div class="col-4 m-auto text-center" style="max-height:140px;">
                   <%= image_tag "/Character/#{characterimage_from_character(@character.sub_character1)}.png", class: "rounded img-thumbnail my-2 img-fluid", :style => "max-height:120px;" %>
                 </div>
+              <% else %>
+                <div class="text-center m-auto">
+                  登録されているキャラクターはありません。
+                </div>
               <% end %>
               <% if @character.sub_character2 %>
                 <div class="col-4 m-auto text-center" style="max-height:140px;">

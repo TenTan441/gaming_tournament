@@ -28,7 +28,9 @@
               <th><%= link_to "大会を終了させる", tournament_finalize_path(@tournament), method: :get, data: { confirm: "大会を終了させてもいいですか？" }, class: "btn btn-lg btn-success" %></th>
             <% end %>
           <% end %>
-          <th><%= link_to "開催者：#{master_tournament(@tournament).name}", master_tournament(@tournament), class: "btn btn-lg btn-success" %></th>
+          <% unless master?(@tournament) %>
+            <th><%= link_to "開催者：#{master_tournament(@tournament).name}", master_tournament(@tournament), class: "btn btn-lg btn-success" %></th>
+          <% end %>
         <% end %>
       </tr>
       <tr>

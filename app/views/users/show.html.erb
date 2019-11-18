@@ -1,14 +1,17 @@
 <% provide(:title, @user.name) %>
 <div>
   <h1>【<%= @user.name %>】</h1>
-  <% if @user == current_user %>
-    <%= link_to "新しく大会を作る", new_tournament_path, class: "btn btn-lg btn-success" %>
-    <%= link_to "俺より強い奴に会いに行く", tournaments_path, class: "btn btn-lg btn-primary" %>
-  <% end %>
+  
+  <div class="m-auto text-center">
+    <% if @user == current_user %>
+      <%= link_to "新しく大会を作る", new_tournament_path, class: "btn btn-lg btn-success mx-2" %>
+      <%= link_to "俺より強い奴に会いに行く", tournaments_path, class: "btn btn-lg btn-primary mx-2" %>
+    <% end %>
+  </div>
   
   <!-- ピル部分 -->
   <ul class="nav nav-tabs nav-justified" id="tabs-tab" role="tablist">
-    <li class="nav-item">
+    <li class="nav-item active">
       <%= link_to "ホーム", "#tabs-home", id: "tabs-home-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-home", "aria-selected" => "true", class: "nav-link" %>
     </li>
     <li class="nav-item">
@@ -17,18 +20,14 @@
     <% if @user.twitter_private == true %>
       <li class="nav-item">
         <% if @user == current_user %>
-          <%= link_to "Twitter情報公開設定中", "#", 'tabindex' => "-1", 'aria-disabled' => "true", class: "nav-link disabled" %>
+          <%= link_to "Twitter情報公開中", "#", 'tabindex' => "-1", 'aria-disabled' => "true", class: "nav-link disabled" %>
         <% else %>
           <%= link_to "コンタクト", "#tabs-contact", id: "tabs-contact-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-contact", class: "nav-link" %>
         <% end %>
       </li>
     <% else %>
       <li class="nav-item">
-        <% if @user == current_user %>
-          <%= link_to "Twitter情報非公開設定中", "#", 'tabindex' => "-1", 'aria-disabled' => "true", class: "nav-link disabled" %>
-        <% else %>
-          <%= link_to "Twitter情報非公開です。", "#", 'tabindex' => "-1", 'aria-disabled' => "true", class: "nav-link disabled" %>
-        <% end %>
+        <%= link_to "Twitter情報非公開", "#", 'tabindex' => "-1", 'aria-disabled' => "true", class: "nav-link disabled" %>
       </li>
     <% end %>
     <% if @user == current_user %>
@@ -47,14 +46,31 @@
   <!-- パネル部分 -->
   <div class="tab-content" id="pills-tabContent">
     <div class="tab-pane fade" id="tabs-home" role="tabpanel" aria-labelledby="tabs-home-tab">
-      <% if @user.image? %>
-        <%= image_tag @user.image.to_s, class: "img-fluid img-thumbnail rounded", :style => "width:200px; height:200px;"  %>
-      <% else %>
-        <%= image_tag "no-profile-image.png", class: "img-fluid img-thumbnail rounded", :style => "width:200px; height:200px;" %>
-      <% end %>
-      
-      名前：<%= @user.name %>
-      紹介：<%= @user.description %>
+      <div class="container-fluid">
+        <div class="col-lg-8 offset-lg-2">
+          <div class="row justify-content-start">
+            <div class="m-3">
+              <% if @user.image? %>
+                <%= image_tag @user.image.to_s, class: "img-fluid img-thumbnail rounded", :style => "max-width:150px;"  %>
+              <% else %>
+                <%= image_tag "no-profile-image.png", class: "img-fluid img-thumbnail rounded", :style => "max-width:150px;" %>
+              <% end %>
+            </div>
+            <div class="m-3 font-weight-bold">
+              <%= @user.name %>
+            </div>
+          </div>
+          <div class="m-3">
+            <% unless @user.description.blank? %>
+              自己紹介<br><%= @user.description %>
+            <% else %>
+              <div class="text-center">
+                自己紹介文がありません。
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="tab-pane fade" id="tabs-profile" role="tabpanel" aria-labelledby="tabs-profile-tab">
       <ul class="nav nav-tabs nav-justified" id="tabs-title" role="tablist">
