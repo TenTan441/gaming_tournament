@@ -47,8 +47,8 @@
     <%= f.check_box :hold_third_place_match %><span>3位決定戦を行う</span>
   </div>
 
+  <%= f.label :start_time, class: "label-#{yield(:class_text)}" %>
   <div class="input-group" data-target-input="nearest">
-    <%= f.label :start_time, class: "label-#{yield(:class_text)}" %>
     <%= f.text_field :start_time, id: "start_time", class: "form-control datepicker", data: {target: "#start_time"} %>
     <div class="input-group-append" data-target="#start_time" data-toggle="datetimepicker">
         <div class="input-group-text"><i class="fa fa-calendar"></i></div>

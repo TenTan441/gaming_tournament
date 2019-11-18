@@ -8,7 +8,7 @@
     </div>
     <div class="modal-body">
       <div class="row">
-        <div class="col-md-12 col-md-offset-0">
+        <div class="col-md-10 offset-md-1">
           <%= form_with(model: @character, url: user_characters_update_path, local: true, method: :put) do |f| %>
             <%= render 'shared/error_messages_character', object: @character %>
             

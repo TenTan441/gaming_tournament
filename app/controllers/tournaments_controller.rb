@@ -136,10 +136,10 @@ class TournamentsController < ApplicationController
     end
     
     def set_tournament
-      if params[:id].present?
-        @tournament = Tournament.find(params[:id])
-      elsif params[:tournament_id].present?
+      if params[:tournament_id].present?
         @tournament = Tournament.find(params[:tournament_id])
+      elsif params[:id].present?
+        @tournament = Tournament.find(params[:id])
       end
       @t = Challonge::Tournament.find(@tournament.id_number)
     end

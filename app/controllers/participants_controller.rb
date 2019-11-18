@@ -144,7 +144,7 @@ class ParticipantsController < ApplicationController
     bool, access_token = delete_challonge_api({}, "/#{@tournament.id_number}/participants/#{participant.challonge_participant_id}")
     
     if bool
-      flash[:success] = "参加を取り消しました。"
+      flash[:success] = "#{participant.name}さんの参加を取り消しました。"
       participant.destroy
       puts access_token
     else
@@ -174,10 +174,10 @@ class ParticipantsController < ApplicationController
   private
   
     def set_tournament
-      if params[:id].present?
-        @tournament = Tournament.find(params[:id])
-      elsif params[:tournament_id].present?
+      if params[:tournament_id].present?
         @tournament = Tournament.find(params[:tournament_id])
+      elsif params[:id].present?
+        @tournament = Tournament.find(params[:id])
       end
       @t = Challonge::Tournament.find(@tournament.id_number)
     end
