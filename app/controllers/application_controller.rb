@@ -5,4 +5,5 @@ class ApplicationController < ActionController::Base
   include ParticipantsHelper
   include CharactersHelper
   include TournamentsHelper
+  include MessagesHelper
 end

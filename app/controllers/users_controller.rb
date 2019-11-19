@@ -9,7 +9,9 @@ class UsersController < ApplicationController
   end
 
   def show
-    @characters = Character.where(user_id: @user.id)
+    @message = Message.new()
+    @message_inbox = Message.where(user_to: @user.id).order(id: "DESC")
+    @message_outbox = Message.where(user_id: @user.id).order(id: "DESC")
   end
 
   def new

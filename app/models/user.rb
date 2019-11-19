@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   before_save { self.email = email.downcase } unless :twitter_auth?
   
+  has_many :messages, dependent: :destroy
+  
   validates :name,  presence: true, length: { maximum: 50 }
   has_secure_password validations: false
   

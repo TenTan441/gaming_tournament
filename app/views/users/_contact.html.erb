@@ -1,18 +1,6 @@
-<% if @user.twitter_url %>
-  <div class="d-flex-row justify-content-around bd-highlight">
-    <div class="p-2 bd-highlight">フォローする：<a href="<%= @user.twitter_url %>?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-size="large" data-show-count="false"></a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></div>
-    <div class="p-2 bd-highlight">リプライする：<a href="https://twitter.com/intent/tweet?screen_name=TenTan441&ref_src=twsrc%5Etfw" class="twitter-mention-button" data-size="large" data-show-count="false"></a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></div>
-    <div class="p-2 bd-highlight">
-      <%= form_with(model: @user, url: user_send_dm_path(@user), local: true, method: :post) do |f| %>
-        <%= f.label "DM送信" %>
-        <%= f.text_field :text, class: "form-control" %>
-        
-        <%= f.submit "このユーザにDMを送る", class: "btn btn-primary btn-block btn-login" %>
-      <% end %>
-    </div>
-  </div>
-<% else %>
-  <div class="mx-auto">
-    <p class="text-center"><%= @user.name %>さんはTwitterを利用していません。</p>
+<% if @user.twitter_url && @user.twitter_private == true %>
+  <div class="row justify-content-center">
+    <div class="m-3 bd-highlight">フォローする：<a href="<%= @user.twitter_url %>?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-size="large" data-show-count="false"></a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></div>
+    <div class="m-3 bd-highlight">リプライする：<a href="https://twitter.com/intent/tweet?screen_name=TenTan441&ref_src=twsrc%5Etfw" class="twitter-mention-button" data-size="large" data-show-count="false"></a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></div>
   </div>
 <% end %>
