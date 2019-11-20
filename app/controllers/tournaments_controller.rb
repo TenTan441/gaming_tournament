@@ -18,35 +18,20 @@ class TournamentsController < ApplicationController
   
   def create
     @tournament = Tournament.new(tournament_params)
-    par = params[:tournament]
-    t = Challonge::Tournament.new()
-    t.name = par[:name]
-    t.game_name = par[:game_title]
-    t.url = par[:url]
-    t.tournament_type = par[:elimination_type]
-    t.start_at = par[:start_time]
-    t.private = par[:private]
-    t.description = par[:description]
-    t.hold_third_place_match = par[:hold_third_place_match]
-=begin
-    ## 接続先URLを指定してパース
-    uri = URI.parse("https://#{username}:#{password}@api.challonge.com/v1/tournaments")
+    t = params[:tournament]
     
-    http = Net::HTTP.new(uri.host, uri.port)
+    bool, access_token = post_challonge_api({:tournament => {:name => t[:name], 
+                                                             :game_name => t[:game_title], 
+                                                             :url => t[:url],
+                                                             :tournament_type => t[:elimination_type],
+                                                             :start_at => t[:start_time],
+                                                             :private => t[:private],
+                                                             :description => t[:description],
+                                                             :hold_third_place_match => t[:hold_third_place_match]}
+                                            }, "")
 
-    http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-
-    req = Net::HTTP::Post.new(uri.path)
-    req.basic_auth(username, password)
-    
-    req.set_form_data({tournament: {name: par[:name], tournament_type: par[:elimination_type], start_at: par[:start_time]}})
-
-    res = http.request(req)
-    debugger
-=end
-    if t.save # && s.save
-      @tournament.id_number = t.id
+    if bool # && s.save
+      @tournament.id_number = access_token["tournament"]["id"]
       @tournament.status = '準備中'
       if @tournament.save
         flash[:success] = '新規作成に成功しました。'
@@ -66,40 +51,56 @@ class TournamentsController < ApplicationController
   
   def show
     @participants = Participant.where(tournament_id: @tournament)
-    tournament = get_challonge_api({}, "/#{@t.id}")
-    # 開催中のマッチングを取得
-    @matches_opening = get_challonge_api({:state => "open"}, "/#{@t.id}/matches")
-    @matches_complete = get_challonge_api({:state => "complete"}, "/#{@t.id}/matches")
-    if tournament["tournament"]["state"] == "pending"
+    @t = get_challonge_api({}, "/#{@tournament.id_number}")
+    
+    # 開催中と終了したマッチングを取得
+    @matches_opening = get_challonge_api({:state => "open"}, "/#{@tournament.id_number}/matches")
+    @matches_complete = get_challonge_api({:state => "complete"}, "/#{@tournament.id_number}/matches")
+    
+    if @t["tournament"]["state"] == "pending"
       @started = false
     else
       @started = true
     end
-    #ms.select {|hash| hash.state == "open"}
-    @t.reload
-    
+
     @participant = Participant.new()
     @not_yet_users = return_users_from_non_participants(@participants)
+
   end
   
   def start
-    @t.start!
-    @tournament.status = '進行中'
-    @tournament.save
-    flash[:success] = "大会開始！"
+    #@t.start!
+    bool, access_token = post_challonge_api({}, "/#{@tournament.id_number}/start")
+    
+    if bool
+      @tournament.status = '進行中'
+      @tournament.save
+      flash[:success] = "大会開始！"
+    else
+      flash[:danger] = "開始に失敗しました。"
+    end
+    
     redirect_to @tournament
   end
   
   def reset
-    @t.reset!
-    @tournament.status = '準備中'
-    @tournament.save
-    flash[:info] = "大会がやり直されました。"
+    #@t.reset!
+    bool, access_token = post_challonge_api({}, "/#{@tournament.id_number}/reset")
+    
+    if bool
+      @tournament.status = '準備中'
+      @tournament.save
+      flash[:info] = "大会がやり直されました。"
+    else
+      flash[:danger] = "やり直しに失敗しました。"
+    end
+    
     redirect_to @tournament
   end
   
   def finalize
-    bool, access_token = post_challonge_api({}, "/#{@t.id}/finalize")
+    bool, access_token = post_challonge_api({}, "/#{@tournament.id_number}/finalize")
+    
     if bool
       flash[:info] = "大会お疲れさまでした。"
       @tournament.status = '終了'
@@ -107,6 +108,7 @@ class TournamentsController < ApplicationController
     else
       flash[:danger] = "送信に失敗しました。管理者へ連絡してください。"
     end
+    
     redirect_to @tournament
   end
   
@@ -141,7 +143,6 @@ class TournamentsController < ApplicationController
       elsif params[:id].present?
         @tournament = Tournament.find(params[:id])
       end
-      @t = Challonge::Tournament.find(@tournament.id_number)
     end
     
     def tournament_master

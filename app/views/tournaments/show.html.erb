@@ -13,7 +13,7 @@
     <thead>
       <tr class="text-center">
         <% unless @participants.blank? %>
-          <th><%= image_tag @t.live_image_url, :width => "100%", class: "mx-auto" %></th>
+          <th><%= image_tag @t["tournament"]["live_image_url"], :width => "100%", class: "mx-auto" %></th>
         <% else %>
           <th>参加者が登録されていないため参加者の追加を行ってください。</th>
         <% end %>

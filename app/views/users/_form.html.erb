@@ -3,7 +3,7 @@
     <%= render 'shared/error_messages_user', object: @user %>
   
     <%= f.label :image, class: "label-#{yield(:class_text)}" %>
-    <%= f.file_field :image %>
+    <%= f.file_field :image, class: "form-control-file" %>
     
     <%= f.label :name, class: "label-#{yield(:class_text)}" %>
     <%= f.text_field :name, class: "form-control" %>
@@ -17,6 +17,7 @@
     
       <%= f.label :password_confirmation, class: "label-#{yield(:class_text)}" %>
       <%= f.password_field :password_confirmation, class: "form-control" %>
+      
     <% else %>
       <div class="form-group">
         <%= f.label :twitter_private, class: "label-#{yield(:class_text)}" %>

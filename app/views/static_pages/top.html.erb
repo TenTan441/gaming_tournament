@@ -4,11 +4,11 @@
   <h1>スマブラ大会進行管理システム</h1>
   <p>大会進行に関する手続きをオンライン上で完結しましょう。</p>
   <% if logged_in? %>
-    <%= link_to "新しく大会を作る", '#', class: "btn btn-lg btn-success" %>
-    <%= link_to "大会に参加する", '#', class: "btn btn-lg btn-primary" %>
+    <%= link_to "新しく大会を作る", new_tournament_path, class: "btn btn-lg btn-success" %>
+    <%= link_to "支度を整える", current_user, class: "btn btn-lg btn-primary" %>
   <% else %>
     <%= link_to "ユーザー登録", signup_path, class: "btn btn-lg btn-primary" %>
-    <%= link_to "ログイン", '#', class: "btn btn-lg btn-primary" %>
+    <%= link_to "ログイン", login_path, class: "btn btn-lg btn-primary" %>
   <% end %>
-  <%= link_to "現在開催中の大会を見る", '#', class: "btn btn-lg btn-primary" %>
+  <%= link_to "俺より強い奴に会いに行く", tournaments_path, class: "btn btn-lg btn-primary" %>
 </div>

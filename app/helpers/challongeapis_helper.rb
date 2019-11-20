@@ -21,6 +21,7 @@ module ChallongeapisHelper
     else
       flash[:danger] = "情報取得に失敗しました。管理者へ問い合わせてください。"
     end
+    
     return access_token
   end
   
