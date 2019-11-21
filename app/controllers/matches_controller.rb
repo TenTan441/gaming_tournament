@@ -5,24 +5,37 @@ class MatchesController < ApplicationController
   before_action :master_or_party, only: [:report]
   
   def report
-    @match_id = params[:match][:suggested_play_order].to_i - 1
+    #@match_id = params[:match][:suggested_play_order].to_i - 1
     @tournament_id = params[:match][:tournament_id]
     @player1 = params[:match][:player1_id]
     @player2 = params[:match][:player2_id]
+    @match_id = params[:match][:id]
+    @underway_at = params[:match][:underway_at]
   end
   
   def update
-    t_id = params[:tournamentid]
-    m = Challonge::Tournament.find(t_id).matches[params[:match_id].to_i]
-    m.scores_csv = "#{params[:player1_score]}-#{params[:player2_score]}"
-    m.winner_id = params[:player1_score] > params[:player2_score] ? params[:player1] : params[:player2]
-    if m.save
-      flash[:success] = "スコア送信しました。"
+    @tournament = Tournament.find(params[:tournament_id])
+
+    if params[:player1_score].blank? && params[:player2_score].blank?
+      flash[:danger] = "スコアはどちらか必ず入力してください。"
+      
     else
-      flash[:danger] = "スコア送信に失敗しました。繰り返される場合は管理者へ問い合わせてください。"
+      player1_score = params[:player1_score].blank? ? "0" : params[:player1_score]
+      player2_score = params[:player2_score].blank? ? "0" : params[:player2_score]
+
+      @winner_id = player1_score > player2_score ? params[:player1] : params[:player2]
+      @scores_csv = "#{player1_score}-#{player2_score}"
+      
+      bool, access_token = put_challonge_api({:match => {:scores_csv => @scores_csv,
+                                                         :winner_id => @winner_id}}, 
+                                             "/#{params[:tournamentid]}/matches/#{params[:match_id]}")
+      if bool
+        flash[:success] = "スコア送信しました。"
+      else
+        flash[:danger] = "スコア送信に失敗しました。繰り返される場合は管理者へ問い合わせてください。"
+      end
     end
     
-    @tournament = Tournament.find(params[:tournament_id])
     redirect_to @tournament
   end
   

@@ -53,7 +53,7 @@ module ChallongeapisHelper
   
   def put_challonge_api(hash, url)
     put_body_json = JSON.pretty_generate(hash)
-    uri = URI("https://api.challonge.com/v1/tournaments#{url}.json#{"?" + URI.encode_www_form(hash) unless hash.blank?}")
+    uri = URI("https://api.challonge.com/v1/tournaments#{url}.json")
     req = Net::HTTP::Put.new(uri)
     req['Content-Type'] = req['Accept'] = 'application/json'
     #req['Authorization'] = 'bearer ' + access_token

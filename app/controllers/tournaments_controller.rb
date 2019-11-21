@@ -56,20 +56,17 @@ class TournamentsController < ApplicationController
     # 開催中と終了したマッチングを取得
     @matches_opening = get_challonge_api({:state => "open"}, "/#{@tournament.id_number}/matches")
     @matches_complete = get_challonge_api({:state => "complete"}, "/#{@tournament.id_number}/matches")
-    
     if @t["tournament"]["state"] == "pending"
       @started = false
     else
       @started = true
     end
-
+    
     @participant = Participant.new()
     @not_yet_users = return_users_from_non_participants(@participants)
-
   end
   
   def start
-    #@t.start!
     bool, access_token = post_challonge_api({}, "/#{@tournament.id_number}/start")
     
     if bool
@@ -84,7 +81,6 @@ class TournamentsController < ApplicationController
   end
   
   def reset
-    #@t.reset!
     bool, access_token = post_challonge_api({}, "/#{@tournament.id_number}/reset")
     
     if bool
