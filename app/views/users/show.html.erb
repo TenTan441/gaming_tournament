@@ -90,54 +90,104 @@
 
     <div class="tab-pane fade" id="tabs-contact" role="tabpanel" aria-labelledby="tabs-contact-tab">
       <div id="user-contact" class="m-auto"></div>
-        <ul class="nav nav-tabs nav-justified" id="tabs-box" role="tablist">
-          <li class="nav-item">
-            <%= link_to "受信箱", "#tabs-inbox", id: "tabs-inbox-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-inbox", "aria-selected" => "true", class: "nav-link" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "メール作成", "#tabs-create-mail", id: "tabs-inbox-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-inbox", "aria-selected" => "true", class: "nav-link" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "送信箱", "#tabs-outbox", id: "tabs-outbox-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-outbox", class: "nav-link" %>
-          </li>
-        </ul>
-        
-      <div class="container-fluid">    
-        <div class="col-lg-10 offset-lg-1">
-          <div class="tab-content" id="pills-tabContent-box">
-            <div class="tab-pane fade" id="tabs-inbox" role="tabpanel" aria-labelledby="tabs-contact-tab">
-              <div class="mx-auto my-3 bg-dark">
-                <% if !@message_inbox.blank? %>
-                  <% @message_inbox.each do |message| %>
-                    <% sendUser = send_user(message) %>
-                      <div class="m-auto row justify-content-start">
-                        <% if sendUser.present? %>
-                          <div class="m-1">
-                            <% if sendUser.image.present? %>
-                              <%= image_tag sendUser.image.to_s, class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
-                            <% else %>
-                              <%= image_tag "no-profile-image.png", class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
+        <% if current_user == @user %>
+          <ul class="nav nav-tabs nav-justified" id="tabs-box" role="tablist">
+            <li class="nav-item">
+              <%= link_to "受信箱", "#tabs-inbox", id: "tabs-inbox-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-inbox", "aria-selected" => "true", class: "nav-link" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "メール作成", "#tabs-create-mail", id: "tabs-inbox-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-inbox", "aria-selected" => "true", class: "nav-link" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "送信箱", "#tabs-outbox", id: "tabs-outbox-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-outbox", class: "nav-link" %>
+            </li>
+          </ul>
+            
+          <div class="container-fluid">    
+            <div class="col-lg-10 offset-lg-1">
+              <div class="tab-content" id="pills-tabContent-box">
+                <div class="tab-pane fade" id="tabs-inbox" role="tabpanel" aria-labelledby="tabs-contact-tab">
+                  <div class="mx-auto my-3 bg-dark">
+                    <% if !@message_inbox.blank? %>
+                      <% @message_inbox.each do |message| %>
+                        <% sendUser = send_user(message) %>
+                        <div class="m-auto bg-dark">
+                          <div class="m-auto row justify-content-start">
+                            <% if sendUser.present? %>
+                              <div class="m-1">
+                                <% if sendUser.image.present? %>
+                                  <%= image_tag sendUser.image.to_s, class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
+                                <% else %>
+                                  <%= image_tag "no-profile-image.png", class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
+                                <% end %>
+                              </div>
+                              <div class="m-1 font-weight-bold text-muted">From:<%= link_to sendUser.name, sendUser, class: "text-reset" %></div>
                             <% end %>
                           </div>
-                          <div class="m-1 font-weight-bold text-muted">From:<%= link_to sendUser.name, sendUser, class: "text-reset" %></div>
-                        <% end %>
-                      </div>
-                      <div class="m-2"><%= message.text %></div>
-                      <div class="m-2 text-right font-weight-bold text-muted"><%= link_to l(message.created_at, format: :short), edit_user_message_path(@user, message), remote: true, class: "text-reset" %></div>
-                  <% end %>
-                <% else %>
-                  まだメッセージが来ていません
-                <% end %>
-              </div>
-            </div>
-            
-            <div class="tab-pane fade" id="tabs-create-mail" role="tabpanel" aria-labelledby="tabs-contact-tab">
-              <%= form_with(model: @message, url: user_messages_path(@user), local: true, method: :post) do |f| %>
-              
-                <%= f.hidden_field :user_id, value: @user.id %>
+                          <div class="m-2"><%= message.text %></div>
+                          <div class="m-2 text-right font-weight-bold text-muted"><%= link_to l(message.created_at, format: :short), edit_user_message_path(@user, message), remote: true, class: "text-reset" %></div>
+                        </div>
+                      <% end %>
+                    <% else %>
+                      まだメッセージが来ていません
+                    <% end %>
+                  </div>
+                </div>
                 
-                <%= f.label "宛先" %>
-                <%= select_tag :user_to, options_from_collection_for_select(User.where.not(id: @user), :id, :name), include_blank: true, class: "form-control searchable"%>
+                <div class="tab-pane fade" id="tabs-create-mail" role="tabpanel" aria-labelledby="tabs-contact-tab">
+                  <%= form_with(model: @message, url: user_messages_path(@user), local: true, method: :post) do |f| %>
+                  
+                    <%= f.hidden_field :user_id, value: @user.id %>
+                    
+                    <%= f.label "宛先" %>
+                    <%= select_tag :user_to, options_from_collection_for_select(User.where.not(id: @user), :id, :name), include_blank: true, class: "form-control searchable"%>
+    
+                    <%= f.label "本文" %>
+                    <%= f.text_area :text, class: "form-control" %>
+                    
+                    <%= f.submit "メッセージを送信する", class: "btn btn-primary btn-block btn-login" %>
+                  <% end %>
+                </div>
+                
+                <div class="tab-pane fade" id="tabs-outbox" role="tabpanel" aria-labelledby="tabs-contact-tab">
+                  <div class="mx-auto my-3 rounded">
+                    <% if !@message_outbox.blank? %>
+                      <% @message_outbox.each do |message| %>
+                        <% receiveUser = destinate_user(message) %>
+                        <div class="m-auto bg-dark">
+                          <div class="m-auto row justify-content-start">
+                            <% if receiveUser.present? %>
+                              <div class="m-1">
+                                <% if receiveUser.image.present? %>
+                                  <%= image_tag receiveUser.image.to_s, class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
+                                <% else %>
+                                  <%= image_tag "no-profile-image.png", class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
+                                <% end %>
+                              </div>
+                              <div class="m-1 font-weight-bold text-muted">To:<%= link_to receiveUser.name, receiveUser, class: "text-reset" %></div>
+                            <% else %>
+                              <div class="m-1">存在しないユーザ</div>
+                            <% end %>
+                          </div>
+                          <div class="m-2"><%= message.text %></div>
+                          <div class="m-2 text-right font-weight-bold text-muted"><%= link_to l(message.created_at, format: :short), edit_user_message_path(@user, message), remote: true, class: "text-reset" %></div>
+                        </div>
+                      <% end %>
+                    <% else %>
+                      まだメッセージを送っていません。
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div><!-- col-lg-10 offset-lg-1 -->
+          </div><!-- container-fluid -->
+        <% else %>
+          <div class="container-fluid">    
+            <div class="col-lg-10 offset-lg-1">
+              <%= form_with(model: @message, url: user_messages_path(current_user), local: true, method: :post) do |f| %>
+                  
+                <%= f.hidden_field :user_id, value: current_user.id %>
+                <%= hidden_field_tag :user_to, @user.id %>
 
                 <%= f.label "本文" %>
                 <%= f.text_area :text, class: "form-control" %>
@@ -145,37 +195,8 @@
                 <%= f.submit "メッセージを送信する", class: "btn btn-primary btn-block btn-login" %>
               <% end %>
             </div>
-            
-            <div class="tab-pane fade" id="tabs-outbox" role="tabpanel" aria-labelledby="tabs-contact-tab">
-              <div class="mx-auto my-3 bg-dark rounded">
-                <% if !@message_outbox.blank? %>
-                  <% @message_outbox.each do |message| %>
-                    <% receiveUser = destinate_user(message) %>
-                    <div class="m-auto row justify-content-start">
-                      <% if receiveUser.present? %>
-                        <div class="m-1">
-                          <% if receiveUser.image.present? %>
-                            <%= image_tag receiveUser.image.to_s, class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
-                          <% else %>
-                            <%= image_tag "no-profile-image.png", class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
-                          <% end %>
-                        </div>
-                        <div class="m-1 font-weight-bold text-muted">To:<%= link_to receiveUser.name, receiveUser, class: "text-reset" %></div>
-                      <% else %>
-                        <div class="m-1">存在しないユーザ</div>
-                      <% end %>
-                    </div>
-                    <div class="m-2"><%= message.text %></div>
-                    <div class="m-2 text-right font-weight-bold text-muted"><%= link_to l(message.created_at, format: :short), edit_user_message_path(@user, message), remote: true, class: "text-reset" %></div>
-                  <% end %>
-                <% else %>
-                  まだメッセージを送っていません。
-                <% end %>
-              </div>
-            </div>
           </div>
-        </div><!-- col-lg-10 offset-lg-1 -->
-      </div><!-- container-fluid -->
+        <% end %>
     </div><!-- tabs-contact -->
   </div>
 </div>
