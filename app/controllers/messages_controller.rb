@@ -8,15 +8,33 @@ class MessagesController < ApplicationController
   UPDATE_ERROR_MSG = "ステータスの変更に失敗しました。"
   
   def create
-    message = Message.new(message_params)
-    message.user_to = params[:user_to]
-    
-    if message.save
-      flash[:success] = "メッセージを送信しました。"
+
+    if params[:user_to].instance_of?(Array)
+      users = params[:user_to]
+      
+      users.each do |user|
+        message = Message.new(message_params)
+        message.user_to = user
+        message.save
+      end
+      
+      @tournament = Tournament.find(params[:tournament_id])
+      redirect_to @tournament
     else
-      flash[:danger] = "メッセージ送信に失敗しました。"
+      message = Message.new(message_params)
+      message.user_to = params[:user_to]
+      
+      if message.save
+        flash[:success] = "メッセージを送信しました。"
+      else
+        flash[:danger] = "メッセージ送信に失敗しました。"
+      end
+      redirect_to current_user
     end
-    redirect_to current_user
+  end
+  
+  def creates
+    
   end
   
   def edit

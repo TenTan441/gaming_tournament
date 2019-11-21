@@ -4,12 +4,26 @@ module ParticipantsHelper
     return User.find(Participant.find_by(challonge_participant_id: participant).user_id)
   end
   
+  def participant_to_user(participant)
+    return User.find(Participant.find(participant.id).user_id)
+  end
+  
   # 参加者の一覧をユーザ情報へ変換する
   def return_users_from_participants(participants)
     users = []
 
     participants.each do |participant|
       users.push(User.find(participant.user_id))
+    end
+    
+    return users
+  end
+  
+  def return_user_id_from_participant(participants)
+    users = []
+    
+    participants.each do |participant|
+      users.push(participant.user_id)
     end
     
     return users

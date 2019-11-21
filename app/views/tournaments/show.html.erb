@@ -54,10 +54,26 @@
         </th>
       </tr>
     </thead>
-
+    
     <% @participants.each do |participant| %>
       <tr>
-        <td><%= link_to User.find(participant.user_id).name, User.find(participant.user_id) %></td>
+        <td>
+          <% if participant_to_user(participant).image? %>
+            <%= image_tag participant_to_user(participant).image.to_s, class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
+          <% else %>
+            <%= image_tag "no-profile-image.png", class: "img-fluid img-thumbnail rounded", :style => "max-width:60px;" %>
+          <% end %>
+          <%= link_to User.find(participant.user_id).name, User.find(participant.user_id) %>
+        </td>
+        <td>
+          <%= form_with(model: @message, url: user_messages_path(current_user), local: true, method: :post) do |f| %>
+            <%= f.hidden_field :user_id, value: master_tournament(@tournament).id %>
+            <%= hidden_field_tag :user_to, participant.user_id %>
+            
+            <%= f.text_field :text, class: "form-control" %>
+            <%= f.submit "送信", class: "btn btn-primary" %>
+          <% end %>
+        </td>
         <td>
           <% if master?(@tournament) %>
             <%= link_to "削除", tournament_participant_path(@tournament, participant), method: :delete,
@@ -68,6 +84,20 @@
       </tr>
     <% end %>
   </table>
+  
+  <%= form_with(model: @message, url: user_messages_path(current_user), local: true, method: :post) do |f| %>
+              
+    <%= f.hidden_field :user_id, value: master_tournament(@tournament).id %>
+    <%= hidden_field_tag :tournament_id, @tournament.id %>
+    
+    <%= f.label "宛先" %>
+    <%= select_tag :user_to, options_from_collection_for_select(return_users_from_participants(@participants), :id, :name), include_blank: true, multiple: true, class: "form-control searchable"%>
+
+    <%= f.label "本文" %>
+    <%= f.text_area :text, class: "form-control" %>
+    
+    <%= f.submit "メッセージを送信する", class: "btn btn-primary btn-block btn-login" %>
+  <% end %>
   
   <% unless @started %>
     <% if master?(@tournament) #開催者用追加フォーム %>
@@ -88,3 +118,10 @@
 </div>
   
 <div id="report-match" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+<script>
+  $(document).ready(function() {
+    $('.searchable').val(<%= return_user_id_from_participant(@participants) %>);
+    $('.searchable').trigger('change');
+  });
+</script>

@@ -62,6 +62,7 @@ class TournamentsController < ApplicationController
       @started = true
     end
     
+    @message = Message.new()
     @participant = Participant.new()
     @not_yet_users = return_users_from_non_participants(@participants)
   end
