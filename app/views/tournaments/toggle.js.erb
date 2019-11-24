@@ -1,0 +1,6 @@
+<% case @state %>
+<% when 'open' %>
+  $('#toggle-matches-opening-or-complete').html('<%= escape_javascript( render 'toggle', object: @matches_opening ) %>');
+<% when 'complete' %>
+  $('#toggle-matches-opening-or-complete').html('<%= escape_javascript( render 'toggle', object: @matches_complete ) %>');
+<% end %>

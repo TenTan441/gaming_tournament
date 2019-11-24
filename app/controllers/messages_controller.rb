@@ -33,7 +33,7 @@ class MessagesController < ApplicationController
     end
   end
   
-  def creates
+  def new
     
   end
   

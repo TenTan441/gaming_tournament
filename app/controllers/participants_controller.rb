@@ -4,13 +4,13 @@ require 'json'
 
 class ParticipantsController < ApplicationController
   
-  before_action :set_tournament, only: [:create, :reload, :randomize, :destroy, :update, :clear, :tournament_master]
+  before_action :set_tournament, only: [:new, :create, :reload, :randomize, :destroy, :update, :clear, :tournament_master]
   before_action :tournament_master, only: [:randomize, :destroy, :clear]
   
   def new
     @participant = Participant.new()
-    @participants = Participant.where.not(tournament_id: params[:tournament_id])
-    @users = return_users_from_participants(@participants)
+    @participants = Participant.where(tournament_id: @tournament)
+    @not_yet_users = return_users_from_non_participants(@participants)
   end
   
   def create
@@ -19,13 +19,15 @@ class ParticipantsController < ApplicationController
 
     if players.instance_of?(Array)
       players.each do |player|
-        pa = Participant.new(tournament_id: @tournament.id, user_id: player)
-        #chapa = Challonge::Participant.create(:name => "#{User.find(player).name}", :tournament => Challonge::Tournament.find(@tournament.id_number))
-        bool, access_token = post_challonge_api({:participant => {:name => User.find(player).name}}, "/#{@tournament.id_number}/participants")
-        
-        if bool
-          pa.challonge_participant_id = access_token["participant"]["id"]
-          pa.save
+        if !player.nil?
+          pa = Participant.new(tournament_id: @tournament.id, user_id: player)
+          #chapa = Challonge::Participant.create(:name => "#{User.find(player).name}", :tournament => Challonge::Tournament.find(@tournament.id_number))
+          bool, access_token = post_challonge_api({:participant => {:name => User.find(player).name}}, "/#{@tournament.id_number}/participants")
+          
+          if bool
+            pa.challonge_participant_id = access_token["participant"]["id"]
+            pa.save
+          end
         end
       end
     else
@@ -51,7 +53,7 @@ class ParticipantsController < ApplicationController
   end
   
   def randomize
-    bool, access_token = post_challonge_api({:tournament => t.id}, "/#{@tournament.id_number}/participants/randomize")
+    bool, access_token = post_challonge_api({:tournament => @tournament.id_number}, "/#{@tournament.id_number}/participants/randomize")
   
     if bool
       flash[:success] = "並び替えました。"
@@ -90,7 +92,7 @@ class ParticipantsController < ApplicationController
     bool, access_token = delete_challonge_api({}, "/#{@tournament.id_number}/participants/#{participant.challonge_participant_id}")
     
     if bool
-      flash[:success] = "#{return_user_from_participant(participant).name}さんの参加を取り消しました。"
+      flash[:success] = "#{participant_to_user(participant).name}さんの参加を取り消しました。"
       participant.destroy
       puts access_token
     else

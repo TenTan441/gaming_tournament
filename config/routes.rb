@@ -34,6 +34,7 @@ Rails.application.routes.draw do
     get 'start', to: 'tournaments#start'
     get 'reset', to: 'tournaments#reset'
     get 'finalize', to: 'tournaments#finalize'
+    get 'toggle', to: 'tournaments#toggle'
     
     get 'report', to: 'matches#report'
     post 'update', to: 'matches#update'

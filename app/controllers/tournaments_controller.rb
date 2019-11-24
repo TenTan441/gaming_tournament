@@ -51,20 +51,35 @@ class TournamentsController < ApplicationController
   
   def show
     @participants = Participant.where(tournament_id: @tournament)
-    @t = get_challonge_api({}, "/#{@tournament.id_number}")
+    @challonge = get_challonge_api({}, "/#{@tournament.id_number}")
     
     # 開催中と終了したマッチングを取得
     @matches_opening = get_challonge_api({:state => "open"}, "/#{@tournament.id_number}/matches")
     @matches_complete = get_challonge_api({:state => "complete"}, "/#{@tournament.id_number}/matches")
-    if @t["tournament"]["state"] == "pending"
+    
+    case @challonge["tournament"]["state"]
+    when "pending"
       @started = false
-    else
+    when "underway"
+      @started = true
+    when "complete"
       @started = true
     end
     
     @message = Message.new()
     @participant = Participant.new()
     @not_yet_users = return_users_from_non_participants(@participants)
+  end
+  
+  def toggle
+    @state = params[:state]
+    @tournament = Tournament.find(params[:tournament_id])
+    case @state
+    when 'open'
+      @matches_opening = get_challonge_api({:state => "open"}, "/#{@tournament.id_number}/matches")
+    when 'complete'
+      @matches_complete = get_challonge_api({:state => "complete"}, "/#{@tournament.id_number}/matches")
+    end
   end
   
   def start
