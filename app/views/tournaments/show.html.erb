@@ -1,6 +1,6 @@
 <% provide(:title, @tournament.name) %>
-<div class="col-sm-12">
-
+<div>
+  
   <section class="my-2">
     <div class="accordion" id="accordion" role="tablist" aria-multiselectable="true">
       <% unless @started %>
@@ -76,6 +76,7 @@
           <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
             <div class="card-body">
               <div class="row justify-content-around">
+                  <%= link_to "大会を編集する", edit_tournament_path(@tournament, @challonge), class: "btn btn-lg btn-success" %>
                 <% unless @started %>
                   <%= link_to "参加者を全て取り消す", tournament_participants_clear_path(@tournament), method: :delete, data: { confirm: "取り消ししてよろしいですか？" }, class: "btn btn-lg btn-primary" %>
                   <%= link_to "参加者を並び替る", tournament_randomize_path(@tournament), data: { confirm: "並び替えてもいいですか？" }, class: "btn btn-lg btn-success" %>
@@ -95,11 +96,14 @@
     </div><!-- /#accordion -->
   </section>
   
+  <h1><%= @tournament.name %></h1>
+  <h5><%= @tournament.game_title %></h5>
+  
   <div class="container-fluid">
     <div class="row justify-content-start">
       <div class="col-lg-8 bg-light border">
         <% if @participants.count > 1 %>
-          <%= image_tag @challonge["tournament"]["live_image_url"], :width => "100%" %>
+          <%= link_to image_tag(@challonge["tournament"]["live_image_url"], :width => "100%"), @challonge["tournament"]["full_challonge_url"], target: :_blank %>
         <% else %>
           <p class="text-dark">参加者は最低2人設定してください。</p>
         <% end %>
@@ -138,40 +142,66 @@
     </div>
   </div>
   
-  <div class="bg-transparent p-1">
-    <span class="m-2">参加者一覧</span>
-    <% @participants.each do |participant| %>
-      <div class="bg-dark border m-2">
-        <div class="container-fluid">
-          <div class="row p-1">
-            <div class="col-5">
-              <% if participant_to_user(participant).image? %>
-                <%= image_tag participant_to_user(participant).image.to_s, class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
-              <% else %>
-                <%= image_tag "no-profile-image.png", class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
-              <% end %>
-              <%= link_to User.find(participant.user_id).name, User.find(participant.user_id), class: "font-weight-bold text-whited " %>
-            </div>
-            <div class="col-5">
-              <%= form_with(model: @message, url: user_messages_path(current_user), local: true, method: :post) do |f| %>
-                <%= f.hidden_field :user_id, value: master_tournament(@tournament).id %>
-                <%= hidden_field_tag :user_to, participant.user_id %>
-                
-                <%= f.text_field :text, class: "form-control" %>
-                <%= f.submit "送信", class: "btn btn-primary" %>
-              <% end %>
-            </div>
-            <div class="col-2">
-              <% if master?(@tournament) %>
-                <%= link_to "削除", tournament_participant_path(@tournament, participant), method: :delete,
-                    data: { confirm: "削除してよろしいですか？" },
-                    class: "btn btn-danger" %>
-              <% end %>
+  <div class="bg-dark my-1 p-1 border">
+    <div class="row justify-content-between m-1">
+      <div class="m-1">
+        <%= will_paginate @participants_search %>
+        <span class="m-2 font-weight-bold">
+          <% if params[:search].blank? %>
+            参加者一覧
+          <% else %>
+            検索結果
+          <% end %>
+        </span>
+      </div>
+      <div class="m-1">
+        <p>ユーザ検索</p>
+        <%= form_tag(tournament_path, :method => 'get') do %>
+          <%= text_field_tag :search %>
+          <%= submit_tag '検索', :name => nil, :class => 'btn btn-primary' %>
+        <% end %>
+      </div>
+    </div>
+    
+    <% if !@participants_search.blank? %>
+      <% @participants_search.each do |participant| %>
+        <div class="bg-dark border m-2">
+          <div class="container-fluid">
+            <div class="row p-1">
+              <div class="col-5">
+                <% if participant_to_user(participant).image? %>
+                  <%= image_tag participant_to_user(participant).image.to_s, class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
+                <% else %>
+                  <%= image_tag "no-profile-image.png", class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
+                <% end %>
+                <%= link_to User.find(participant.user_id).name, User.find(participant.user_id), class: "font-weight-bold text-whited " %>
+              </div>
+              <div class="col-5">
+                <%= form_with(model: @message, url: user_messages_path(current_user), local: true, method: :post) do |f| %>
+                  <%= f.hidden_field :user_id, value: master_tournament(@tournament).id %>
+                  <%= hidden_field_tag :user_to, participant.user_id %>
+                  
+                  <%= f.text_field :text, class: "form-control" %>
+                  <%= f.submit "送信", class: "btn btn-primary" %>
+                <% end %>
+              </div>
+              <div class="col-2">
+                <% if master?(@tournament) %>
+                  <%= link_to "削除", tournament_participant_path(@tournament, participant), method: :delete,
+                      data: { confirm: "削除してよろしいですか？" },
+                      class: "btn btn-danger" %>
+                <% end %>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      <% end %>
+    <% else %>
+      <div class="text-center">なし</div>
     <% end %>
+    <div class="m-2">
+    <%= will_paginate @participants_search %>
+    </div>
   </div>
 </div>
   

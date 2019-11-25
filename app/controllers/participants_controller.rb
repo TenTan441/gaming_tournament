@@ -1,7 +1,3 @@
-require 'net/http'
-require 'uri'
-require 'json'
-
 class ParticipantsController < ApplicationController
   
   before_action :set_tournament, only: [:new, :create, :reload, :randomize, :destroy, :update, :clear, :tournament_master]
@@ -21,7 +17,6 @@ class ParticipantsController < ApplicationController
       players.each do |player|
         if !player.nil?
           pa = Participant.new(tournament_id: @tournament.id, user_id: player)
-          #chapa = Challonge::Participant.create(:name => "#{User.find(player).name}", :tournament => Challonge::Tournament.find(@tournament.id_number))
           bool, access_token = post_challonge_api({:participant => {:name => User.find(player).name}}, "/#{@tournament.id_number}/participants")
           
           if bool

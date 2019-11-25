@@ -26,6 +26,6 @@ ja:
         master: 管理者
         status: 大会ステータス
         particepants: 参加者
-        group_stage_enabled: 形式
+        group_stages_enabled: 形式
       participant:
         

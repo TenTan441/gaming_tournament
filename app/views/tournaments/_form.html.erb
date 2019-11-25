@@ -1,8 +1,8 @@
 <%= form_with(model: @tournament, local: true) do |f| %>
-<%#= form_with(url: 'https://api.challonge.com/v1/tournaments', method: :post) do |f| %>
   <%= render 'shared/error_messages_tournament', object: @tournament %>
   
   <%= f.hidden_field :master, :value => current_user.id %>
+  
   <div class="form-group">
     <%= f.label :name, class: "label-#{yield(:class_text)}" %>
     <%= f.text_field :name, class: "form-control" %>
@@ -20,14 +20,22 @@
     </div>
   </div>
 
-　<div class="form-group">
+  <div class="form-group">
     <%= f.label :game_title, class: "label-#{yield(:class_text)}" %>
-    <%= f.select :game_title, options_for_select([["ニンテンドウオールスター！大乱闘スマッシュブラザーズ","Super Smash Bros."], ["大乱闘スマッシュブラザーズDX","Super Smash Bros. Melee"], ["大乱闘スマッシュブラザーズX", "Super Smash Bros. Brawl"], ["大乱闘スマッシュブラザーズ for Nintendo 3DS", "Super Smash Bros. for 3DS"], ["大乱闘スマッシュブラザーズ for Wii U", "Super Smash Bros. for Wii U"], ["大乱闘スマッシュブラザーズ SPECIAL", "Super Smash Bros. Ultimate"]]), {:include_blank => true}, class: "form-control" %>
+    <% if controller.action_name == 'new' %>
+      <%= f.select :game_title, ["ニンテンドウオールスター！大乱闘スマッシュブラザーズ", "大乱闘スマッシュブラザーズDX", "大乱闘スマッシュブラザーズX", "大乱闘スマッシュブラザーズ for Nintendo 3DS", "大乱闘スマッシュブラザーズ for Wii U", "大乱闘スマッシュブラザーズ SPECIAL"], {:include_blank => true}, class: "form-control" %>
+    <% else %>
+      <%= f.select :game_title, ["ニンテンドウオールスター！大乱闘スマッシュブラザーズ", "大乱闘スマッシュブラザーズDX", "大乱闘スマッシュブラザーズX", "大乱闘スマッシュブラザーズ for Nintendo 3DS", "大乱闘スマッシュブラザーズ for Wii U", "大乱闘スマッシュブラザーズ SPECIAL"], {:include_blank => true}, value: @tournament.game_title, class: "form-control" %>
+    <% end %>
   </div>
   
   <div class="form-group">
     <%= f.label :url, class: "label-#{yield(:class_text)}" %>
-    <%= f.text_field :url, value: (0...8).map{ ('a'..'z').to_a[rand(26)] }.join, class: "form-control" %>
+    <% if controller.action_name == 'new' %>
+      <%= f.text_field :url, value: (0...8).map{ ('a'..'z').to_a[rand(26)] }.join, class: "form-control" %>
+    <% else %>
+      <%= f.text_field :url, value: @challonge['tournament']['url'], class: "form-control" %>
+    <% end %>
   </div>
   
   <div class="form-group">
@@ -35,17 +43,31 @@
     <%= f.text_area :description, class: "form-control" %>
   </div>
   
-  <%= f.label :group_stage_enabled, class: "label-#{yield(:class_text)}" %>
-  <div class="radio">
-    <label><%= f.radio_button :group_stage_enabled, false, :value => false, :checked => true, :onclick => "tournament_type();", class: "radio-control" %><span>通常の形式　</span></label>
-    <label><%= f.radio_button :group_stage_enabled, true, :value => true, :disabled => true, :onclick => "tournament_type();", class: "radio-control" %><span>2ステージトーナメント【API仕様により選択不可】</span></label>
-  </div>
-  
-  <div class="form-group" id="normal-tournament">
-    <%= f.label :elimination_type, class: "label-#{yield(:class_text)}" %>
-    <%= f.select :elimination_type, options_for_select([["シングルイリミネーション","single elimination"],["ダブルイリミネーション","double elimination"],["総当たり戦", "round robin"]]), {}, class: "form-control" %>
-    <%= f.check_box :hold_third_place_match %><span>3位決定戦を行う</span>
-  </div>
+  <% if controller.action_name == 'new' %>
+    <%= f.label :group_stage_enabled, class: "label-#{yield(:class_text)}" %>
+    <div class="radio">
+      <label><%= f.radio_button :group_stage_enabled, false, :value => false, :checked => true, :onclick => "tournament_type();", class: "radio-control" %><span>通常の形式　</span></label>
+      <label><%= f.radio_button :group_stage_enabled, true, :value => true, :disabled => true, :onclick => "tournament_type();", class: "radio-control" %><span>2ステージトーナメント【API仕様により選択不可】</span></label>
+    </div>
+    
+    <div class="form-group" id="normal-tournament">
+      <%= f.label :elimination_type, class: "label-#{yield(:class_text)}" %>
+      <%= f.select :elimination_type, options_for_select([["シングルイリミネーション","single elimination"],["ダブルイリミネーション","double elimination"],["総当たり戦", "round robin"]]), {}, class: "form-control" %>
+      <%= f.check_box :hold_third_place_match %><span>3位決定戦を行う</span>
+    </div>
+  <% else %>
+    <%= f.label :group_stages_enabled, class: "label-#{yield(:class_text)}" %>
+    <div class="radio">
+      <label><%= f.radio_button :group_stages_enabled, false, :value => false, :checked => true, :disabled => true, :onclick => "tournament_type();", class: "radio-control" %><span>通常の形式　</span></label>
+      <label><%= f.radio_button :group_stages_enabled, true, :value => true, :disabled => true, :onclick => "tournament_type();", class: "radio-control" %><span>2ステージトーナメント【API仕様により選択不可】</span></label>
+    </div>
+    
+    <div class="form-group" id="normal-tournament">
+      <%= f.label :elimination_type, class: "label-#{yield(:class_text)}" %>
+      <%= f.select :elimination_type, options_for_select([["シングルイリミネーション","single elimination"],["ダブルイリミネーション","double elimination"],["総当たり戦", "round robin"]]), {}, value: @challonge["tournament"]["tournament_type"], id: "elimination", class: "form-control" %>
+      <%= f.check_box :hold_third_place_match, value: @challonge["tournament"]["hold_third_place_match"] %><span>3位決定戦を行う</span>
+    </div>
+  <% end %>
 
   <%= f.label :start_time, class: "label-#{yield(:class_text)}" %>
   <div class="input-group" data-target-input="nearest">
@@ -64,4 +86,6 @@
       format: 'YYYY-MM-DD HH:mm:00'
     });
   });
+  
+  var select_num = $('#elimination').val();
 </script>

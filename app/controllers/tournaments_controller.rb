@@ -1,11 +1,6 @@
-require 'net/http'
-require 'uri'
-require 'json'
-
-
 class TournamentsController < ApplicationController
   
-  before_action :set_tournament, only: [:show, :edit, :update, :destroy, :reload, :start, :reset, :finalize, :tournament_master, :master_or_party]
+  before_action :set_tournament, only: [:show, :edit, :update, :destroy, :toggle, :start, :reset, :finalize, :tournament_master, :master_or_party]
   before_action :tournament_master, only: [:start, :edit, :reset, :finalize, :destroy]
   
   def index
@@ -19,9 +14,9 @@ class TournamentsController < ApplicationController
   def create
     @tournament = Tournament.new(tournament_params)
     t = params[:tournament]
-    
+    game_title = game_title_from_number(t[:game_title])
     bool, access_token = post_challonge_api({:tournament => {:name => t[:name], 
-                                                             :game_name => t[:game_title], 
+                                                             :game_name => game_title, 
                                                              :url => t[:url],
                                                              :tournament_type => t[:elimination_type],
                                                              :start_at => t[:start_time],
@@ -47,6 +42,7 @@ class TournamentsController < ApplicationController
   end
   
   def edit
+    @challonge = get_challonge_api({}, "/#{@tournament.id_number}")
   end
   
   def show
@@ -55,8 +51,7 @@ class TournamentsController < ApplicationController
     
     # 開催中と終了したマッチングを取得
     @matches_opening = get_challonge_api({:state => "open"}, "/#{@tournament.id_number}/matches")
-    @matches_complete = get_challonge_api({:state => "complete"}, "/#{@tournament.id_number}/matches")
-    
+
     case @challonge["tournament"]["state"]
     when "pending"
       @started = false
@@ -69,11 +64,12 @@ class TournamentsController < ApplicationController
     @message = Message.new()
     @participant = Participant.new()
     @not_yet_users = return_users_from_non_participants(@participants)
+    
+    @participants_search = @participants.where(user_id: User.search(params[:search]).order(:id).pluck(:id)).paginate(page: params[:page], per_page: 10)
   end
   
   def toggle
     @state = params[:state]
-    @tournament = Tournament.find(params[:tournament_id])
     case @state
     when 'open'
       @matches_opening = get_challonge_api({:state => "open"}, "/#{@tournament.id_number}/matches")
@@ -125,6 +121,30 @@ class TournamentsController < ApplicationController
   end
   
   def update
+    t = params[:tournament]
+    game_title = game_title_from_number(t[:game_title])
+    bool, access_token = put_challonge_api({:tournament => {:name => t[:name], 
+                                                            :game_name => game_title, 
+                                                            :url => t[:url],
+                                                            :tournament_type => t[:elimination_type],
+                                                            :start_at => t[:start_time],
+                                                            :private => true,
+                                                            :description => t[:description],
+                                                            :hold_third_place_match => true}
+                                            }, "/#{@tournament.id_number}")
+    if bool # && s.save
+      if @tournament.update_attributes(tournament_params)
+        flash[:success] = '更新に成功しました。'
+        redirect_to @tournament
+      else
+        flash[:danger] = "更新に失敗しました！"
+        render :edit
+      end
+    else
+      flash[:danger] = "更新に失敗しました。"
+      @challonge = get_challonge_api({}, "/#{@tournament.id_number}")
+      render :edit
+    end
   end
   
   def destroy
@@ -146,7 +166,7 @@ class TournamentsController < ApplicationController
   private
   
     def tournament_params
-      params.require(:tournament).permit(:master, :name, :private, :game_title, :url, :description, :group_stage_enabled, :elimination_type, :hold_third_place_match, :start_time)
+      params.require(:tournament).permit(:master, :name, :private, :game_title, :description, :start_time)
     end
     
     def set_tournament

@@ -76,6 +76,15 @@ class User < ApplicationRecord
     end
   end
   
+  # 検索ワードが含まれる場合は合致するuserを返し、含まれてない場合は全てのユーザを返します。
+  def self.search(search)
+    if search
+      where(['name LIKE ?', "%#{search}%"])
+    else
+      all
+    end
+  end
+  
   #email認証「A」かTwitter認証「B」のどちらかを済ませていればどちらかは空白でも構わない
   # A || B を満たせれば良い
   private
