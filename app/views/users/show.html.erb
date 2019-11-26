@@ -107,31 +107,7 @@
             <div class="col-lg-10 offset-lg-1">
               <div class="tab-content" id="pills-tabContent-box">
                 <div class="tab-pane fade" id="tabs-inbox" role="tabpanel" aria-labelledby="tabs-contact-tab">
-                  <div class="mx-auto my-3 bg-dark">
-                    <% if !@message_inbox.blank? %>
-                      <% @message_inbox.each do |message| %>
-                        <% sendUser = send_user(message) %>
-                        <div class="m-auto bg-dark">
-                          <div class="m-auto row justify-content-start">
-                            <% if sendUser.present? %>
-                              <div class="m-1">
-                                <% if sendUser.image.present? %>
-                                  <%= image_tag sendUser.image.to_s, class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
-                                <% else %>
-                                  <%= image_tag "no-profile-image.png", class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
-                                <% end %>
-                              </div>
-                              <div class="m-1 font-weight-bold text-muted">From:<%= link_to sendUser.name, sendUser, class: "text-reset" %></div>
-                            <% end %>
-                          </div>
-                          <div class="m-2"><%= message.text %></div>
-                          <div class="m-2 text-right font-weight-bold text-muted"><%= link_to l(message.created_at, format: :short), edit_user_message_path(@user, message), remote: true, class: "text-reset" %></div>
-                        </div>
-                      <% end %>
-                    <% else %>
-                      まだメッセージが来ていません
-                    <% end %>
-                  </div>
+                  <%= render "messages/inbox" %>
                 </div>
                 
                 <div class="tab-pane fade" id="tabs-create-mail" role="tabpanel" aria-labelledby="tabs-contact-tab">
@@ -150,33 +126,7 @@
                 </div>
                 
                 <div class="tab-pane fade" id="tabs-outbox" role="tabpanel" aria-labelledby="tabs-contact-tab">
-                  <div class="mx-auto my-3 rounded">
-                    <% if !@message_outbox.blank? %>
-                      <% @message_outbox.each do |message| %>
-                        <% receiveUser = destinate_user(message) %>
-                        <div class="m-auto bg-dark">
-                          <div class="m-auto row justify-content-start">
-                            <% if receiveUser.present? %>
-                              <div class="m-1">
-                                <% if receiveUser.image.present? %>
-                                  <%= image_tag receiveUser.image.to_s, class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
-                                <% else %>
-                                  <%= image_tag "no-profile-image.png", class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
-                                <% end %>
-                              </div>
-                              <div class="m-1 font-weight-bold text-muted">To:<%= link_to receiveUser.name, receiveUser, class: "text-reset" %></div>
-                            <% else %>
-                              <div class="m-1">存在しないユーザ</div>
-                            <% end %>
-                          </div>
-                          <div class="m-2"><%= message.text %></div>
-                          <div class="m-2 text-right font-weight-bold text-muted"><%= link_to l(message.created_at, format: :short), edit_user_message_path(@user, message), remote: true, class: "text-reset" %></div>
-                        </div>
-                      <% end %>
-                    <% else %>
-                      まだメッセージを送っていません。
-                    <% end %>
-                  </div>
+                  <%= render "messages/outbox" %>
                 </div>
               </div>
             </div><!-- col-lg-10 offset-lg-1 -->
@@ -206,26 +156,43 @@
 <div id="message-edit-page" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 
 <script>
+
 $(function(){
-  // 対象とするノードを取得
-  const target = document.getElementById('tabs-contact');
-  
   // オブザーバの設定
-  const config = { attributes: true, childList: true, characterData: true };
+  const config = { attributes: true, characterData: true };
   
+  // 対象とするノードを取得
+  const inbox = document.getElementById('tabs-inbox');
   // オブザーバインスタンスを作成
-  var observer = new MutationObserver((mutations) => {
+  var inbox_observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       // 一度監視を中止
-      observer.disconnect();
-      $('#user-contact').html('');
-      $('#user-contact').html('<%= escape_javascript( render 'contact', object: @user) %>');
+      inbox_observer.disconnect();
+      $('#tabs-inbox').html('<%= escape_javascript( render 'messages/inbox') %>');
       // 監視再開
-      observer.observe(target, config);
+      inbox_observer.observe(inbox, config);
     });    
   });
-   
   // 対象ノードとオブザーバの設定を渡す
-  observer.observe(target, config);
+  inbox_observer.observe(inbox, config);
+  
+  
+  // 対象とするノードを取得
+  const outbox = document.getElementById('tabs-outbox');
+  // オブザーバインスタンスを作成
+  var outbox_observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      // 一度監視を中止
+      outbox_observer.disconnect();
+      $('#tabs-outbox').html('<%= escape_javascript( render 'messages/outbox') %>');
+      // 監視再開
+      outbox_observer.observe(outbox, config);
+    });    
+  });
+  // 対象ノードとオブザーバの設定を渡す
+  outbox_observer.observe(outbox, config);
+  
+  $('.pagination a').attr('data-remote', 'true')
 });
+
 </script>

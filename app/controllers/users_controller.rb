@@ -9,9 +9,26 @@ class UsersController < ApplicationController
   end
 
   def show
+=begin
     @message = Message.new()
-    @message_inbox = Message.where(user_to: @user.id).order(id: "DESC")
-    @message_outbox = Message.where(user_id: @user.id).order(id: "DESC")
+    @message_inbox = Message.where(user_to: @user.id).order(updated_at: "DESC").paginate(page: params[:indox_page], per_page: 10)
+    @message_outbox = Message.where(user_id: @user.id).order(updated_at: "DESC").paginate(page: params[:outbox_page], per_page: 10)
+=end
+
+    respond_to do |format|
+      format.html do
+        @message = Message.new()
+        @message_inbox = Message.where(user_to: @user.id).order(updated_at: "DESC").paginate(page: params[:indox_page], per_page: 10)
+        @message_outbox = Message.where(user_id: @user.id).order(updated_at: "DESC").paginate(page: params[:outbox_page], per_page: 10)
+      end
+      format.js do
+        if params[:inbox_page].present?
+          @message_inbox = Message.where(user_to: @user.id).order(updated_at: "DESC").paginate(page: params[:indox_page], per_page: 10)
+        elsif params[:outbox_page].present?
+          @message_outbox = Message.where(user_id: @user.id).order(updated_at: "DESC").paginate(page: params[:outbox_page], per_page: 10)
+        end
+      end
+    end
   end
 
   def new

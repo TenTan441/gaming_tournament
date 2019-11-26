@@ -18,6 +18,9 @@ Rails.application.routes.draw do
     put 'characters/update', to: 'characters#update'
     match 'characters/select_title', to: 'characters#select_titles', via: [:get, :post]
     resources :characters
+    
+    get 'messages/inbox', to: 'messages#inbox'
+    get 'messages/outbox', to: 'messages#outbox'
     resources :messages
     
     get 'contact', to: 'users#contact'

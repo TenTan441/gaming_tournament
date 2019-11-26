@@ -1,11 +1,21 @@
 class MessagesController < ApplicationController
   
-  before_action :set_message, except: :create
-  before_action :only_send_or_destinate, except: :create
+  before_action :set_message, except: [:inbox, :outbox, :create]
+  before_action :only_send_or_destinate, except: [:inbox, :outbox, :create]
   #after_action :to_current_user, only: [:create, :update, :destroy]
   
   UPDATE_SUCCESS_MSG = "ステータスを変更しました"
   UPDATE_ERROR_MSG = "ステータスの変更に失敗しました。"
+  
+  def inbox
+    @user = User.find(params[:user_id])
+    @message_inbox = Message.where(user_to: @user.id).order(updated_at: "DESC").paginate(page: params[:page])
+  end
+  
+  def outbox
+    @user = User.find(params[:user_id])
+    @message_outbox = Message.where(user_id: @user.id).order(updated_at: "DESC").paginate(page: params[:page])
+  end
   
   def create
 

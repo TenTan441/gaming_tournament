@@ -1,0 +1,33 @@
+<div class="mx-auto my-3 bg-dark">
+  <% if !@message_inbox.blank? %>
+    <%= will_paginate @message_inbox, {:param_name => 'inbox_page', :class => 'pagination'} %>
+    <% @message_inbox.each do |message| %>
+      <% sendUser = send_user(message) %>
+      <div class="m-auto bg-dark">
+        <div class="m-auto row justify-content-start">
+          <% if sendUser.present? %>
+            <div class="m-1">
+              <% if sendUser.image.present? %>
+                <%= image_tag sendUser.image.to_s, class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
+              <% else %>
+                <%= image_tag "no-profile-image.png", class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
+              <% end %>
+            </div>
+            <div class="m-1 font-weight-bold text-muted">From:<%= link_to sendUser.name, sendUser, class: "text-reset" %></div>
+          <% end %>
+        </div>
+        <div class="m-2"><%= message.text %></div>
+        <div class="m-2 text-right font-weight-bold text-muted"><%= link_to l(message.updated_at, format: :short), edit_user_message_path(@user, message), remote: true, class: "text-reset" %></div>
+      </div>
+    <% end %>
+    <%= will_paginate @message_inbox, {:param_name => 'inbox_page', :class => 'pagination'} %>
+  <% else %>
+    着信ナシ（陣内智則）
+  <% end %>
+</div>
+
+<script>
+  $(function(){
+    $('.pagination a').attr('data-remote', 'true')
+  });
+</script>
