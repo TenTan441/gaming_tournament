@@ -1,21 +1,11 @@
 class MessagesController < ApplicationController
   
-  before_action :set_message, except: [:inbox, :outbox, :create]
-  before_action :only_send_or_destinate, except: [:inbox, :outbox, :create]
+  before_action :set_message, except: [:inbox, :outbox, :create, :search, :destroys]
+  before_action :only_send_or_destinate, except: [:inbox, :outbox, :create, :search, :destroys]
   #after_action :to_current_user, only: [:create, :update, :destroy]
   
   UPDATE_SUCCESS_MSG = "ステータスを変更しました"
   UPDATE_ERROR_MSG = "ステータスの変更に失敗しました。"
-  
-  def inbox
-    @user = User.find(params[:user_id])
-    @message_inbox = Message.where(user_to: @user.id).order(updated_at: "DESC").paginate(page: params[:page])
-  end
-  
-  def outbox
-    @user = User.find(params[:user_id])
-    @message_outbox = Message.where(user_id: @user.id).order(updated_at: "DESC").paginate(page: params[:page])
-  end
   
   def create
 
@@ -80,6 +70,29 @@ class MessagesController < ApplicationController
   def destroy
     @message.destroy
     flash[:success] = "メッセージを削除しました。"
+    redirect_to current_user
+  end
+  
+  def destroys
+
+    deleted = 0
+    params.require(:messages).each do |id, item|
+      if ActiveRecord::Type::Boolean.new.cast(item[:permit])
+        message = Message.find(id)
+        message.destroy
+        deleted += 1
+      end
+    end
+    
+    if deleted > 0
+      flash[:success] = "メッセージを#{deleted}件削除しました。"
+    end
+    
+    redirect_to current_user
+  end
+  
+  def search
+    debugger
     redirect_to current_user
   end
   

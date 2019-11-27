@@ -1,35 +1,52 @@
-<div class="mx-auto my-3 rounded">
-  <%= will_paginate @message_outbox, {:param_name => 'outbox_page', :class => 'pagination'} %>
+<div class="mx-auto my-3">
   <% if !@message_outbox.blank? %>
-    <% @message_outbox.each do |message| %>
-      <% receiveUser = destinate_user(message) %>
-      <div class="m-auto bg-dark">
-        <div class="m-auto row justify-content-start">
-          <% if receiveUser.present? %>
-            <div class="m-1">
-              <% if receiveUser.image.present? %>
-                <%= image_tag receiveUser.image.to_s, class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
-              <% else %>
-                <%= image_tag "no-profile-image.png", class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
-              <% end %>
+    <%= will_paginate @message_outbox, {:param_name => 'outbox_page', :class => 'pagination'} %>
+    <%= form_with(model: @message_outbox, url: user_messages_destroys_path(@user), local: true, method: :delete) do |f| %>
+      <% @message_outbox.each do |message| %>
+        <% receiveUser = destinate_user(message) %>
+        <%= f.fields_for "messages[]", message do |msg| %>
+          <div class="m-auto bg-dark">
+            <div class="m-auto row justify-content-between">
+              <div class="row m-1">
+                <% if receiveUser.present? %>
+                  <div class="row m-1">
+                    <% if receiveUser.image.present? %>
+                      <%= image_tag receiveUser.image.to_s, class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
+                    <% else %>
+                      <%= image_tag "no-profile-image.png", class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
+                    <% end %>
+                    <div class="m-1 font-weight-bold text-muted">To: <%= link_to receiveUser.name, receiveUser, class: "text-reset" %></div>
+                  </div>
+                <% else %>
+                  <div class="m-1">削除済みユーザ</div>
+                <% end %>
+              </div>
+              <div class="m-1"><%= msg.check_box :permit, :checked => false %></div>
             </div>
-            <div class="m-1 font-weight-bold text-muted">To:<%= link_to receiveUser.name, receiveUser, class: "text-reset" %></div>
-          <% else %>
-            <div class="m-1">存在しないユーザ</div>
-          <% end %>
-        </div>
-        <div class="m-2"><%= message.text %></div>
-        <div class="m-2 text-right font-weight-bold text-muted"><%= link_to l(message.updated_at, format: :short), edit_user_message_path(@user, message), remote: true, class: "text-reset" %></div>
-      </div>
+            <div class="m-2"><%= message.text %></div>
+            <div class="m-2 text-right font-weight-bold text-muted"><%= link_to l(message.updated_at, format: :short), edit_user_message_path(@user, message), remote: true, class: "text-reset" %></div>
+          </div>
+        <% end %>
+      <% end %>
+    <div class="m-auto row justify-content-between">
+      <div><%= will_paginate @message_outbox, {:param_name => 'outbox_page', :class => 'pagination'} %></div>
+      <div><%= f.submit "チェック付きの投稿を削除する", data: { confirm: "削除してよろしいですか？（取消できません）" }, class: "btn btn-lg btn-primary" %></div>
+    </div>
     <% end %>
-  <%= will_paginate @message_outbox, {:param_name => 'outbox_page', :class => 'pagination'} %>
   <% else %>
-    送信メッセージがありません
+    <p class="text-center">送信メッセージがありません</p>
   <% end %>
 </div>
 
 <script>
   $(function(){
-    $('.pagination a').attr('data-remote', 'true')
+    $('.pagination a').attr('data-remote', 'true');
+    $('.mail_search').attr('data-remote', 'true');
+    
+    $('.datepicker').datetimepicker({
+      format: 'YYYY-MM-DD HH:mm:00'
+    });
+    
+    $('.searchable').select2();
   });
 </script>

@@ -107,7 +107,38 @@
             <div class="col-lg-10 offset-lg-1">
               <div class="tab-content" id="pills-tabContent-box">
                 <div class="tab-pane fade" id="tabs-inbox" role="tabpanel" aria-labelledby="tabs-contact-tab">
-                  <%= render "messages/inbox" %>
+                  <%= form_with(url: user_path(@user), method: :get) do |fo| %>
+                    <div class="m-auto row justify-content-between align-items-center col-lg">
+                      <div>
+                        <%= fo.label "差出人" %><br>
+                        <%= select_tag :user_id, options_from_collection_for_select(User.where.not(id: @user), :id, :name), include_blank: true, class: "form-control searchable" %>
+                      </div>
+                      <div>
+                        <%= fo.label "From"%>
+                        <div class="input-group" data-target-input="nearest">
+                          <%= fo.text_field :from, id: "from_time_in", class: "form-control datepicker", data: {target: "#from_time_in"} %>
+                          <div class="input-group-append" data-target="#from_time_in" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div>～</div>
+                      <div>
+                        <%= fo.label "To" %>
+                        <div class="input-group" data-target-input="nearest">
+                          <%= fo.text_field :to, id: "to_time_in", class: "form-control datepicker", data: {target: "#to_time_in"} %>
+                          <div class="input-group-append" data-target="#to_time_in" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <%= fo.label "本文" %>
+                    <%= fo.text_field :text, class: "form-control" %>
+                    <%= fo.hidden_field :inbox, value: 'inbox_search' %>
+                    <%= fo.submit "検索する", class: "btn btn-primary btn-block my-2 mail_search" %>
+                  <% end %>
+                  <div id="mails-inbox"><%= render "messages/inbox" %></div>
                 </div>
                 
                 <div class="tab-pane fade" id="tabs-create-mail" role="tabpanel" aria-labelledby="tabs-contact-tab">
@@ -126,7 +157,45 @@
                 </div>
                 
                 <div class="tab-pane fade" id="tabs-outbox" role="tabpanel" aria-labelledby="tabs-contact-tab">
-                  <%= render "messages/outbox" %>
+                  <%= form_with(url: user_path(@user), method: :get) do |fo| %>
+                    <div class="m-auto row justify-content-between align-items-center col-lg">
+                      <!--
+                      <div>
+                        <%#= fo.label "差出人" %>
+                        <%#= select_tag :user_id, options_from_collection_for_select(User.all, :id, :name), include_blank: true, class: "form-control searchable" %>
+                      </div>
+                      <div>→</div>
+                      !-->
+                      <div>
+                        <%= fo.label "宛先" %><br>
+                        <%= select_tag :user_to, options_from_collection_for_select(User.where.not(id: @user), :id, :name), include_blank: true, class: "form-control searchable" %>
+                      </div>
+                      <div>
+                        <%= fo.label "From"%>
+                        <div class="input-group" data-target-input="nearest">
+                          <%= fo.text_field :from, id: "from_time", class: "form-control datepicker", data: {target: "#from_time"} %>
+                          <div class="input-group-append" data-target="#from_time" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div>～</div>
+                      <div>
+                        <%= fo.label "To" %>
+                        <div class="input-group" data-target-input="nearest">
+                          <%= fo.text_field :to, id: "to_time", class: "form-control datepicker", data: {target: "#to_time"} %>
+                          <div class="input-group-append" data-target="#to_time" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <%= fo.label "本文" %>
+                    <%= fo.text_field :text, class: "form-control" %>
+                    <%= fo.hidden_field :outbox, value: 'outbox_search' %>
+                    <%= fo.submit "検索する", class: "btn btn-primary btn-block my-2 mail_search" %>
+                  <% end %>
+                  <div id="mails-outbox"><%= render "messages/outbox" %></div>
                 </div>
               </div>
             </div><!-- col-lg-10 offset-lg-1 -->
@@ -168,7 +237,7 @@ $(function(){
     mutations.forEach((mutation) => {
       // 一度監視を中止
       inbox_observer.disconnect();
-      $('#tabs-inbox').html('<%= escape_javascript( render 'messages/inbox') %>');
+      $('#mails-inbox').html('<%= escape_javascript( render 'messages/inbox') %>');
       // 監視再開
       inbox_observer.observe(inbox, config);
     });    
@@ -184,7 +253,7 @@ $(function(){
     mutations.forEach((mutation) => {
       // 一度監視を中止
       outbox_observer.disconnect();
-      $('#tabs-outbox').html('<%= escape_javascript( render 'messages/outbox') %>');
+      $('#mails-outbox').html('<%= escape_javascript( render 'messages/outbox') %>');
       // 監視再開
       outbox_observer.observe(outbox, config);
     });    

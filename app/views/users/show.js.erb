@@ -1,5 +1,5 @@
-<% if params[:inbox_page].present? %>
-  $('#tabs-inbox').html('<%= escape_javascript( render 'messages/inbox') %>');
-<% elsif params[:outbox_page].present? %>
-  $('#tabs-outbox').html('<%= escape_javascript( render 'messages/outbox') %>');
+<% if params[:inbox_page].present? || params[:inbox].present?%>
+  $('#mails-inbox').html('<%= escape_javascript( render 'messages/inbox') %>');
+<% elsif params[:outbox_page].present? || params[:outbox].present? %>
+  $('#mails-outbox').html('<%= escape_javascript( render 'messages/outbox') %>');
 <% end %>

@@ -66,6 +66,7 @@ class TournamentsController < ApplicationController
     @not_yet_users = return_users_from_non_participants(@participants)
     
     @participants_search = @participants.where(user_id: User.search(params[:search]).order(:id).pluck(:id)).paginate(page: params[:page], per_page: 10)
+    
   end
   
   def toggle

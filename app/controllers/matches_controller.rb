@@ -5,7 +5,6 @@ class MatchesController < ApplicationController
   before_action :master_or_party, only: [:report]
   
   def report
-    #@match_id = params[:match][:suggested_play_order].to_i - 1
     @tournament_id = params[:match][:tournament_id]
     @player1 = params[:match][:player1_id]
     @player2 = params[:match][:player2_id]
