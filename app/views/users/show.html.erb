@@ -107,38 +107,8 @@
             <div class="col-lg-10 offset-lg-1">
               <div class="tab-content" id="pills-tabContent-box">
                 <div class="tab-pane fade" id="tabs-inbox" role="tabpanel" aria-labelledby="tabs-contact-tab">
-                  <%= form_with(url: user_path(@user), method: :get) do |fo| %>
-                    <div class="m-auto row justify-content-between align-items-center col-lg">
-                      <div>
-                        <%= fo.label "差出人" %><br>
-                        <%= select_tag :user_id, options_from_collection_for_select(User.where.not(id: @user), :id, :name), include_blank: true, class: "form-control searchable" %>
-                      </div>
-                      <div>
-                        <%= fo.label "From"%>
-                        <div class="input-group" data-target-input="nearest">
-                          <%= fo.text_field :from, id: "from_time_in", class: "form-control datepicker", data: {target: "#from_time_in"} %>
-                          <div class="input-group-append" data-target="#from_time_in" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div>～</div>
-                      <div>
-                        <%= fo.label "To" %>
-                        <div class="input-group" data-target-input="nearest">
-                          <%= fo.text_field :to, id: "to_time_in", class: "form-control datepicker", data: {target: "#to_time_in"} %>
-                          <div class="input-group-append" data-target="#to_time_in" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <%= fo.label "本文" %>
-                    <%= fo.text_field :text, class: "form-control" %>
-                    <%= fo.hidden_field :inbox, value: 'inbox_search' %>
-                    <%= fo.submit "検索する", class: "btn btn-primary btn-block my-2 mail_search" %>
-                  <% end %>
-                  <div id="mails-inbox"><%= render "messages/inbox" %></div>
+                  <%= render 'messages/search_inbox' %>
+                  <div id="mails-inbox"></div>
                 </div>
                 
                 <div class="tab-pane fade" id="tabs-create-mail" role="tabpanel" aria-labelledby="tabs-contact-tab">
@@ -159,13 +129,6 @@
                 <div class="tab-pane fade" id="tabs-outbox" role="tabpanel" aria-labelledby="tabs-contact-tab">
                   <%= form_with(url: user_path(@user), method: :get) do |fo| %>
                     <div class="m-auto row justify-content-between align-items-center col-lg">
-                      <!--
-                      <div>
-                        <%#= fo.label "差出人" %>
-                        <%#= select_tag :user_id, options_from_collection_for_select(User.all, :id, :name), include_blank: true, class: "form-control searchable" %>
-                      </div>
-                      <div>→</div>
-                      !-->
                       <div>
                         <%= fo.label "宛先" %><br>
                         <%= select_tag :user_to, options_from_collection_for_select(User.where.not(id: @user), :id, :name), include_blank: true, class: "form-control searchable" %>
@@ -195,7 +158,7 @@
                     <%= fo.hidden_field :outbox, value: 'outbox_search' %>
                     <%= fo.submit "検索する", class: "btn btn-primary btn-block my-2 mail_search" %>
                   <% end %>
-                  <div id="mails-outbox"><%= render "messages/outbox" %></div>
+                  <div id="mails-outbox"></div>
                 </div>
               </div>
             </div><!-- col-lg-10 offset-lg-1 -->
@@ -228,7 +191,7 @@
 
 $(function(){
   // オブザーバの設定
-  const config = { attributes: true, characterData: true };
+  const config = { childList: true };
   
   // 対象とするノードを取得
   const inbox = document.getElementById('tabs-inbox');
@@ -240,11 +203,11 @@ $(function(){
       $('#mails-inbox').html('<%= escape_javascript( render 'messages/inbox') %>');
       // 監視再開
       inbox_observer.observe(inbox, config);
-    });    
+    });
   });
+  
   // 対象ノードとオブザーバの設定を渡す
   inbox_observer.observe(inbox, config);
-  
   
   // 対象とするノードを取得
   const outbox = document.getElementById('tabs-outbox');
@@ -261,7 +224,25 @@ $(function(){
   // 対象ノードとオブザーバの設定を渡す
   outbox_observer.observe(outbox, config);
   
-  $('.pagination a').attr('data-remote', 'true')
+  // オブザーバの設定
+  const config_searchable = { attributes: true };
+  
+  // 対象とするノードを取得
+  const searchable = document.getElementById('tabs-box');
+  // オブザーバインスタンスを作成
+  var searchable_observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      // 一度監視を中止
+      searchable_observer.disconnect();
+      $('.searchable').select2();
+      // 監視再開
+      searchable_observer.observe(searchable, config_searchable);
+    });    
+  });
+  // 対象ノードとオブザーバの設定を渡す
+  searchable_observer.observe(searchable, config_searchable);
+  
+  $('.pagination a').attr('data-remote', 'true');
 });
 
 </script>

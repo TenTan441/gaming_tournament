@@ -15,6 +15,7 @@ class MessagesController < ApplicationController
       users.each do |user|
         message = Message.new(message_params)
         message.user_to = user
+        message.edited_at = DateTime.now
         message.save
       end
       
@@ -23,6 +24,7 @@ class MessagesController < ApplicationController
     else
       message = Message.new(message_params)
       message.user_to = params[:user_to]
+      message.edited_at = DateTime.now
       
       if message.save
         flash[:success] = "メッセージを送信しました。"
@@ -31,6 +33,9 @@ class MessagesController < ApplicationController
       end
       redirect_to current_user
     end
+  end
+  
+  def creates
   end
   
   def new
@@ -45,6 +50,7 @@ class MessagesController < ApplicationController
     
     if params[:read].present?
       @message.read = params[:read]
+      @message.edited_at = DateTime.now
       if @message.save
         flash[:success] = UPDATE_SUCCESS_MSG
       else
@@ -52,12 +58,14 @@ class MessagesController < ApplicationController
       end
     elsif params[:show].present?
       @message.show = params[:show]
+      @message.edited_at = DateTime.now
       if @message.save
         flash[:success] = UPDATE_SUCCESS_MSG
       else
         flash[:danger] = UPDATE_ERROR_MSG
       end
     else
+      @message.edited_at = DateTime.now
       if @message.update_attributes(message_params)
         flash[:success] = "メッセージを更新しました。"
       else
@@ -67,6 +75,9 @@ class MessagesController < ApplicationController
     redirect_to current_user
   end
   
+  def updates
+  end
+  
   def destroy
     @message.destroy
     flash[:success] = "メッセージを削除しました。"
@@ -74,7 +85,6 @@ class MessagesController < ApplicationController
   end
   
   def destroys
-
     deleted = 0
     params.require(:messages).each do |id, item|
       if ActiveRecord::Type::Boolean.new.cast(item[:permit])

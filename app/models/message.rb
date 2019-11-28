@@ -32,13 +32,13 @@ class Message < ApplicationRecord
   end
   
   # 更新日時の検索
-  def self.updated_at_search(from, to)
+  def self.edited_at_search(from, to)
     if !from.blank? && !to.blank?
-      where('updated_at BETWEEN ? AND ?', from, to)
+      where('edited_at BETWEEN ? AND ?', from, to)
     elsif !from.blank?
-      where('updated_at >= ?', from)
+      where('edited_at >= ?', from)
     elsif !to.blank?
-      where('updated_at <= ?', to)
+      where('edited_at <= ?', to)
     else
       all
     end

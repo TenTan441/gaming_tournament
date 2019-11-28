@@ -5,7 +5,7 @@
       <% @message_inbox.each do |message| %>
         <% sendUser = send_user(message) %>
         <%= f.fields_for "messages[]", message do |msg| %>
-          <div class="m-auto bg-dark">
+          <div class="my-2 bg-dark <%= "border border-info" if message.read_at.nil? || message.edited_at > message.read_at %>">
             <div class="m-auto row justify-content-between">
               <div class="row m-1">
                 <% if sendUser.present? %>
@@ -24,13 +24,15 @@
               <div class="m-1"><%= msg.check_box :permit, :checked => false %></div>
             </div>
             <div class="m-2"><%= message.text %></div>
-            <div class="m-2 text-right font-weight-bold text-muted"><%= link_to l(message.updated_at, format: :short), edit_user_message_path(@user, message), remote: true, class: "text-reset" %></div>
+            <div class="m-2 text-right font-weight-bold text-muted"><%= link_to l(message.edited_at, format: :short), edit_user_message_path(@user, message), remote: true, class: "text-reset" %></div>
           </div>
+          <% message.read_at = DateTime.now %>
+          <% message.save %>
         <% end %>
       <% end %>
     <div class="m-auto row justify-content-between">
       <div><%= will_paginate @message_inbox, {:param_name => 'inbox_page', :class => 'pagination'} %></div>
-      <div><%= f.submit "チェック付きの投稿を削除する", data: { confirm: "削除してよろしいですか？（取消できません）" }, class: "btn btn-lg btn-primary" %></div>
+      <div><%= f.submit "まとめて削除する", data: { confirm: "削除してよろしいですか？（取消できません）" }, class: "btn btn-lg btn-primary" %></div>
     </div>
     <% end %>
   <% else %>
@@ -46,7 +48,5 @@
     $('.datepicker').datetimepicker({
       format: 'YYYY-MM-DD HH:mm:00'
     });
-    
-    $('.searchable').select2();
   });
 </script>
