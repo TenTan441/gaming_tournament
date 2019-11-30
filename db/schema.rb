@@ -71,7 +71,7 @@ ActiveRecord::Schema.define(version: 20191128112029) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "private", default: true, null: false
-    t.string "status"
+    t.integer "status"
     t.integer "master"
     t.boolean "group_stage_enabled"
     t.boolean "hold_third_place_match", default: false, null: false

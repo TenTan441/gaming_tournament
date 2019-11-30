@@ -20,11 +20,11 @@ ja:
         private: 公開設定
         name: 大会名
         url: URL
-        game_title: ゲームタイトル
+        game_title: タイトル
         elimination_type: 対戦方式
         description: 大会説明
-        master: 管理者
-        status: 大会ステータス
+        master: 開催者
+        status: ステータス
         particepants: 参加者
         group_stages_enabled: 形式
       participant:

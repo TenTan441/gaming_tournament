@@ -9,4 +9,9 @@ module ApplicationHelper
       page_name + " | " + base_title # 文字列を連結して返す
     end
   end
+  
+  # datetimepickerで渡された文字列をdatetime型にして返す
+  def datetimepicker_parse(picker)
+    return DateTime.parse(picker + " +09:00")
+  end
 end

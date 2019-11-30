@@ -4,28 +4,76 @@
 <h1>トーナメント一覧</h1>
 
 <div class="col-lg-10 offset-lg-1">
-  <%= will_paginate %>
-  <table class="table table-hover" id="table-users">
-    <thead>
-      <tr>
-        <th colspan="4"><%= Tournament.human_attribute_name :name %></th>
-        <th colspan="4"><%= Tournament.human_attribute_name :master %></th>
-        <th colspan="2"><%= Tournament.human_attribute_name :start_time %></th>
-        <th colspan="2"><%= Tournament.human_attribute_name :status %></th>
-      </tr>
-    </thead>
-    
-    <tbody>
-      <% @tournaments.each do |tournament| %>
-        <% master = master_tournament(tournament) %>
-        <tr>
-          <td colspan="4"><%= link_to tournament.name, tournament %></td>
-          <td colspan="4"><%= link_to image_tag(master.image.to_s, class: "img-fluid img-thumbnail rounded", :style => "width:100px; height:100px; margin:5px"), master %><%= link_to master.name, master %></td>
-          <td colspan="2"><%= l(tournament.start_time, format: :short) %></td>
-          <td colspan="2"><%= tournament.status %></td>
-        </tr>
+  <p>
+    <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+      検索オプション
+    </button>
+  </p>
+  <div class="collapse my-2" id="collapseExample">
+    <div class="card card-body bg-dark">
+      <%= form_with(url: tournaments_path, method: :get) do |fo| %>
+        <div class="m-auto row justify-content-between align-items-center col-lg">
+          <div class="col-lg-6">
+            <%= fo.label Tournament.human_attribute_name :game_title %>
+            <%= fo.select :game_title, Tournament.game_titles.keys.to_a, {include_blank: true}, class: "form-control" %>
+          </div>
+          <div class="col-lg-4 col-sm-8">
+            <%= fo.label Tournament.human_attribute_name :master %><br>
+            <%= select_tag :master, options_from_collection_for_select(User.all, :id, :name), include_blank: true, class: "form-control searchable" %>
+          </div>
+          <div class="col-lg-2 col-sm-4">
+            <%= fo.label Tournament.human_attribute_name :status %>
+            <%= fo.select :status, Tournament.statuses.keys.to_a, {include_blank: true}, class: "form-control" %>
+          </div>
+          <div class="col-lg-5">
+            <%= fo.label "From"%>
+            <div class="input-group" data-target-input="nearest">
+              <%= fo.text_field :from, id: "from_time_in", class: "form-control datepicker", data: {target: "#from_time_in"} %>
+              <div class="input-group-append" data-target="#from_time_in" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 d-none d-lg-block text-center">～</div>
+          <div class="col-lg-5">
+            <%= fo.label "To" %>
+            <div class="input-group" data-target-input="nearest">
+              <%= fo.text_field :to, id: "to_time_in", class: "form-control datepicker", data: {target: "#to_time_in"} %>
+              <div class="input-group-append" data-target="#to_time_in" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <%= fo.submit "検索する", class: "btn btn-primary btn-block my-2" %>
       <% end %>
-    </tbody>
-  </table>
-  <%= will_paginate %>
+    </div>
+  </div>
+  
+  <div class="table-responsive-md">
+    <table class="table table-hover text-nowrap table-responsive" id="table-users">
+      <thead>
+        <tr>
+          <th colspan="4"><%= Tournament.human_attribute_name :name %></th>
+          <th colspan="2"><%= Tournament.human_attribute_name :game_title %></th>
+          <th colspan="4"><%= Tournament.human_attribute_name :master %></th>
+          <th colspan="1"><%= Tournament.human_attribute_name :start_time %></th>
+          <th colspan="1"><%= Tournament.human_attribute_name :status %></th>
+        </tr>
+      </thead>
+      
+      <tbody id="tournaments_search_result">
+        <%= render 'tournaments_search' %>
+      </tbody>
+     
+    </table>
+  </div>
 </div>
+
+<script>
+  $('.searchable').select2();
+  
+  $('.datepicker').datetimepicker({
+    format: 'YYYY-MM-DD HH:mm:00'
+  });
+</script>

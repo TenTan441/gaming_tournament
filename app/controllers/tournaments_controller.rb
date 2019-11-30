@@ -4,7 +4,14 @@ class TournamentsController < ApplicationController
   before_action :tournament_master, only: [:start, :edit, :reset, :finalize, :destroy]
   
   def index
-    @tournaments = Tournament.paginate(page: params[:page])
+    respond_to do |format|
+      format.html do
+        @tournaments = Tournament.paginate(page: params[:page], per_page: 10)
+      end
+      format.js do
+        @tournaments = Tournament.master_search(params[:master]).title_search(params[:game_title]).status_search(params[:status]).start_time_search(params[:from], params[:to]).paginate(page: params[:page], per_page: 10)
+      end
+    end
   end
   
   def new
@@ -27,7 +34,7 @@ class TournamentsController < ApplicationController
 
     if bool # && s.save
       @tournament.id_number = access_token["tournament"]["id"]
-      @tournament.status = '準備中'
+      @tournament.status = "準備中"
       if @tournament.save
         flash[:success] = '新規作成に成功しました。'
         redirect_to @tournament
@@ -83,7 +90,7 @@ class TournamentsController < ApplicationController
     bool, access_token = post_challonge_api({}, "/#{@tournament.id_number}/start")
     
     if bool
-      @tournament.status = '進行中'
+      @tournament.status = "進行中"
       @tournament.save
       flash[:success] = "大会開始！"
     else
@@ -97,7 +104,7 @@ class TournamentsController < ApplicationController
     bool, access_token = post_challonge_api({}, "/#{@tournament.id_number}/reset")
     
     if bool
-      @tournament.status = '準備中'
+      @tournament.status = "準備中"
       @tournament.save
       flash[:info] = "大会がやり直されました。"
     else
@@ -112,7 +119,7 @@ class TournamentsController < ApplicationController
     
     if bool
       flash[:info] = "大会お疲れさまでした。"
-      @tournament.status = '終了'
+      @tournament.status = "終了"
       @tournament.save
     else
       flash[:danger] = "送信に失敗しました。管理者へ連絡してください。"

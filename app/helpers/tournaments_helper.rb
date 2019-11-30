@@ -32,4 +32,9 @@ module TournamentsHelper
     end
     return game_title
   end
+  
+  # datetimepickerで渡された文字列をdatetime型にして返す
+  def datetimepicker_parse(picker)
+    return DateTime.parse(picker + " +09:00")
+  end
 end

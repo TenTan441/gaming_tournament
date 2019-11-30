@@ -34,10 +34,14 @@ class Message < ApplicationRecord
   # 更新日時の検索
   def self.edited_at_search(from, to)
     if !from.blank? && !to.blank?
+      from = DateTime.parse(from + " +09:00")
+      to = DateTime.parse(to + " +09:00")
       where('edited_at BETWEEN ? AND ?', from, to)
     elsif !from.blank?
+      from = DateTime.parse(from + " +09:00")
       where('edited_at >= ?', from)
     elsif !to.blank?
+      to = DateTime.parse(to + " +09:00")
       where('edited_at <= ?', to)
     else
       all

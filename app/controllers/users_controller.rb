@@ -16,12 +16,12 @@ class UsersController < ApplicationController
       format.js do
         if params[:inbox].present?
           messages = params
-          @message_inbox = Message.where(user_to: @user.id).from_search(messages[:user_id]).text_search(messages[:text]).edited_at_search( (DateTime.parse(messages[:from] + "+09:00") unless messages[:from].blank?), (DateTime.parse(messages[:to] + "+09:00") unless messages[:to].blank?) ).order(edited_at: "DESC").paginate(page: params[:inbox_page], per_page: 10)
+          @message_inbox = Message.where(user_to: @user.id).from_search(messages[:user_id]).text_search(messages[:text]).edited_at_search(messages[:from], messages[:to]).order(edited_at: "DESC").paginate(page: params[:inbox_page], per_page: 10)
         elsif params[:inbox_page].present?
           @message_inbox = Message.where(user_to: @user.id).order(edited_at: "DESC").paginate(page: params[:indox_page], per_page: 10)
         elsif params[:outbox].present?
           messages = params
-          @message_outbox = Message.where(user_id: @user.id).to_search(messages[:user_to]).text_search(messages[:text]).edited_at_search( (DateTime.parse(messages[:from] + "+09:00") unless messages[:from].blank?), (DateTime.parse(messages[:to] + "+09:00") unless messages[:to].blank?) ).order(edited_at: "DESC").paginate(page: params[:outbox_page], per_page: 10)
+          @message_outbox = Message.where(user_id: @user.id).to_search(messages[:user_to]).text_search(messages[:text]).edited_at_search(messages[:from], messages[:to]).order(edited_at: "DESC").paginate(page: params[:outbox_page], per_page: 10)
         elsif params[:outbox_page].present?
           @message_outbox = Message.where(user_id: @user.id).order(edited_at: "DESC").paginate(page: params[:outbox_page], per_page: 10)
         end
