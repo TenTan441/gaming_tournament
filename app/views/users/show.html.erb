@@ -12,22 +12,22 @@
   <!-- ピル部分 -->
   <ul class="nav nav-tabs nav-justified mt-2" id="tabs-tab" role="tablist">
     <li class="nav-item active">
-      <%= link_to "ホーム", "#tabs-home", id: "tabs-home-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-home", "aria-selected" => "true", class: "nav-link" %>
+      <%= link_to "ホーム", "#tabs-home", id: "tabs-home-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-home", "aria-selected" => "true", class: "nav-link text-reset font-weight-bold" %>
     </li>
     <li class="nav-item">
-      <%= link_to "使用キャラ", "#tabs-profile", id: "tabs-profile-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-profile", class: "nav-link" %>
+      <%= link_to "使用キャラ", "#tabs-profile", id: "tabs-profile-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-profile", class: "nav-link text-reset font-weight-bold" %>
     </li>
     <li class="nav-item">
-      <%= link_to "コンタクト", "#tabs-contact", id: "tabs-contact-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-contact", class: "nav-link" %>
+      <%= link_to "コンタクト", "#tabs-contact", id: "tabs-contact-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-contact", class: "nav-link text-reset font-weight-bold" %>
     </li>
     <% if @user == current_user %>
       <li class="nav-item active dropdown">
-        <a href="#" class="nav-link dropdown-toggle" id="userpageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a href="#" class="nav-link dropdown-toggle text-reset font-weight-bold" id="userpageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           編集
         </a>
         <div class="dropdown-menu" aria-labelledby="userpageDropdown">
-          <%= link_to "設定", edit_user_path(current_user), remote: true, class: "dropdown-item" %>
-          <%= link_to "使用キャラクター", user_characters_edit_path(@user), remote: true, class: "dropdown-item" %>
+          <%= link_to "設定", edit_user_path(current_user), remote: true, class: "dropdown-item font-weight-bold" %>
+          <%= link_to "使用キャラクター", user_characters_edit_path(@user), remote: true, class: "dropdown-item font-weight-bold" %>
         </div>
       </li>
     <% end %>
@@ -66,22 +66,22 @@
     <div class="tab-pane fade" id="tabs-profile" role="tabpanel" aria-labelledby="tabs-profile-tab">
       <ul class="nav nav-tabs nav-justified" id="tabs-title" role="tablist">
         <li class="nav-item">
-          <%= link_to "64", user_title_character_path(user_id: @user, game_title: '0'), remote: true, id: "tabs-title-64", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-64", class: "nav-link" %>
+          <%= link_to "64", user_title_character_path(user_id: @user, game_title: '0'), remote: true, id: "tabs-title-64", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-64", class: "nav-link text-reset font-weight-bold" %>
         </li>
         <li class="nav-item">
-          <%= link_to "DX", user_title_character_path(user_id: @user, game_title: '1'), remote: true, id: "tabs-title-DX", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-DX", class: "nav-link" %>
+          <%= link_to "DX", user_title_character_path(user_id: @user, game_title: '1'), remote: true, id: "tabs-title-DX", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-DX", class: "nav-link text-reset font-weight-bold" %>
         </li>
         <li class="nav-item">
-          <%= link_to "X", user_title_character_path(user_id: @user, game_title: '2'), remote: true, id: "tabs-title-X", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-X", class: "nav-link" %>
+          <%= link_to "X", user_title_character_path(user_id: @user, game_title: '2'), remote: true, id: "tabs-title-X", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-X", class: "nav-link text-reset font-weight-bold" %>
         </li>
         <li class="nav-item">
-          <%= link_to "3DS", user_title_character_path(user_id: @user, game_title: '3'), remote: true, id: "tabs-title-3DS", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-3DS", class: "nav-link" %>
+          <%= link_to "3DS", user_title_character_path(user_id: @user, game_title: '3'), remote: true, id: "tabs-title-3DS", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-3DS", class: "nav-link text-reset font-weight-bold" %>
         </li>
         <li class="nav-item">
-          <%= link_to "Wii U", user_title_character_path(user_id: @user, game_title: '4'), remote: true, id: "tabs-title-WiiU", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-WiiU", class: "nav-link" %>
+          <%= link_to "Wii U", user_title_character_path(user_id: @user, game_title: '4'), remote: true, id: "tabs-title-WiiU", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-WiiU", class: "nav-link text-reset font-weight-bold" %>
         </li>
         <li class="nav-item">
-          <%= link_to "SP", user_title_character_path(user_id: @user, game_title: '5'), remote: true, id: "tabs-title-SP", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-SP", class: "nav-link" %>
+          <%= link_to "SP", user_title_character_path(user_id: @user, game_title: '5'), remote: true, id: "tabs-title-SP", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-SP", class: "nav-link text-reset font-weight-bold" %>
         </li>
       </ul>
       
@@ -93,13 +93,13 @@
         <% if current_user == @user %>
           <ul class="nav nav-tabs nav-justified" id="tabs-box" role="tablist">
             <li class="nav-item">
-              <%= link_to "受信箱", "#tabs-inbox", id: "tabs-inbox-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-inbox", "aria-selected" => "true", class: "nav-link" %>
+              <%= link_to "受信箱", "#tabs-inbox", id: "tabs-inbox-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-inbox", "aria-selected" => "true", class: "nav-link text-reset font-weight-bold" %>
             </li>
             <li class="nav-item">
-              <%= link_to "メール作成", "#tabs-create-mail", id: "tabs-inbox-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-inbox", "aria-selected" => "true", class: "nav-link" %>
+              <%= link_to "メール作成", "#tabs-create-mail", id: "tabs-inbox-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-inbox", "aria-selected" => "true", class: "nav-link text-reset font-weight-bold" %>
             </li>
             <li class="nav-item">
-              <%= link_to "送信箱", "#tabs-outbox", id: "tabs-outbox-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-outbox", class: "nav-link" %>
+              <%= link_to "送信箱", "#tabs-outbox", id: "tabs-outbox-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-outbox", class: "nav-link text-reset font-weight-bold" %>
             </li>
           </ul>
             
@@ -113,27 +113,27 @@
                 
                 <div class="tab-pane fade" id="tabs-create-mail" role="tabpanel" aria-labelledby="tabs-contact-tab">
                   <%= form_with(model: @message, url: user_messages_path(@user), local: true, method: :post) do |f| %>
-                  
                     <%= f.hidden_field :user_id, value: @user.id %>
-                    
-                    <%= f.label "宛先" %>
-                    <%= select_tag :user_to, options_from_collection_for_select(User.where.not(id: @user), :id, :name), include_blank: true, class: "form-control searchable"%>
-    
-                    <%= f.label "本文" %>
-                    <%= f.text_area :text, class: "form-control" %>
-                    
-                    <%= f.submit "メッセージを送信する", class: "btn btn-primary btn-block btn-login" %>
+                    <div class="row">
+                      <div class="col-4">
+                        <%= f.label "宛先" %>
+                        <%= select_tag :user_to, options_from_collection_for_select(User.where.not(id: @user), :id, :name), include_blank: true, class: "form-control searchable"%>
+                      </div>
+                      <div class="col-12">
+                        <%= f.label "本文" %>
+                        <%= f.text_area :text, class: "form-control" %>
+                      </div>
+                      <div class="col-12">
+                        <%= f.submit "メッセージを送信する", class: "btn btn-primary btn-block btn-login" %>
+                      </div>
+                    </div>
                   <% end %>
                 </div>
                 
                 <div class="tab-pane fade" id="tabs-outbox" role="tabpanel" aria-labelledby="tabs-contact-tab">
                   <%= form_with(url: user_path(@user), method: :get) do |fo| %>
                     <div class="m-auto row justify-content-between align-items-center col-lg">
-                      <div>
-                        <%= fo.label "宛先" %><br>
-                        <%= select_tag :user_to, options_from_collection_for_select(User.where.not(id: @user), :id, :name), include_blank: true, class: "form-control searchable" %>
-                      </div>
-                      <div>
+                      <div class="col-md-5">
                         <%= fo.label "From"%>
                         <div class="input-group" data-target-input="nearest">
                           <%= fo.text_field :from, id: "from_time", class: "form-control datepicker", data: {target: "#from_time"} %>
@@ -142,8 +142,8 @@
                           </div>
                         </div>
                       </div>
-                      <div>～</div>
-                      <div>
+                      <div class="col-md-2 d-none d-md-block text-center">～</div>
+                      <div class="col-md-5">
                         <%= fo.label "To" %>
                         <div class="input-group" data-target-input="nearest">
                           <%= fo.text_field :to, id: "to_time", class: "form-control datepicker", data: {target: "#to_time"} %>
@@ -152,11 +152,19 @@
                           </div>
                         </div>
                       </div>
+                      <div class="col-md-4">
+                        <%= fo.label "宛先" %><br>
+                        <%= select_tag :user_to, options_from_collection_for_select(User.where.not(id: @user), :id, :name), include_blank: true, class: "form-control searchable" %>
+                      </div>
+                      <div class="col-md-8">
+                        <%= fo.label "本文" %>
+                        <%= fo.text_field :text, class: "form-control" %>
+                      </div>
+                      <div class="col-12">
+                        <%= fo.submit "検索する", class: "btn btn-primary btn-block my-2 mail_search" %>
+                      </div>
                     </div>
-                    <%= fo.label "本文" %>
-                    <%= fo.text_field :text, class: "form-control" %>
                     <%= fo.hidden_field :outbox, value: 'outbox_search' %>
-                    <%= fo.submit "検索する", class: "btn btn-primary btn-block my-2 mail_search" %>
                   <% end %>
                   <div id="mails-outbox"></div>
                 </div>

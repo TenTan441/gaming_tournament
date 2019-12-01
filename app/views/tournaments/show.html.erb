@@ -2,7 +2,7 @@
 <div>
   
   <section class="my-2">
-    <div class="accordion" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="accordion border" id="accordion" role="tablist" aria-multiselectable="true">
       <% unless @started %>
         <div class="card">
           <div class="card-header" role="tab" id="headingOne">
@@ -105,7 +105,13 @@
         <% if @participants.count > 1 %>
           <%= link_to image_tag(@challonge["tournament"]["live_image_url"], :width => "100%"), @challonge["tournament"]["full_challonge_url"], target: :_blank %>
         <% else %>
-          <p class="text-dark">参加者は最低2人設定してください。</p>
+          <p class="text-dark">
+          <% if master?(@tournament) %>
+            参加者は最低2人設定してください。
+          <% else %>
+            有効な人数が揃っていません。
+          <% end %>
+          </p>
         <% end %>
       </div>
       <div class="col-lg-4 bg-dark border" id="toggle-matches-opening-or-complete">
@@ -174,7 +180,7 @@
                 <% else %>
                   <%= image_tag "no-profile-image.png", class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
                 <% end %>
-                <%= link_to User.find(participant.user_id).name, User.find(participant.user_id), class: "font-weight-bold text-whited " %>
+                <%= link_to User.find(participant.user_id).name, User.find(participant.user_id), class: "font-weight-bold text-reset" %>
               </div>
               <div class="col-5">
                 <%= form_with(model: @message, url: user_messages_path(current_user), local: true, method: :post) do |f| %>
