@@ -12,6 +12,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html do
         @message = Message.new()
+        @tournaments = Tournament.where(id: Participant.where(user_id: @user).pluck(:tournament_id)).paginate(page: params[:page], per_page: 10)
       end
       format.js do
         if params[:inbox].present?
@@ -24,6 +25,8 @@ class UsersController < ApplicationController
           @message_outbox = Message.where(user_id: @user.id).to_search(messages[:user_to]).text_search(messages[:text]).edited_at_search(messages[:from], messages[:to]).order(edited_at: "DESC").paginate(page: params[:outbox_page], per_page: 10)
         elsif params[:outbox_page].present?
           @message_outbox = Message.where(user_id: @user.id).order(edited_at: "DESC").paginate(page: params[:outbox_page], per_page: 10)
+        elsif params[:tournaments]
+          @tournaments = Tournament.name_search(params[:name]).master_search(params[:master]).title_search(params[:game_title]).status_search(params[:status]).start_time_search(params[:from], params[:to]).paginate(page: params[:page], per_page: 10)
         end
       end # format.js
     end # respond_to do |format|

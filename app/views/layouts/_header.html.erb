@@ -2,11 +2,13 @@
   <div class="container">
     <%= link_to "Super Smash Bros. Tournament App", root_path, id: "logo" %>
     
-    <nav>
+    <nav class="row">
       <% if logged_in? && (messages = Message.where(user_to: current_user).count - Message.where(user_to: current_user).where("edited_at < read_at").count) > 0 %>
-        <li class="nav-item active">
-          <%= link_to image_tag("arrived_message.png")+"#{messages}", current_user, class: "text-light text-decoration-none" %>
-        </li>
+        <ul class="navbar-nav mr-2">
+          <li class="nav-item active">
+            <%= link_to image_tag("arrived_message.png")+"#{messages}", current_user, class: "text-light text-decoration-none" %>
+          </li>
+        </ul>
       <% end %>
       <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#Navber" aria-controls="Navber" aria-expanded="false" aria-label="ナビゲーションの切替">
         <span class="navbar-toggler-icon"></span>

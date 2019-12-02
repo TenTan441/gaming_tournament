@@ -11,18 +11,17 @@
       <%= f.label :password, "パスワード", class: "label-login" %>
       <%= f.password_field :password, class: 'form-control' %>
 
-      <%= f.label :remember_me, class: "checkbox inline checkbox-login", for: "remember-me" do %>
         <%= f.check_box :remember_me, id: "remember-me" %>
         <span>ログイン情報を記憶する</span>
-      <% end %>
 
       <%= f.submit "ログイン", class: "btn btn-primary btn-block btn-login" %>
     <% end %>
     <p>
       ユーザー登録がまだの場合は<%= link_to "こちら", signup_path %>
     </p>
-    <p>
-      Twitter認証でログインする場合には<%= link_to "こちら", "/auth/twitter", method: :post %>
-    </p>
   </div>
+  
+  <p>
+    <%= link_to image_tag("login_by_twitter.png", class: "img-fluid rounded") + " ログイン", "/auth/twitter", method: :post, class: "btn btn-primary" %>
+  </p>
 </div>

@@ -16,6 +16,14 @@ class Tournament < ApplicationRecord
     end
   end
   
+  def self.name_search(names)
+    if !names.blank?
+      where(['name LIKE ?', "%#{names}%"])
+    else
+      all
+    end
+  end
+  
   # 開催者の検索
   def self.master_search(master)
     if !master.blank?

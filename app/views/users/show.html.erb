@@ -1,5 +1,5 @@
 <% provide(:title, @user.name) %>
-<div>
+<div class="col-12">
   <h1>【<%= @user.name %>】</h1>
   
   <div class="m-auto text-center">
@@ -19,6 +19,9 @@
     </li>
     <li class="nav-item">
       <%= link_to "コンタクト", "#tabs-contact", id: "tabs-contact-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-contact", class: "nav-link text-reset font-weight-bold" %>
+    </li>
+    <li class="nav-item">
+      <%= link_to "戦績", "#tabs-result", id: "tabs-result-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-result", class: "nav-link text-reset font-weight-bold" %>
     </li>
     <% if @user == current_user %>
       <li class="nav-item active dropdown">
@@ -188,6 +191,82 @@
           </div>
         <% end %>
     </div><!-- tabs-contact -->
+    <div class="tab-pane fade" id="tabs-result" role="tabpanel" aria-labelledby="tabs-result-tab">
+      <div class="container-fluid">    
+        <div class="col-lg-10 offset-lg-1">
+          <p class="my-2">
+            <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+              検索オプション
+            </button>
+          </p>
+          <div class="collapse my-2" id="collapseExample">
+            <div class="card card-body bg-dark">
+              <%= form_with(url: user_path(@user), method: :get) do |fo| %>
+                <%= fo.hidden_field :tournaments, value: @user.id %>
+                <div class="m-auto row justify-content-between align-items-center col-lg">
+                  <div class="col-lg-12">
+                    <%= fo.label Tournament.human_attribute_name :name %>
+                    <%= fo.text_field :name, class: "form-control" %>
+                  </div>
+                  <div class="col-lg-6">
+                    <%= fo.label Tournament.human_attribute_name :game_title %>
+                    <%= fo.select :game_title, Tournament.game_titles.keys.to_a, {include_blank: true}, class: "form-control" %>
+                  </div>
+                  <div class="col-lg-4 col-sm-8">
+                    <%= fo.label Tournament.human_attribute_name :master %><br>
+                    <%= select_tag :master, options_from_collection_for_select(User.all, :id, :name), include_blank: true, class: "form-control searchable" %>
+                  </div>
+                  <div class="col-lg-2 col-sm-4">
+                    <%= fo.label Tournament.human_attribute_name :status %>
+                    <%= fo.select :status, Tournament.statuses.keys.to_a, {include_blank: true}, class: "form-control" %>
+                  </div>
+                  <div class="col-md-5">
+                    <%= fo.label "From"%>
+                    <div class="input-group" data-target-input="nearest">
+                      <%= fo.text_field :from, id: "from_time_result", class: "form-control datepicker", data: {target: "#from_time_result"} %>
+                      <div class="input-group-append" data-target="#from_time_result" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2 d-none d-md-block text-center">～</div>
+                  <div class="col-md-5">
+                    <%= fo.label "To" %>
+                    <div class="input-group" data-target-input="nearest">
+                      <%= fo.text_field :to, id: "to_time_result", class: "form-control datepicker", data: {target: "#to_time_result"} %>
+                      <div class="input-group-append" data-target="#to_time_result" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-12">
+                    <%= fo.submit "検索する", class: "btn btn-primary btn-block my-3" %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          <div class="table-responsive-md">
+            <table class="table table-hover text-nowrap table-responsive-md" id="table-users">
+              <thead>
+                <tr>
+                  <th colspan="4"><%= Tournament.human_attribute_name :name %></th>
+                  <th colspan="2"><%= Tournament.human_attribute_name :game_title %></th>
+                  <th colspan="4"><%= Tournament.human_attribute_name :master %></th>
+                  <th colspan="1"><%= Tournament.human_attribute_name :start_time %></th>
+                  <th colspan="1"><%= Tournament.human_attribute_name :status %></th>
+                </tr>
+              </thead>
+              
+              <tbody id="tournaments_search_result">
+                <%= render 'tournaments/tournaments_search' %>
+              </tbody>
+             
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -251,6 +330,10 @@ $(function(){
   searchable_observer.observe(searchable, config_searchable);
   
   $('.pagination a').attr('data-remote', 'true');
+  
+  $('.datepicker').datetimepicker({
+    format: 'YYYY-MM-DD HH:mm:00'
+  });
 });
 
 </script>

@@ -9,7 +9,9 @@ class TournamentsController < ApplicationController
         @tournaments = Tournament.paginate(page: params[:page], per_page: 10)
       end
       format.js do
-        @tournaments = Tournament.master_search(params[:master]).title_search(params[:game_title]).status_search(params[:status]).start_time_search(params[:from], params[:to]).paginate(page: params[:page], per_page: 10)
+        if params[:tournaments].present?
+          @tournaments = Tournament.master_search(params[:master]).title_search(params[:game_title]).status_search(params[:status]).start_time_search(params[:from], params[:to]).paginate(page: params[:page], per_page: 10)
+        end
       end
     end
   end
