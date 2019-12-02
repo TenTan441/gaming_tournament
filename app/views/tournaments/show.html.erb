@@ -1,6 +1,6 @@
 <% provide(:title, @tournament.name) %>
 <div>
-  
+  <% if logged_in? %>
   <section class="my-2">
     <div class="accordion border" id="accordion" role="tablist" aria-multiselectable="true">
       <% unless @started %>
@@ -95,6 +95,7 @@
       <% end %>
     </div><!-- /#accordion -->
   </section>
+  <% end %><!-- logged_in? -->
   
   <h1><%= @tournament.name %></h1>
   <h5><%= @tournament.game_title %></h5>
@@ -176,15 +177,21 @@
             <div class="row p-1">
               <div class="col-5">
                 <%= image_tag participant_to_user(participant).image.to_s, class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
-                <%= link_to User.find(participant.user_id).name, User.find(participant.user_id), class: "font-weight-bold text-reset" %>
+                <% if logged_in? %>
+                  <%= link_to participant_to_user(participant).name, participant_to_user(participant), class: "font-weight-bold text-reset" %>
+                <% else %>
+                  <%= participant_to_user(participant).name %>
+                <% end %>
               </div>
               <div class="col-5">
-                <%= form_with(model: @message, url: user_messages_path(current_user), local: true, method: :post) do |f| %>
-                  <%= f.hidden_field :user_id, value: master_tournament(@tournament).id %>
-                  <%= hidden_field_tag :user_to, participant.user_id %>
-                  
-                  <%= f.text_field :text, class: "form-control" %>
-                  <%= f.submit "送信", class: "btn btn-primary" %>
+                <% if logged_in? %>
+                  <%= form_with(model: @message, url: user_messages_path(current_user), local: true, method: :post) do |f| %>
+                    <%= f.hidden_field :user_id, value: master_tournament(@tournament).id %>
+                    <%= hidden_field_tag :user_to, participant.user_id %>
+                    
+                    <%= f.text_field :text, class: "form-control" %>
+                    <%= f.submit "送信", class: "btn btn-primary" %>
+                  <% end %>
                 <% end %>
               </div>
               <div class="col-2">

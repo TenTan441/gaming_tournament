@@ -5,7 +5,12 @@
     <td colspan="4"><%= link_to tournament.name, tournament, class: "text-reset font-weight-bold" %></td>
     <td colspan="2" class="text-wrap text-break"><%= tournament.game_title %></td>
     <td colspan="4">
-      <%= link_to image_tag(master.image.to_s, class: "img-fluid img-thumbnail rounded m-2", :style => "width:60px; height:60px;"), master %><br><%= link_to "#{master.name}", master, class: "text-reset font-weight-bold" %>
+      <%= link_to image_tag(master.image.to_s, class: "img-fluid img-thumbnail rounded m-2", :style => "width:60px; height:60px;"), master %><br>
+      <% if logged_in? %>
+        <%= link_to "#{master.name}", master, class: "text-reset font-weight-bold" %>
+      <% else %>
+        <%= master.name %>
+      <% end %>
     </td>
     <td colspan="1"><%= l(tournament.start_time, format: :short) %></td>
     <td colspan="1"><%= tournament.status %></td>
