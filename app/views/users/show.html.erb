@@ -43,11 +43,7 @@
         <div class="col-lg-8 offset-lg-2">
           <div class="row justify-content-start">
             <div class="m-3">
-              <% if @user.image? %>
-                <%= image_tag @user.image.to_s, class: "img-fluid img-thumbnail rounded", :style => "max-width:150px;"  %>
-              <% else %>
-                <%= image_tag "no-profile-image.png", class: "img-fluid img-thumbnail rounded", :style => "max-width:150px;" %>
-              <% end %>
+              <%= image_tag @user.image.to_s, class: "img-fluid img-thumbnail rounded", :style => "max-width:150px;" %>
             </div>
             <div class="m-3 font-weight-bold">
               <%= @user.name %>

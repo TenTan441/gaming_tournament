@@ -17,6 +17,7 @@
 	        background-color: #223;
 	      }
 	      
+	      div.container-fluid,
 	      div.container {
 	        color: #fff;
 	      }
@@ -98,7 +99,7 @@
         #userpageDropdown[aria-expanded="true"],
         div.card,
         div.dropdown-menu.show {
-          background-color: #224;
+          background-color: #343A40;
         }
         
         a.dropdown-item,
@@ -115,7 +116,7 @@
 
   <body>
     <%= render 'layouts/header' %>
-    <div class="container">
+    <div id="container">
       <% flash.each do |message_type, msg| %>
         <div class="alert alert-<%= message_type %>"><%= msg %></div>
       <% end %>
@@ -123,5 +124,16 @@
       <%= debug(params) if Rails.env.development? %>
     </div>
   </body>
+  
+  <script>// スマホやタブレットからのアクセスの場合は画面幅いっぱいに表示し、PCからのアクセスの場合は余白を追加するようにクラスを変える
+    $(document).ready(function() {
+      <% ua = request.env["HTTP_USER_AGENT"] %>
+      <% unless(ua.include?('Mobile') || ua.include?('Android')) %>
+        $('#container').addClass('container');
+      <% else %>
+        $('#container').addClass('container-fluid');
+      <% end %>
+    });
+  </script>
   
 </html>

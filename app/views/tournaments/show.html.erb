@@ -175,11 +175,7 @@
           <div class="container-fluid">
             <div class="row p-1">
               <div class="col-5">
-                <% if participant_to_user(participant).image? %>
-                  <%= image_tag participant_to_user(participant).image.to_s, class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
-                <% else %>
-                  <%= image_tag "no-profile-image.png", class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
-                <% end %>
+                <%= image_tag participant_to_user(participant).image.to_s, class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
                 <%= link_to User.find(participant.user_id).name, User.find(participant.user_id), class: "font-weight-bold text-reset" %>
               </div>
               <div class="col-5">

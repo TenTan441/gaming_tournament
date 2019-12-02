@@ -11,6 +11,10 @@ class PictureUploader < CarrierWave::Uploader::Base
   version :thumb do
     process :resize_to_limit => [300, 300]
   end
+  
+  def default_url(*args)
+   "/uploads/" + [version_name, "no-profile-image.png"].compact.join('_')
+  end
 
 # jpg,jpeg,gif,pngのみ
   def extension_white_list
