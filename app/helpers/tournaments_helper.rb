@@ -10,9 +10,19 @@ module TournamentsHelper
   
   # 大会管理者かマッチの当事者の場合はtrue, それ以外はfalseを返す
   def master_or_party?(tournament, player1, player2)
-    (current_user == master_tournament(tournament)) || 
-    (current_user == return_user_from_participant(player1)) || 
-    (current_user == return_user_from_participant(player2))
+    (current_user == master_tournament(tournament) ) || 
+    (current_user == return_user_from_participant(player1) ) || 
+    (current_user == return_user_from_participant(player2) )
+  end
+  
+  def master_or_participants?(tournament)
+    unless current_user == master_tournament(tournament)
+      users = return_users_from_participants(Participant.where(tournament_id: tournament.id))
+      if users.include?(current_user) == false
+        return false
+      end
+    end
+    return true
   end
   
   def game_title_from_number(num)

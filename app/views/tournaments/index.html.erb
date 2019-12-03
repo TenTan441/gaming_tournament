@@ -12,6 +12,7 @@
   <div class="collapse my-2" id="collapseExample">
     <div class="card card-body bg-dark">
       <%= form_with(url: tournaments_path, method: :get) do |fo| %>
+        <%= fo.hidden_field :tournaments, value: "tournaments_search" %>
         <div class="m-auto row justify-content-between align-items-center col-lg">
           <div class="col-lg-6">
             <%= fo.label Tournament.human_attribute_name :game_title %>

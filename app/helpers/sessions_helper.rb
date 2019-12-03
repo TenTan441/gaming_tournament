@@ -37,6 +37,8 @@ module SessionsHelper
         log_in user
         @current_user = user
       end
+    else
+      @current_user = nil
     end
   end
   

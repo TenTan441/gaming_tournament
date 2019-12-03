@@ -12,21 +12,63 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html do
         @message = Message.new()
-        @tournaments = Tournament.where(id: Participant.where(user_id: @user).pluck(:tournament_id)).paginate(page: params[:page], per_page: 10)
+        if current_user == @user
+          @tournaments = Tournament.where(id: Participant.where(user_id: current_user.id)
+                                                         .pluck(:tournament_id))
+                                   .order(id: "DESC").paginate(page: params[:page], per_page: 10)
+        else
+          @tournaments = Tournament.where(id: Participant.where(user_id: @user.id)
+                                                         .pluck(:tournament_id),
+                                          private: true)
+                                   .order(id: "DESC").paginate(page: params[:page], per_page: 10)
+        end
       end
       format.js do
         if params[:inbox].present?
           messages = params
-          @message_inbox = Message.where(user_to: @user.id).from_search(messages[:user_id]).text_search(messages[:text]).edited_at_search(messages[:from], messages[:to]).order(edited_at: "DESC").paginate(page: params[:inbox_page], per_page: 10)
+          @message_inbox = Message.where(user_to: @user.id)
+                                  .from_search(messages[:user_id])
+                                  .text_search(messages[:text])
+                                  .edited_at_search(messages[:from], messages[:to])
+                                  .order(edited_at: "DESC")
+                                  .paginate(page: params[:inbox_page], per_page: 10)
         elsif params[:inbox_page].present?
-          @message_inbox = Message.where(user_to: @user.id).order(edited_at: "DESC").paginate(page: params[:indox_page], per_page: 10)
+          @message_inbox = Message.where(user_to: @user.id)
+                                  .order(edited_at: "DESC")
+                                  .paginate(page: params[:indox_page], per_page: 10)
         elsif params[:outbox].present?
           messages = params
-          @message_outbox = Message.where(user_id: @user.id).to_search(messages[:user_to]).text_search(messages[:text]).edited_at_search(messages[:from], messages[:to]).order(edited_at: "DESC").paginate(page: params[:outbox_page], per_page: 10)
+          @message_outbox = Message.where(user_id: @user.id)
+                                   .to_search(messages[:user_to])
+                                   .text_search(messages[:text])
+                                   .edited_at_search(messages[:from], messages[:to])
+                                   .order(edited_at: "DESC")
+                                   .paginate(page: params[:outbox_page], per_page: 10)
         elsif params[:outbox_page].present?
-          @message_outbox = Message.where(user_id: @user.id).order(edited_at: "DESC").paginate(page: params[:outbox_page], per_page: 10)
+          @message_outbox = Message.where(user_id: @user.id)
+                                   .order(edited_at: "DESC")
+                                   .paginate(page: params[:outbox_page], per_page: 10)
         elsif params[:tournaments]
-          @tournaments = Tournament.name_search(params[:name]).master_search(params[:master]).title_search(params[:game_title]).status_search(params[:status]).start_time_search(params[:from], params[:to]).paginate(page: params[:page], per_page: 10)
+          if current_user == @user
+            @tournaments = Tournament.where(id: Participant.where(user_id: current_user.id)
+                                                           .pluck(:tournament_id))
+                                     .name_search(params[:name])
+                                     .master_search(params[:master])
+                                     .title_search(params[:game_title])
+                                     .status_search(params[:status])
+                                     .start_time_search(params[:from], params[:to])
+                                     .paginate(page: params[:page], per_page: 10)
+          else
+            @tournaments = Tournament.where(id: Participant.where(user_id: @user.id)
+                                                           .pluck(:tournament_id),
+                                            private: true)
+                                     .name_search(params[:name])
+                                     .master_search(params[:master])
+                                     .title_search(params[:game_title])
+                                     .status_search(params[:status])
+                                     .start_time_search(params[:from], params[:to])
+                                     .paginate(page: params[:page], per_page: 10)
+          end
         end
       end # format.js
     end # respond_to do |format|

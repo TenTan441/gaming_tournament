@@ -1,18 +1,38 @@
 class TournamentsController < ApplicationController
   
-  before_action :set_tournament, only: [:show, :edit, :update, :destroy, :toggle, :start, :reset, :finalize, :tournament_master, :master_or_party]
-  before_action :tournament_master, only: [:start, :edit, :reset, :finalize, :destroy]
+  before_action :set_tournament, only: [:show, :edit, :update, :destroy, :toggle, :start, :reset, :finalize, :tournament_master, :master_or_party, :privated_tournament]
+  before_action :privated_tournament, only: [:edit, :show, :toggle, :start, :reset, :finalize, :update, :destroy]
+  before_action :tournament_master, only: [:start, :edit, :reset, :finalize, :update, :destroy]
   
   def index
     respond_to do |format|
       format.html do
-        @tournaments = Tournament.paginate(page: params[:page], per_page: 10)
+        if !current_user.nil? 
+          @tournaments = Tournament.where(private: true).or(Tournament.where(id: Participant.where(user_id: current_user.id)
+                                                                                            .pluck(:tournament_id),
+                                                                             private: false))
+                                                        .order(id: "DESC").paginate(page: params[:page], per_page: 10)
+        else
+          @tournaments = Tournament.where(private: true).order(id: "DESC").paginate(page: params[:page], per_page: 10)
+        end
       end
       format.js do
         if params[:tournaments].present?
-          @tournaments = Tournament.master_search(params[:master]).title_search(params[:game_title]).status_search(params[:status]).start_time_search(params[:from], params[:to]).paginate(page: params[:page], per_page: 10)
+          if !current_user.nil?
+            @tournaments = Tournament.where(private: true).or(Tournament.where(id: Participant.where(user_id: current_user.id)
+                                                                                              .pluck(:tournament_id),
+                                                                               private: false))
+                                                          .master_search(params[:master])
+                                                          .title_search(params[:game_title])
+                                                          .status_search(params[:status])
+                                                          .start_time_search(params[:from], params[:to])
+                                                          .order(id: "DESC").paginate(page: params[:page], per_page: 10)
+          else
+            @tournaments = Tournament.where(private: true).order(id: "DESC").paginate(page: params[:page], per_page: 10)
+          end
         end
       end
+                                                    
     end
   end
   
@@ -74,7 +94,8 @@ class TournamentsController < ApplicationController
     @participant = Participant.new()
     @not_yet_users = return_users_from_non_participants(@participants)
     
-    @participants_search = @participants.where(user_id: User.search(params[:search]).order(:id).pluck(:id)).paginate(page: params[:page], per_page: 10)
+    @participants_search = @participants.where(user_id: User.search(params[:search]).order(:id).pluck(:id))
+                                        .paginate(page: params[:page], per_page: 10)
     
   end
   
@@ -190,7 +211,14 @@ class TournamentsController < ApplicationController
     def tournament_master
       unless User.find(@tournament.master) == current_user
         flash[:danger] = "権限がありません。"
-        redirect_to current_user
+        redirect_to logged_in? ? current_user : root_path
+      end
+    end
+    
+    def privated_tournament
+      if @tournament.private == false && master_or_participants?(@tournament) == false
+        flash[:danger] = "非公開の大会です"
+        redirect_to root_path
       end
     end
 end
