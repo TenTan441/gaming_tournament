@@ -88,8 +88,10 @@ class TournamentsController < ApplicationController
       @started = true
     when "complete"
       @started = true
+    when "awaiting_review"
+      @started = true
     end
-    
+
     @message = Message.new()
     @participant = Participant.new()
     @not_yet_users = return_users_from_non_participants(@participants)
@@ -127,6 +129,13 @@ class TournamentsController < ApplicationController
     bool, access_token = post_challonge_api({}, "/#{@tournament.id_number}/reset")
     
     if bool
+      if @tournament.status == "完了"
+        participants = Participant.where(tournament_id: @tournament.id)
+        participants.each do |participant|
+          participant.ranking = nil
+          participant.save
+        end
+      end
       @tournament.status = "準備中"
       @tournament.save
       flash[:info] = "大会がやり直されました。"
@@ -142,8 +151,15 @@ class TournamentsController < ApplicationController
     
     if bool
       flash[:info] = "大会お疲れさまでした。"
-      @tournament.status = "終了"
+      @tournament.status = "完了"
       @tournament.save
+      
+      @challonge_participants = get_challonge_api({}, "/#{@tournament.id_number}/participants")
+      @challonge_participants.each do |challonge_participant|
+        participant = Participant.find_by(challonge_participant_id: challonge_participant["participant"]["id"])
+        participant.ranking = challonge_participant["participant"]["final_rank"]
+        participant.save
+      end
     else
       flash[:danger] = "送信に失敗しました。管理者へ連絡してください。"
     end

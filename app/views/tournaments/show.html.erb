@@ -1,7 +1,7 @@
 <% provide(:title, @tournament.name) %>
 <div>
   <% if logged_in? %>
-  <% if master?(@tournament) == false && Participant.find_by(tournament_id: @tournament.id, user_id: current_user.id).nil? %>
+  <% if master?(@tournament) == true || Participant.find_by(tournament_id: @tournament.id, user_id: current_user.id).nil? %>
     <section class="my-2">
       <div class="accordion border" id="accordion" role="tablist" aria-multiselectable="true">
         <% unless @started %>
@@ -82,7 +82,7 @@
                     <%= link_to "大会を始める", tournament_start_path(@tournament), method: :get, data: { confirm: "大会を始めてもいいですか？" }, class: "btn btn-lg btn-success" %>
                   <% else %>
                     <%= link_to "大会をやり直す", tournament_reset_path(@tournament), method: :get, data: { confirm: "大会をやり直してもいいですか？" }, class: "btn btn-lg btn-success" %>
-                    <% if @matches_opening.blank? && @challonge["tournament"]["state"] == "underway" %>
+                    <% if @challonge["tournament"]["state"] == "awaiting_review" %>
                       <%= link_to "大会を終了する", tournament_finalize_path(@tournament), method: :get, data: { confirm: "大会を終了させてもいいですか？" }, class: "btn btn-lg btn-success" %>
                     <% end %>
                   <% end %>
@@ -195,10 +195,16 @@
                 <% end %>
               </div>
               <div class="col-2">
-                <% if master?(@tournament) %>
-                  <%= link_to "削除", tournament_participant_path(@tournament, participant), method: :delete,
-                      data: { confirm: "削除してよろしいですか？" },
-                      class: "btn btn-danger" %>
+                <% unless @tournament.status == '完了' %>
+                  <% if master?(@tournament) %>
+                    <%= link_to "削除", tournament_participant_path(@tournament, participant), method: :delete,
+                        data: { confirm: "削除してよろしいですか？" },
+                        class: "btn btn-danger" %>
+                  <% end %>
+                <% else %>
+                  <p class="show-ranking font-weight-bold font-italic">
+                    <%= participant.ranking.ordinalize %>
+                  </p>
                 <% end %>
               </div>
             </div>
