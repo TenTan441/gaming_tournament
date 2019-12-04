@@ -22,6 +22,8 @@ Rails.application.routes.draw do
     get 'messages/inbox', to: 'messages#inbox'
     get 'messages/outbox', to: 'messages#outbox'
     get 'messages/search', to: 'messages#search'
+    post 'messages/creates', to: 'messages#creates'
+    put 'messages/updates', to: 'messages#updates'
     delete 'messages/destroys', to: 'messages#destroys'
     resources :messages
     

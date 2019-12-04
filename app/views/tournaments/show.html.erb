@@ -47,7 +47,7 @@
             </div><!-- /.card-header -->
             <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
               <div class="card-body">
-                <%= form_with(model: @message, url: user_messages_path(current_user), local: true, method: :post) do |f| %>
+                <%= form_with(model: @message, url: user_messages_creates_path(current_user), local: true, method: :post) do |f| %>
               
                   <%= f.hidden_field :user_id, value: master_tournament(@tournament).id %>
                   <%= hidden_field_tag :tournament_id, @tournament.id %>

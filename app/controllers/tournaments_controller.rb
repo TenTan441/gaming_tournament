@@ -130,11 +130,7 @@ class TournamentsController < ApplicationController
     
     if bool
       if @tournament.status == "完了"
-        participants = Participant.where(tournament_id: @tournament.id)
-        participants.each do |participant|
-          participant.ranking = nil
-          participant.save
-        end
+        Participant.where(tournament_id: @tournament.id).update_all(ranking: nil)
       end
       @tournament.status = "準備中"
       @tournament.save
