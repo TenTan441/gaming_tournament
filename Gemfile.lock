@@ -150,7 +150,7 @@ GEM
       rack
     popper_js (1.14.5)
     public_suffix (4.0.1)
-    puma (3.12.1)
+    puma (3.12.2)
     rack (2.0.7)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
@@ -268,7 +268,7 @@ DEPENDENCIES
   momentjs-rails
   omniauth
   omniauth-twitter
-  puma (~> 3.7)
+  puma (~> 3.12)
   rails (~> 5.1.6)
   rails-i18n
   sass-rails (~> 5.0)
