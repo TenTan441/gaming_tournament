@@ -58,7 +58,7 @@ class TournamentsController < ApplicationController
     t = params[:tournament]
     case tournament_type = t[:elimination_type]
     when 'single elimination'
-      bool, access_token = put_challonge_api({:tournament => {:name => t[:name], 
+      bool, access_token = post_challonge_api({:tournament => {:name => t[:name], 
                                                               :url => t[:url],
                                                               :tournament_type => t[:elimination_type],
                                                               :start_at => t[:start_time],
@@ -73,7 +73,7 @@ class TournamentsController < ApplicationController
                                                               :rr_pts_for_game_tie => t[:rr_pts_for_game_tie]}
                                               }, "/#{@tournament.id_number}")
     when 'double elimination'
-      bool, access_token = put_challonge_api({:tournament => {:name => t[:name], 
+      bool, access_token = post_challonge_api({:tournament => {:name => t[:name], 
                                                               :url => t[:url],
                                                               :tournament_type => t[:elimination_type],
                                                               :start_at => t[:start_time],
@@ -83,7 +83,7 @@ class TournamentsController < ApplicationController
                                               }, "/#{@tournament.id_number}")
     when 'round robin'
       if t[:ranked_by] == "custom"
-        bool, access_token = put_challonge_api({:tournament => {:name => t[:name], 
+        bool, access_token = post_challonge_api({:tournament => {:name => t[:name], 
                                                                 :url => t[:url],
                                                                 :tournament_type => t[:elimination_type],
                                                                 :start_at => t[:start_time],
@@ -96,7 +96,7 @@ class TournamentsController < ApplicationController
                                                                 :rr_pts_for_game_tie => t[:rr_pts_for_game_tie]}
                                                 }, "/#{@tournament.id_number}")
       else
-        bool, access_token = put_challonge_api({:tournament => {:name => t[:name], 
+        bool, access_token = post_challonge_api({:tournament => {:name => t[:name], 
                                                                 :url => t[:url],
                                                                 :tournament_type => t[:elimination_type],
                                                                 :start_at => t[:start_time],

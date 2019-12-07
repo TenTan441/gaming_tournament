@@ -52,10 +52,10 @@
   <% if controller.action_name == 'new' %>
     <div class="form-group" id="normal-tournament">
       <%= f.label :elimination_type, class: "label-#{yield(:class_text)}" %>
-      <%= f.select :elimination_type, options_for_select([["シングルイリミネーション","single elimination"],["ダブルイリミネーション","double elimination"],["総当たり戦", "round robin"]]), {}, class: "form-control" %>
+      <%= f.select :elimination_type, options_for_select([["シングルイリミネーション","single elimination"],["ダブルイリミネーション","double elimination"],["総当たり戦", "round robin"]]), {}, id: "elimination", class: "form-control" %>
     </div>
     
-    <div id="selected-single">
+    <div id="selected-single" style="display:none">
       <%= f.check_box :hold_third_place_match %><span>3位決定戦を行う</span>
     </div>
     <div class="radio-group" id="selected-double" style="display:none">
@@ -66,18 +66,23 @@
     <div id="selected-robin" style="display:none">
       <%= f.label "順位付け方法" %>
       <%= f.select :ranked_by, options_for_select([["マッチ勝数","match wins"], ["ゲームもしくはセットの勝数","game wins"], ["合計得点","points scored"], ["得失点差","points difference"], ["カスタム（ポイントシステム）","custom"]]), {}, id: "tournament_ranked_by", class: "form-control" %>
-      <div id="robin-custom" style="display:none">
-        <%= f.number_field :rr_pts_for_match_win, step: "0.1", value: 1.0, class: "form-control" %>
-        <%= f.label "ポイント（マッチ勝利毎に）" %>
-        
-        <%= f.number_field :rr_pts_for_match_tie, step: "0.1", value: 0.5, class: "form-control" %>
-        <%= f.label "ポイント（マッチのタイ毎に）" %>
-        
-        <%= f.number_field :rr_pts_for_game_win, step: "0.1", value: 0.0, class: "form-control" %>
-        <%= f.label "ポイント（ゲームもしくはセットの勝利毎に）" %>
-        
-        <%= f.number_field :rr_pts_for_game_tie, step: "0.1", value: 0.0, class: "form-control" %>
-        <%= f.label "ポイント（ゲームもしくはセットのタイ毎に）" %>
+      <div id="robin-custom" class="form-row my-2">
+        <div class="col-lg-3 col-6">
+          <%= f.number_field :rr_pts_for_match_win, step: "0.1", value: 1.0, class: "form-control" %>
+          <%= f.label "ポイント（マッチ勝利毎に）" %>
+        </div>
+        <div class="col-lg-3 col-6">
+          <%= f.number_field :rr_pts_for_match_tie, step: "0.1", value: 0.5, class: "form-control" %>
+          <%= f.label "ポイント（マッチのタイ毎に）" %>
+        </div>
+        <div class="col-lg-3 col-6">
+          <%= f.number_field :rr_pts_for_game_win, step: "0.1", value: 0.0, class: "form-control" %>
+          <%= f.label "ポイント（ゲームもしくはセットの勝利毎に）" %>
+        </div>
+        <div class="col-lg-3 col-6">
+          <%= f.number_field :rr_pts_for_game_tie, step: "0.1", value: 0.0, class: "form-control" %>
+          <%= f.label "ポイント（ゲームもしくはセットのタイ毎に）" %>
+        </div>
       </div>
     </div>
     
