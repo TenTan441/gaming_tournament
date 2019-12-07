@@ -15,6 +15,8 @@ class UsersController < ApplicationController
         if current_user == @user
           @tournaments = Tournament.where(id: Participant.where(user_id: current_user.id)
                                                          .pluck(:tournament_id))
+                                   .or(Tournament.where(master: current_user.id))
+                                   .distinct
                                    .order(id: "DESC").paginate(page: params[:page], per_page: 10)
         else
           @tournaments = Tournament.where(id: Participant.where(user_id: @user.id)
@@ -52,11 +54,14 @@ class UsersController < ApplicationController
           if current_user == @user
             @tournaments = Tournament.where(id: Participant.where(user_id: current_user.id)
                                                            .pluck(:tournament_id))
+                                     .or(Tournament.where(master: current_user.id))
+                                     .distinct
                                      .name_search(params[:name])
                                      .master_search(params[:master])
                                      .title_search(params[:game_title])
                                      .status_search(params[:status])
                                      .start_time_search(params[:from], params[:to])
+                                     .order(id: "DESC")
                                      .paginate(page: params[:page], per_page: 10)
           else
             @tournaments = Tournament.where(id: Participant.where(user_id: @user.id)
@@ -67,6 +72,7 @@ class UsersController < ApplicationController
                                      .title_search(params[:game_title])
                                      .status_search(params[:status])
                                      .start_time_search(params[:from], params[:to])
+                                     .order(id: "DESC")
                                      .paginate(page: params[:page], per_page: 10)
           end
         end

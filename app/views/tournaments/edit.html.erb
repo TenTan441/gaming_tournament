@@ -3,9 +3,9 @@
 <% provide(:button_text, '更新') %>
 <h1><%= @tournament.name %></h1>
 
-<p class="text-right"><%= link_to "戻る", tournament_path(@tournament), class: "btn btn-primary" %></p>
 <div class="row">
-  <div class="col-md-6 offset-md-3">
+  <div class="col-md-8 offset-md-2">
     <%= render 'form' %>
   </div>
+  <p class="text-right"><%= link_to "戻る", tournament_path(@tournament), class: "btn btn-primary" %></p>
 </div>

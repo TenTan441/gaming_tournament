@@ -43,41 +43,139 @@
     <%= f.text_area :description, class: "form-control" %>
   </div>
   
+  <%= f.label :group_stage_enabled, class: "label-#{yield(:class_text)}" %>
+  <div class="radio">
+    <label><%= f.radio_button :group_stage_enabled, false, :value => false, :checked => true, :onclick => "tournament_type();", class: "radio-control" %><span>通常の形式　</span></label>
+    <label><%= f.radio_button :group_stage_enabled, true, :value => true, :disabled => true, :onclick => "tournament_type();", class: "radio-control" %><span>2ステージトーナメント【API仕様により選択不可】</span></label>
+  </div>
+  
   <% if controller.action_name == 'new' %>
-    <%= f.label :group_stage_enabled, class: "label-#{yield(:class_text)}" %>
-    <div class="radio">
-      <label><%= f.radio_button :group_stage_enabled, false, :value => false, :checked => true, :onclick => "tournament_type();", class: "radio-control" %><span>通常の形式　</span></label>
-      <label><%= f.radio_button :group_stage_enabled, true, :value => true, :disabled => true, :onclick => "tournament_type();", class: "radio-control" %><span>2ステージトーナメント【API仕様により選択不可】</span></label>
-    </div>
-    
     <div class="form-group" id="normal-tournament">
       <%= f.label :elimination_type, class: "label-#{yield(:class_text)}" %>
       <%= f.select :elimination_type, options_for_select([["シングルイリミネーション","single elimination"],["ダブルイリミネーション","double elimination"],["総当たり戦", "round robin"]]), {}, class: "form-control" %>
-      <%= f.check_box :hold_third_place_match %><span>3位決定戦を行う</span>
-    </div>
-  <% else %>
-    <%= f.label :group_stages_enabled, class: "label-#{yield(:class_text)}" %>
-    <div class="radio">
-      <label><%= f.radio_button :group_stages_enabled, false, :value => false, :checked => true, :disabled => true, :onclick => "tournament_type();", class: "radio-control" %><span>通常の形式　</span></label>
-      <label><%= f.radio_button :group_stages_enabled, true, :value => true, :disabled => true, :onclick => "tournament_type();", class: "radio-control" %><span>2ステージトーナメント【API仕様により選択不可】</span></label>
     </div>
     
+    <div id="selected-single">
+      <%= f.check_box :hold_third_place_match %><span>3位決定戦を行う</span>
+    </div>
+    <div class="radio-group" id="selected-double" style="display:none">
+      <%= f.radio_button :grand_finals_modifier, nil, :checked => true %><span> 1-2マッチ — ルーザーズの勝者はウィナーズの勝者から2回勝利しなければいけません</span><br>
+      <%= f.radio_button :grand_finals_modifier, "single match" %><span>1マッチ</span><br>
+      <%= f.radio_button :grand_finals_modifier, "skip" %><span>無し</span>
+    </div>
+    <div id="selected-robin" style="display:none">
+      <%= f.label "順位付け方法" %>
+      <%= f.select :ranked_by, options_for_select([["マッチ勝数","match wins"], ["ゲームもしくはセットの勝数","game wins"], ["合計得点","points scored"], ["得失点差","points difference"], ["カスタム（ポイントシステム）","custom"]]), {}, id: "tournament_ranked_by", class: "form-control" %>
+      <div id="robin-custom" style="display:none">
+        <%= f.number_field :rr_pts_for_match_win, step: "0.1", value: 1.0, class: "form-control" %>
+        <%= f.label "ポイント（マッチ勝利毎に）" %>
+        
+        <%= f.number_field :rr_pts_for_match_tie, step: "0.1", value: 0.5, class: "form-control" %>
+        <%= f.label "ポイント（マッチのタイ毎に）" %>
+        
+        <%= f.number_field :rr_pts_for_game_win, step: "0.1", value: 0.0, class: "form-control" %>
+        <%= f.label "ポイント（ゲームもしくはセットの勝利毎に）" %>
+        
+        <%= f.number_field :rr_pts_for_game_tie, step: "0.1", value: 0.0, class: "form-control" %>
+        <%= f.label "ポイント（ゲームもしくはセットのタイ毎に）" %>
+      </div>
+    </div>
+    
+    <%= f.label :start_time, class: "label-#{yield(:class_text)}" %>
+    <div class="input-group" data-target-input="nearest">
+      <%= f.text_field :start_time, id: "start_time", class: "form-control datepicker", data: {target: "#start_time"} %>
+      <div class="input-group-append" data-target="#start_time" data-toggle="datetimepicker">
+          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+      </div>
+    </div>
+    
+    <%= f.submit "新規作成", class: "btn btn-primary btn-block btn-#{yield(:class_text)} my-2" %>
+  <% else %>
     <div class="form-group" id="normal-tournament">
       <%= f.label :elimination_type, class: "label-#{yield(:class_text)}" %>
-      <%= f.select :elimination_type, options_for_select([["シングルイリミネーション","single elimination"],["ダブルイリミネーション","double elimination"],["総当たり戦", "round robin"]]), {}, value: @challonge["tournament"]["tournament_type"], id: "elimination", class: "form-control" %>
-      <%= f.check_box :hold_third_place_match, value: @challonge["tournament"]["hold_third_place_match"] %><span>3位決定戦を行う</span>
+      <% unless @started %>
+        <%= f.select :elimination_type, options_for_select([["シングルイリミネーション","single elimination"], ["ダブルイリミネーション","double elimination"], ["総当たり戦", "round robin"]], :selected => @challonge["tournament"]["tournament_type"]), {}, id: "elimination", class: "form-control" %>
+      <% else %>
+        <%= f.select :elimination_type, options_for_select([["シングルイリミネーション","single elimination"], ["ダブルイリミネーション","double elimination"], ["総当たり戦", "round robin"]], :selected => @challonge["tournament"]["tournament_type"]), {}, disabled: true, id: "elimination", class: "form-control" %>
+      <% end %>
     </div>
+    
+    <% unless @started %>
+      <div id="selected-single" style:"display:none">
+        <%= f.check_box :hold_third_place_match, {:checked => @challonge["tournament"]["hold_third_place_match"]} %><span>3位決定戦を行う</span>
+      </div>
+      <div class="radio-group" id="selected-double" style="display:none">
+        <%= f.radio_button :grand_finals_modifier, nil, :checked => true %><span> 1-2マッチ — ルーザーズの勝者はウィナーズの勝者から2回勝利しなければいけません</span><br>
+        <%= f.radio_button :grand_finals_modifier, "single match" %><span>1マッチ</span><br>
+        <%= f.radio_button :grand_finals_modifier, "skip" %><span>無し</span>
+      </div>
+      <div id="selected-robin" style="display:none">
+        <%= f.label "順位付け方法" %>
+        <%= f.select :ranked_by, options_for_select([["マッチ勝数","match wins"], ["ゲームもしくはセットの勝数","game wins"], ["合計得点","points scored"], ["得失点差","points difference"], ["カスタム（ポイントシステム）","custom"]], :selected => @challonge["tournament"]["ranked_by"]), {}, id: "tournament_ranked_by", class: "form-control" %>
+        <div id="robin-custom" class="form-row my-2">
+          <div class="col-lg-3 col-6">
+            <%= f.number_field :rr_pts_for_match_win, step: "0.1", value: @challonge["tournament"]["rr_pts_for_match_win"], class: "form-control" %>
+            <%= f.label "ポイント（マッチ勝利毎に）" %>
+          </div>
+          <div class="col-lg-3 col-6">
+            <%= f.number_field :rr_pts_for_match_tie, step: "0.1", value: @challonge["tournament"]["rr_pts_for_match_tie"], class: "form-control" %>
+            <%= f.label "ポイント（マッチのタイ毎に）" %>
+          </div>
+          <div class="col-lg-3 col-6">
+            <%= f.number_field :rr_pts_for_game_win, step: "0.1", value: @challonge["tournament"]["rr_pts_for_game_win"], class: "form-control" %>
+            <%= f.label "ポイント（ゲームもしくはセットの勝利毎に）" %>
+          </div>
+          <div class="col-lg-3 col-6">
+            <%= f.number_field :rr_pts_for_game_tie, step: "0.1", value: @challonge["tournament"]["rr_pts_for_game_tie"], class: "form-control" %>
+            <%= f.label "ポイント（ゲームもしくはセットのタイ毎に）" %>
+          </div>
+        </div>
+      </div>
+      
+      <%= f.label :start_time, class: "label-#{yield(:class_text)}" %>
+      <div class="input-group" data-target-input="nearest">
+        <%= f.text_field :start_time, id: "start_time", class: "form-control datepicker", data: {target: "#start_time"} %>
+        <div class="input-group-append" data-target="#start_time" data-toggle="datetimepicker">
+            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+        </div>
+      </div>
+    <% else %>
+      <div id="selected-single" style:"display:none">
+        <%= f.check_box :hold_third_place_match, {:checked => @challonge["tournament"]["hold_third_place_match"], :disabled => true} %><span>3位決定戦を行う</span>
+      </div>
+      <div class="radio-group" id="selected-double" style="display:none">
+        <%= f.radio_button :grand_finals_modifier, nil, :disabled => true %><span> 1-2マッチ — ルーザーズの勝者はウィナーズの勝者から2回勝利しなければいけません</span><br>
+        <%= f.radio_button :grand_finals_modifier, "single match", :disabled => true %><span>1マッチ</span><br>
+        <%= f.radio_button :grand_finals_modifier, "skip", :disabled => true %><span>無し</span>
+      </div>
+      <div id="selected-robin" style="display:none">
+        <%= f.label "順位付け方法" %>
+        <%= f.select :ranked_by, options_for_select([["マッチ勝数","match wins"], ["ゲームもしくはセットの勝数","game wins"], ["合計得点","points scored"], ["得失点差","points difference"], ["カスタム（ポイントシステム）","custom"]], :selected => @challonge["tournament"]["ranked_by"], :disabled => true), {}, id: "tournament_ranked_by", class: "form-control" %>
+        <div id="robin-custom" style="display:none">
+          <%= f.number_field :rr_pts_for_match_win, disabled: true, value: @challonge["tournament"]["rr_pts_for_match_win"], class: "form-control" %>
+          <%= f.label "ポイント（マッチ勝利毎に）" %>
+          
+          <%= f.number_field :rr_pts_for_match_tie, disabled: true, value: @challonge["tournament"]["rr_pts_for_match_tie"], class: "form-control" %>
+          <%= f.label "ポイント（マッチのタイ毎に）" %>
+          
+          <%= f.number_field :rr_pts_for_game_win, disabled: true, value: @challonge["tournament"]["rr_pts_for_game_win"], class: "form-control" %>
+          <%= f.label "ポイント（ゲームもしくはセットの勝利毎に）" %>
+          
+          <%= f.number_field :rr_pts_for_game_tie, disabled: true, value: @challonge["tournament"]["rr_pts_for_game_tie"], class: "form-control" %>
+          <%= f.label "ポイント（ゲームもしくはセットのタイ毎に）" %>
+        </div>
+      </div>
+      
+      <%= f.label :start_time, class: "label-#{yield(:class_text)}" %>
+      <div class="input-group" data-target-input="nearest">
+        <%= f.text_field :start_time, disabled: true, id: "start_time", class: "form-control datepicker", data: {target: "#start_time"} %>
+        <div class="input-group-append" data-target="#start_time" data-toggle="datetimepicker">
+            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+        </div>
+      </div>
+    <% end %>
+    <%= f.submit "更新", class: "btn btn-primary btn-block btn-#{yield(:class_text)} my-2" %>
   <% end %>
-
-  <%= f.label :start_time, class: "label-#{yield(:class_text)}" %>
-  <div class="input-group" data-target-input="nearest">
-    <%= f.text_field :start_time, id: "start_time", class: "form-control datepicker", data: {target: "#start_time"} %>
-    <div class="input-group-append" data-target="#start_time" data-toggle="datetimepicker">
-        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-    </div>
-  </div>
-
-  <%= f.submit yield(:button_text), class: "btn btn-primary btn-block btn-#{yield(:class_text)} my-2" %>
 <% end %>
 
 <script>
@@ -85,7 +183,61 @@
     $('.datepicker').datetimepicker({
       format: 'YYYY-MM-DD HH:mm:00'
     });
+
+    var elimination_type = $('#elimination').val();
+    switch (elimination_type) {
+      case 'single elimination':
+        $('#selected-single').show('slow');
+        $('#selected-double').hide('slow');
+          $('#selected-robin').hide('slow');
+        break;
+      case 'double elimination':
+        $('#selected-single').hide('slow');
+        $('#selected-double').show('slow');
+        $('#selected-robin').hide('slow');
+        break;
+      case 'round robin':
+        $('#selected-single').hide('slow');
+        $('#selected-double').hide('slow');
+        $('#selected-robin').show('slow');
+        break;
+    }
+
+    $('#elimination').change(function() {
+      elimination_type = $('#elimination').val();
+      switch (elimination_type) {
+        case 'single elimination':
+          $('#selected-single').show('slow');
+          $('#selected-double').hide('slow');
+          $('#selected-robin').hide('slow');
+          break;
+        case 'double elimination':
+          $('#selected-single').hide('slow');
+          $('#selected-double').show('slow');
+          $('#selected-robin').hide('slow');
+          break;
+        case 'round robin':
+          $('#selected-single').hide('slow');
+          $('#selected-double').hide('slow');
+          $('#selected-robin').show('slow');
+          break;
+      }
+    });
+
+    var ranked_by = $('#tournament_ranked_by').val();
+    if (ranked_by == 'custom') {
+      $('#robin-custom').show('slow');
+    } else {
+      $('#robin-custom').hide('slow');
+    }
+    
+    $('#tournament_ranked_by').change(function() {
+      var ranked_by = $('#tournament_ranked_by').val();
+      if (ranked_by == 'custom') {
+        $('#robin-custom').show('slow');
+      } else {
+        $('#robin-custom').hide('slow');
+      }
+    });
   });
-  
-  var select_num = $('#elimination').val();
 </script>

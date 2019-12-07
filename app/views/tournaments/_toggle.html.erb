@@ -37,7 +37,10 @@
     <% if !@matches_complete.blank? %>
       <% @matches_complete.each do |matches| %>
         <%= return_user_from_participant(matches["match"]["player1_id"]).name + " vs " + return_user_from_participant(matches["match"]["player2_id"]).name + "  " %>
-        <%= link_to "やり直し", tournament_reset_match_path(@tournament, matches), method: :get, data: { confirm: "やり直しをしてもいいですか？" }, class: "btn btn-primary mb-2" if master?(@tournament) %><br>
+        <% unless @challonge["tournament"]["state"] == "complete" %>
+          <%= link_to "やり直し", tournament_reset_match_path(@tournament, matches), method: :get, data: { confirm: "やり直しをしてもいいですか？" }, class: "btn btn-primary mb-2" if master?(@tournament) %>
+        <% end %>
+        <br>
       <% end %>
     <% else %>
       <p>なし</p>
@@ -50,7 +53,9 @@
           <% @matches_complete.each do |matches| %>
             <div class="col-6">
               <%= return_user_from_participant(matches["match"]["player1_id"]).name + " vs " + return_user_from_participant(matches["match"]["player2_id"]).name + "  " %>
-              <%= link_to "やり直し", tournament_reset_match_path(@tournament, matches), method: :get, data: { confirm: "やり直しをしてもいいですか？" }, class: "btn btn-primary mb-2" if master?(@tournament) %>
+              <% unless @challonge["tournament"]["state"] == "complete" %>
+                <%= link_to "やり直し", tournament_reset_match_path(@tournament, matches), method: :get, data: { confirm: "やり直しをしてもいいですか？" }, class: "btn btn-primary mb-2" if master?(@tournament) %>
+              <% end %>
             </div>
           <% end %>
         <% else %>

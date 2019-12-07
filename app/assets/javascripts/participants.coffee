@@ -4,7 +4,7 @@
 
 # ページ読み込みの際に単純にloadでは適用されないためon 'turbolinks:load'と記載する必要がある。
 $(window).on 'turbolinks:load', ->
-  $(".searchable").select2({
+  $(".search_participants").select2({
     width:      'resolve',  # 横幅
     height: 'resolve',
     allowClear: true,  # x で選択したものを削除できる

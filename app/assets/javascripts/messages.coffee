@@ -10,7 +10,7 @@ $(window).on 'turbolinks:load', ->
     allowClear: true,  # x で選択したものを削除できる
     color: "black",
     theme: "bootstrap",
-    placeholder: '選択してください',
+    placeholder: '全て',
     language: 'ja'
     # 詳細は http://ivaynberg.github.io/select2/#documentation
   })

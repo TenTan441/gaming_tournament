@@ -41,13 +41,12 @@ module ChallongeapisHelper
     bool = false
     if res.is_a?(Net::HTTPSuccess)
       #access_token = JSON.pretty_generate(JSON.parse(res.body))
-      access_token = JSON.parse(res.body)
       bool = true
     else
       #abort "call api failed: body=" + res.body
       flash[:danger] = "情報送信に失敗しました。管理者へ問い合わせてください。"
     end
-    
+    access_token = JSON.parse(res.body)
     return bool, access_token
   end
   
@@ -66,14 +65,11 @@ module ChallongeapisHelper
     access_token = nil
     bool = false
     if res.is_a?(Net::HTTPSuccess)
-      #access_token = JSON.pretty_generate(JSON.parse(res.body))
-      access_token = JSON.parse(res.body)
       bool = true
     else
-      #abort "call api failed: body=" + res.body
       flash[:danger] = "情報送信に失敗しました。管理者へ問い合わせてください。"
     end
-    
+    access_token = JSON.parse(res.body)
     return bool, access_token
   end
   

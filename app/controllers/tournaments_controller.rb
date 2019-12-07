@@ -11,7 +11,10 @@ class TournamentsController < ApplicationController
           @tournaments = Tournament.where(private: true).or(Tournament.where(id: Participant.where(user_id: current_user.id)
                                                                                             .pluck(:tournament_id),
                                                                              private: false))
-                                                        .order(id: "DESC").paginate(page: params[:page], per_page: 10)
+                                                        .or(Tournament.where(master: current_user.id))
+                                                        .distinct #　重複を消す
+                                                        .order(id: "DESC")
+                                                        .paginate(page: params[:page], per_page: 10)
         else
           @tournaments = Tournament.where(private: true).order(id: "DESC").paginate(page: params[:page], per_page: 10)
         end
@@ -22,13 +25,23 @@ class TournamentsController < ApplicationController
             @tournaments = Tournament.where(private: true).or(Tournament.where(id: Participant.where(user_id: current_user.id)
                                                                                               .pluck(:tournament_id),
                                                                                private: false))
+                                                          .or(Tournament.where(master: current_user.id))
+                                                          .distinct #　重複を消す
+                                                          .name_search(params[:name])
                                                           .master_search(params[:master])
                                                           .title_search(params[:game_title])
                                                           .status_search(params[:status])
                                                           .start_time_search(params[:from], params[:to])
-                                                          .order(id: "DESC").paginate(page: params[:page], per_page: 10)
+                                                          .order(id: "DESC")
+                                                          .paginate(page: params[:page], per_page: 10)
           else
-            @tournaments = Tournament.where(private: true).order(id: "DESC").paginate(page: params[:page], per_page: 10)
+            @tournaments = Tournament.where(private: true).name_search(params[:name])
+                                                          .master_search(params[:master])
+                                                          .title_search(params[:game_title])
+                                                          .status_search(params[:status])
+                                                          .start_time_search(params[:from], params[:to])
+                                                          .order(id: "DESC")
+                                                          .paginate(page: params[:page], per_page: 10)
           end
         end
       end
@@ -43,16 +56,55 @@ class TournamentsController < ApplicationController
   def create
     @tournament = Tournament.new(tournament_params)
     t = params[:tournament]
-    game_title = game_title_from_number(t[:game_title])
-    bool, access_token = post_challonge_api({:tournament => {:name => t[:name], 
-                                                             :game_name => game_title, 
-                                                             :url => t[:url],
-                                                             :tournament_type => t[:elimination_type],
-                                                             :start_at => t[:start_time],
-                                                             :private => t[:private],
-                                                             :description => t[:description],
-                                                             :hold_third_place_match => t[:hold_third_place_match]}
-                                            }, "")
+    case tournament_type = t[:elimination_type]
+    when 'single elimination'
+      bool, access_token = put_challonge_api({:tournament => {:name => t[:name], 
+                                                              :url => t[:url],
+                                                              :tournament_type => t[:elimination_type],
+                                                              :start_at => t[:start_time],
+                                                              :private => true,
+                                                              :description => t[:description],
+                                                              :hold_third_place_match => t[:hold_third_place_match],
+                                                              :grand_finals_modifier => t[:grand_finals_modifier],
+                                                              :ranked_by => t[:ranked_by],
+                                                              :rr_pts_for_match_win => t[:rr_pts_for_match_win],
+                                                              :rr_pts_for_match_tie => t[:rr_pts_for_match_tie],
+                                                              :rr_pts_for_game_win => t[:rr_pts_for_game_win],
+                                                              :rr_pts_for_game_tie => t[:rr_pts_for_game_tie]}
+                                              }, "/#{@tournament.id_number}")
+    when 'double elimination'
+      bool, access_token = put_challonge_api({:tournament => {:name => t[:name], 
+                                                              :url => t[:url],
+                                                              :tournament_type => t[:elimination_type],
+                                                              :start_at => t[:start_time],
+                                                              :private => true,
+                                                              :description => t[:description],
+                                                              :grand_finals_modifier => t[:grand_finals_modifier]}
+                                              }, "/#{@tournament.id_number}")
+    when 'round robin'
+      if t[:ranked_by] == "custom"
+        bool, access_token = put_challonge_api({:tournament => {:name => t[:name], 
+                                                                :url => t[:url],
+                                                                :tournament_type => t[:elimination_type],
+                                                                :start_at => t[:start_time],
+                                                                :private => true,
+                                                                :description => t[:description],
+                                                                :ranked_by => t[:ranked_by],
+                                                                :rr_pts_for_match_win => t[:rr_pts_for_match_win],
+                                                                :rr_pts_for_match_tie => t[:rr_pts_for_match_tie],
+                                                                :rr_pts_for_game_win => t[:rr_pts_for_game_win],
+                                                                :rr_pts_for_game_tie => t[:rr_pts_for_game_tie]}
+                                                }, "/#{@tournament.id_number}")
+      else
+        bool, access_token = put_challonge_api({:tournament => {:name => t[:name], 
+                                                                :url => t[:url],
+                                                                :tournament_type => t[:elimination_type],
+                                                                :start_at => t[:start_time],
+                                                                :private => true,
+                                                                :description => t[:description]}
+                                                }, "/#{@tournament.id_number}")
+      end
+    end
 
     if bool # && s.save
       @tournament.id_number = access_token["tournament"]["id"]
@@ -81,14 +133,9 @@ class TournamentsController < ApplicationController
     # 開催中と終了したマッチングを取得
     @matches_opening = get_challonge_api({:state => "open"}, "/#{@tournament.id_number}/matches")
 
-    case @challonge["tournament"]["state"]
-    when "pending"
+    if @challonge["tournament"]["state"] == "pending"
       @started = false
-    when "underway"
-      @started = true
-    when "complete"
-      @started = true
-    when "awaiting_review"
+    else
       @started = true
     end
 
@@ -98,7 +145,6 @@ class TournamentsController < ApplicationController
     
     @participants_search = @participants.where(user_id: User.search(params[:search]).order(:id).pluck(:id))
                                         .paginate(page: params[:page], per_page: 10)
-    
   end
   
   def toggle
@@ -109,6 +155,7 @@ class TournamentsController < ApplicationController
     when 'complete'
       @matches_complete = get_challonge_api({:state => "complete"}, "/#{@tournament.id_number}/matches")
     end
+    @challonge = get_challonge_api({}, "/#{@tournament.id_number}")
   end
   
   def start
@@ -165,16 +212,56 @@ class TournamentsController < ApplicationController
   
   def update
     t = params[:tournament]
-    game_title = game_title_from_number(t[:game_title])
-    bool, access_token = put_challonge_api({:tournament => {:name => t[:name], 
-                                                            :game_name => game_title, 
-                                                            :url => t[:url],
-                                                            :tournament_type => t[:elimination_type],
-                                                            :start_at => t[:start_time],
-                                                            :private => true,
-                                                            :description => t[:description],
-                                                            :hold_third_place_match => true}
-                                            }, "/#{@tournament.id_number}")
+    case tournament_type = t[:elimination_type]
+    when 'single elimination'
+      bool, access_token = put_challonge_api({:tournament => {:name => t[:name], 
+                                                              :url => t[:url],
+                                                              :tournament_type => t[:elimination_type],
+                                                              :start_at => t[:start_time],
+                                                              :private => true,
+                                                              :description => t[:description],
+                                                              :hold_third_place_match => t[:hold_third_place_match],
+                                                              :grand_finals_modifier => t[:grand_finals_modifier],
+                                                              :ranked_by => t[:ranked_by],
+                                                              :rr_pts_for_match_win => t[:rr_pts_for_match_win],
+                                                              :rr_pts_for_match_tie => t[:rr_pts_for_match_tie],
+                                                              :rr_pts_for_game_win => t[:rr_pts_for_game_win],
+                                                              :rr_pts_for_game_tie => t[:rr_pts_for_game_tie]}
+                                              }, "/#{@tournament.id_number}")
+    when 'double elimination'
+      bool, access_token = put_challonge_api({:tournament => {:name => t[:name], 
+                                                              :url => t[:url],
+                                                              :tournament_type => t[:elimination_type],
+                                                              :start_at => t[:start_time],
+                                                              :private => true,
+                                                              :description => t[:description],
+                                                              :grand_finals_modifier => t[:grand_finals_modifier]}
+                                              }, "/#{@tournament.id_number}")
+    when 'round robin'
+      if t[:ranked_by] == "custom"
+        bool, access_token = put_challonge_api({:tournament => {:name => t[:name], 
+                                                                :url => t[:url],
+                                                                :tournament_type => t[:elimination_type],
+                                                                :start_at => t[:start_time],
+                                                                :private => true,
+                                                                :description => t[:description],
+                                                                :ranked_by => t[:ranked_by],
+                                                                :rr_pts_for_match_win => t[:rr_pts_for_match_win],
+                                                                :rr_pts_for_match_tie => t[:rr_pts_for_match_tie],
+                                                                :rr_pts_for_game_win => t[:rr_pts_for_game_win],
+                                                                :rr_pts_for_game_tie => t[:rr_pts_for_game_tie]}
+                                                }, "/#{@tournament.id_number}")
+      else
+        bool, access_token = put_challonge_api({:tournament => {:name => t[:name], 
+                                                                :url => t[:url],
+                                                                :tournament_type => t[:elimination_type],
+                                                                :start_at => t[:start_time],
+                                                                :private => true,
+                                                                :description => t[:description]}
+                                                }, "/#{@tournament.id_number}")
+      end
+    end
+    
     if bool # && s.save
       if @tournament.update_attributes(tournament_params)
         flash[:success] = '更新に成功しました。'
@@ -185,6 +272,7 @@ class TournamentsController < ApplicationController
       end
     else
       flash[:danger] = "更新に失敗しました。"
+      puts access_token
       @challonge = get_challonge_api({}, "/#{@tournament.id_number}")
       render :edit
     end
