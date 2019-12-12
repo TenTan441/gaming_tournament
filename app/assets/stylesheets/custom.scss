@@ -24,6 +24,34 @@ textarea {
 
 /* typography */
 
+.title {
+  text-align: center;
+  font-size: 32px;
+  letter-spacing: -2px;
+  margin-bottom: 30px;
+}
+
+.sub-title {
+  font-size: 16px;
+}
+
+@media (min-width: 640px) {
+  .title {
+    font-size: calc(32px + ((1vw - 6.4px)*3.571));
+  }
+  .sub-title {
+    font-size: calc(16px + ((1vw - 6.4px)*2.857));
+  }
+}
+@media (min-width: 1200px) {
+  .title {
+    font-size: 52px; //最大値
+  }
+  .sub-title {
+    font-size: 32px;
+  }
+}
+
 h1, h2, h3, h4, h5, h6 {
   line-height: 1;
 }
@@ -97,4 +125,8 @@ p {
   .form-control {
     //color: $state-danger-text;
   }
+}
+
+.table {
+  table-layout: fixed;
 }

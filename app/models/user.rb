@@ -3,7 +3,7 @@ class User < ApplicationRecord
   
   has_many :messages, dependent: :destroy
   
-  validates :name,  presence: true, length: { maximum: 50 }
+  validates :name,  presence: true, length: { maximum: 16 }
   has_secure_password validations: false
   
   mount_uploader :image, PictureUploader

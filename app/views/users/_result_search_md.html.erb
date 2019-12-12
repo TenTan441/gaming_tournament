@@ -1,0 +1,40 @@
+<%= will_paginate @tournaments, {:param_name => 'tournaments', :class => 'pagination'} %>
+<% @tournaments.each do |tournament| %>
+  <% master = master_tournament(tournament) %>
+  <div class="d-flex justify-content-between bg-dark my-2">
+    <div class="d-flex flex-column" style="width:60%;">
+      <div class="p-2"><%= tournament.game_title %></div>
+      <div class="p-2"><%= link_to tournament.name, tournament, class: "text-nowrap text-reset font-weight-bold" %></div>
+      <div class="p-2">
+        <%= link_to image_tag(master.image.to_s, class: "img-fluid img-thumbnail rounded m-2", :style => "width:60px; height:60px;"), master %><br>
+        <% if logged_in? %>
+          <%= link_to "#{master.name}", master, class: "text-reset font-weight-bold" %>
+        <% else %>
+          <%= master.name %>
+        <% end %>
+      </div>
+    </div>
+    <div class="d-flex flex-column justify-content-between text-right" style="width:40%;">
+      <div class="d-flex flex-column justify-content-start p-2">
+        <div><%= Tournament.human_attribute_name :start_time %></div>
+        <div><%= l(tournament.start_time, format: :short) %></div>
+      </div>
+      <% if state = tournament.status == '完了' %>
+        <div class="p-3 show-ranking font-weight-bold font-italic">
+          <% if !(participant = Participant.where(tournament_id: tournament.id).find_by(user_id: @user.id)).nil? %>
+            <% if rank = participant.ranking %>
+              <%= rank.ordinalize %>
+            <% else %>
+              <%= Participant.where(tournament_id: tournament.id).count.ordinalize %>
+            <% end %>
+          <% else %>
+            Mas
+          <% end %>
+        </div>
+      <% else %>
+        <div class="p-2"><%= tournament.status %></div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+<%= will_paginate @tournaments, {:param_name => 'tournaments', :class => 'pagination'} %>

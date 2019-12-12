@@ -1,19 +1,36 @@
-<tr><td colspan="12"><%= will_paginate @tournaments, {:param_name => 'tournaments', :class => 'pagination'} %></td></tr>
-<% @tournaments.each do |tournament| %>
-  <% master = master_tournament(tournament) %>
-  <tr>
-    <td colspan="4"><%= link_to tournament.name, tournament, class: "text-reset font-weight-bold" %></td>
-    <td colspan="2" class="text-wrap text-break"><%= tournament.game_title %></td>
-    <td colspan="4">
-      <%= link_to image_tag(master.image.to_s, class: "img-fluid img-thumbnail rounded m-2", :style => "width:60px; height:60px;"), master %><br>
-      <% if logged_in? %>
-        <%= link_to "#{master.name}", master, class: "text-reset font-weight-bold" %>
-      <% else %>
-        <%= master.name %>
-      <% end %>
-    </td>
-    <td colspan="1"><%= l(tournament.start_time, format: :short) %></td>
-    <td colspan="1"><%= tournament.status %></td>
-  </tr>
-<% end %>
-<tr><td colspan="12"><%= will_paginate @tournaments, {:param_name => 'tournaments', :class => 'pagination'} %></td></tr>
+<%= will_paginate @tournaments, {:class => 'pagination'} %>
+<table class="table table-hover text-nowrap table-responsive-md" id="table-users">
+  <thead>
+    <tr>
+      <th colspan="4"><%= Tournament.human_attribute_name :name %></th>
+      <th colspan="2"><%= Tournament.human_attribute_name :game_title %></th>
+      <th colspan="2"><%= Tournament.human_attribute_name :master %></th>
+      <th colspan="2"><%= Tournament.human_attribute_name :start_time %></th>
+      <th colspan="2"><%= Tournament.human_attribute_name :status %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tournaments.each do |tournament| %>
+      <% master = master_tournament(tournament) %>
+      <tr>
+        <td colspan="4"><%= link_to tournament.name, tournament, class: "text-reset font-weight-bold" %></td>
+        <td colspan="2" class="text-wrap text-break"><%= tournament.game_title %></td>
+        <td colspan="2">
+          <%= link_to image_tag(master.image.to_s, class: "img-fluid img-thumbnail rounded m-2", :style => "width:60px; height:60px;"), master %><br>
+          <% if logged_in? %>
+            <%= link_to "#{master.name}", master, class: "text-reset font-weight-bold" %>
+          <% else %>
+            <%= master.name %>
+          <% end %>
+        </td>
+        <td colspan="2"><%= l(tournament.start_time, format: :short) %></td>
+        <td colspan="2"><%= tournament.status %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= will_paginate @tournaments, {:class => 'pagination'} %>
+
+<script>
+  $('.pagination a').attr('data-remote', 'true');
+</script>

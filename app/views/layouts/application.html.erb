@@ -10,6 +10,15 @@
                                'data-turbolinks-track': 'reload' %>
     <!-- HTML shimがこの1行で収まる -->
     <%= render 'layouts/shim' %>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- 以下3つが横から出てくるハンバーガーメニューのプラグイン -->
+    <!-- drawer.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.min.css">
+    <!-- iScroll -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.min.js"></script>
+    <!-- drawer.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js"></script>
     
     <style type="text/css">
 	    <!--
@@ -102,21 +111,18 @@
           background-color: #343A40;
         }
         
+        a.nav-link.drawer-menu-item,
         a.dropdown-item,
         a.dropdown-item.font-weight-bold {
           color: #fff;
-        }
-        
-        a.dropdown-item.font-weight-bold:hover {
-          color: #000;
         }
 	    
 	  </style>
   </head>
 
-  <body>
+  <body class="drawer drawer--right">
     <%= render 'layouts/header' %>
-    <div id="container">
+    <div class="container">
       <% flash.each do |message_type, msg| %>
         <div class="alert alert-<%= message_type %>"><%= msg %></div>
       <% end %>
@@ -124,16 +130,5 @@
       <%= debug(params) if Rails.env.development? %>
     </div>
   </body>
-  
-  <script>// スマホやタブレットからのアクセスの場合は画面幅いっぱいに表示し、PCからのアクセスの場合は余白を追加するようにクラスを変える
-    $(document).ready(function() {
-      <% ua = request.env["HTTP_USER_AGENT"] %>
-      <% unless(ua.include?('Mobile') || ua.include?('Android')) %>
-        $('#container').addClass('container');
-      <% else %>
-        $('#container').addClass('container-fluid');
-      <% end %>
-    });
-  </script>
   
 </html>

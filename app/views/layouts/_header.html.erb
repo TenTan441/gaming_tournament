@@ -1,7 +1,6 @@
-<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
-  <div class="container">
-    <%= link_to "Super Smash Bros. Tournament App", root_path, id: "logo" %>
-    
+<nav class="drawer-navbar navbar navbar-expand-lg fixed-top navbar-dark bg-dark border border-dark">
+  <div class="drawer-container container">
+    <%= link_to "スマトナ！(仮)", root_path, id: "logo" %>
     <nav class="row">
       <% if logged_in? && (messages = Message.where(user_to: current_user).count - Message.where(user_to: current_user).where("edited_at < read_at").count) > 0 %>
         <ul class="navbar-nav mr-2">
@@ -10,35 +9,36 @@
           </li>
         </ul>
       <% end %>
-      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#Navber" aria-controls="Navber" aria-expanded="false" aria-label="ナビゲーションの切替">
-        <span class="navbar-toggler-icon"></span>
+      <button type="button" class="drawer-toggle drawer-hamburger" aria-controls="Navber" aria-expanded="false">
+        <span class="sr-only">toggle navigation</span>
+        <span class="drawer-hamburger-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="Navber">
-        <ul class="navbar-nav mr-auto">
+      <div class="drawer-nav bg-dark" role="navigation">
+        <ul class="drawer-menu drawer-menu--right mr-auto">
           <li class="nav-item active">
-            <%= link_to "ホーム", root_path, class: "nav-link" %>
+            <%= link_to "ホーム", root_path, class: "nav-link drawer-menu-item" %>
           </li>
           <% if logged_in? %>
             <li class="nav-item active">
-              <%= link_to "ユーザ一覧", users_path, class: "nav-link" %>
+              <%= link_to "ユーザ一覧", users_path, class: "nav-link drawer-menu-item" %>
             </li>
             <li class="nav-item active dropdown">
-              <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <a href="#" class="nav-link dropdown-toggle drawer-menu-item" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 メニュー
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <%= link_to "マイページ", current_user , class: "dropdown-item" %>
+                <%= link_to "マイページ", current_user , class: "dropdown-item nav-link drawer-menu-item" %>
                 <div class="dropdown-divider"></div>
-                <%= link_to "ログアウト", logout_path, method: :delete, class: "dropdown-item" %>
+                <%= link_to "ログアウト", logout_path, method: :delete, class: "dropdown-item nav-link drawer-menu-item" %>
               </div>
             </li>
           <% else %>
             <li class="nav-item active">
-              <%= link_to "ログイン", login_path, class: "nav-link" %>
+              <%= link_to "ログイン", login_path, class: "nav-link drawer-menu-item" %>
             </li>
           <% end %>
         </ul>
-      </div><!-- /.navbar-collapse -->
+      </div>
     </nav>
   </div>
 </nav>

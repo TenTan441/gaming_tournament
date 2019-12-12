@@ -1,269 +1,245 @@
 <% provide(:title, @user.name) %>
-<div class="col-12">
-  <h1>【<%= @user.name %>】</h1>
-  
-  <div class="m-auto text-center">
-    <% if @user == current_user %>
-      <%= link_to "新しく大会を作る", new_tournament_path, class: "btn btn-lg btn-success mx-2" %>
-      <%= link_to "俺より強い奴に会いに行く", tournaments_path, class: "btn btn-lg btn-primary mx-2" %>
-    <% end %>
+
+<div class="title">【<%= @user.name %>】</div>
+
+<% if @user == current_user %>
+<div class="row justify-content-around mb-3">
+  <%= link_to "新しく大会を作る", new_tournament_path, class: "btn btn-success" %>
+  <%= link_to "俺より強い奴に会いに行く", tournaments_path, class: "btn btn-primary" %>
+</div>
+<% end %>
+<!-- ピル部分 -->
+<ul class="nav nav-tabs nav-fill" id="tabs-tab" role="tablist">
+  <li class="nav-item active">
+    <%= link_to "ホーム", "#tabs-home", id: "tabs-home-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-home", "aria-selected" => "true", class: "nav-link text-reset font-weight-bold" %>
+  </li>
+  <li class="nav-item">
+    <%= link_to "使用キャラ", "#tabs-profile", id: "tabs-profile-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-profile", class: "nav-link text-reset font-weight-bold" %>
+  </li>
+  <li class="nav-item">
+    <%= link_to "コンタクト", "#tabs-contact", id: "tabs-contact-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-contact", class: "nav-link text-reset font-weight-bold" %>
+  </li>
+  <li class="nav-item">
+    <%= link_to "戦績", "#tabs-result", id: "tabs-result-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-result", class: "nav-link text-reset font-weight-bold" %>
+  </li>
+  <% if @user == current_user %>
+  <li class="nav-item active dropdown">
+    <a href="#" class="nav-link dropdown-toggle text-reset font-weight-bold" id="userpageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      編集
+    </a>
+    <div class="dropdown-menu" aria-labelledby="userpageDropdown">
+      <%= link_to "設定", edit_user_path(current_user), remote: true, class: "dropdown-item font-weight-bold" %>
+      <%= link_to "キャラ設定", user_characters_edit_path(@user), remote: true, class: "dropdown-item font-weight-bold" %>
+    </div>
+  </li>
+  <% end %>
+</ul>
+
+<!-- パネル部分 -->
+<div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade" id="tabs-home" role="tabpanel" aria-labelledby="tabs-home-tab">
+    <div class="col-md-10 offset-md-1">
+      <div class="d-flex align-self-start">
+        <div class="m-3">
+          <%= image_tag @user.image.to_s, class: "img-fluid img-thumbnail rounded", :style => "width:100px; max-width:100%; min-width:60%;" %>
+        </div>
+        <div class="m-3 font-weight-bold">
+          <%= @user.name %>
+        </div>
+      </div>
+      <div class="m-3">
+        <% unless @user.description.blank? %>
+          自己紹介<br><%= @user.description %>
+        <% else %>
+          <div class="text-center">
+            自己紹介文がありません。
+          </div>
+        <% end %>
+      </div>
+    </div>
   </div>
   
-  <!-- ピル部分 -->
-  <ul class="nav nav-tabs nav-justified mt-2" id="tabs-tab" role="tablist">
-    <li class="nav-item active">
-      <%= link_to "ホーム", "#tabs-home", id: "tabs-home-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-home", "aria-selected" => "true", class: "nav-link text-reset font-weight-bold" %>
-    </li>
-    <li class="nav-item">
-      <%= link_to "使用キャラ", "#tabs-profile", id: "tabs-profile-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-profile", class: "nav-link text-reset font-weight-bold" %>
-    </li>
-    <li class="nav-item">
-      <%= link_to "コンタクト", "#tabs-contact", id: "tabs-contact-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-contact", class: "nav-link text-reset font-weight-bold" %>
-    </li>
-    <li class="nav-item">
-      <%= link_to "戦績", "#tabs-result", id: "tabs-result-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-result", class: "nav-link text-reset font-weight-bold" %>
-    </li>
-    <% if @user == current_user %>
-      <li class="nav-item active dropdown">
-        <a href="#" class="nav-link dropdown-toggle text-reset font-weight-bold" id="userpageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          編集
-        </a>
-        <div class="dropdown-menu" aria-labelledby="userpageDropdown">
-          <%= link_to "設定", edit_user_path(current_user), remote: true, class: "dropdown-item font-weight-bold" %>
-          <%= link_to "使用キャラクター", user_characters_edit_path(@user), remote: true, class: "dropdown-item font-weight-bold" %>
-        </div>
+  <div class="tab-pane fade" id="tabs-profile" role="tabpanel" aria-labelledby="tabs-profile-tab">
+    <ul class="nav nav-tabs nav-fill" id="tabs-title" role="tablist">
+      <li class="nav-item">
+        <%= link_to "64", user_title_character_path(user_id: @user, game_title: '0'), remote: true, id: "tabs-title-64", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-64", class: "nav-link text-reset font-weight-bold" %>
       </li>
-    <% end %>
-  </ul>
-  
-  <!-- パネル部分 -->
-  <div class="tab-content" id="pills-tabContent">
-    <div class="tab-pane fade" id="tabs-home" role="tabpanel" aria-labelledby="tabs-home-tab">
-      <div class="container-fluid">
-        <div class="col-lg-8 offset-lg-2">
-          <div class="row justify-content-start">
-            <div class="m-3">
-              <%= image_tag @user.image.to_s, class: "img-fluid img-thumbnail rounded", :style => "max-width:150px;" %>
+      <li class="nav-item">
+        <%= link_to "DX", user_title_character_path(user_id: @user, game_title: '1'), remote: true, id: "tabs-title-DX", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-DX", class: "nav-link text-reset font-weight-bold" %>
+      </li>
+      <li class="nav-item">
+        <%= link_to "X", user_title_character_path(user_id: @user, game_title: '2'), remote: true, id: "tabs-title-X", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-X", class: "nav-link text-reset font-weight-bold" %>
+      </li>
+      <li class="nav-item">
+        <%= link_to "3DS", user_title_character_path(user_id: @user, game_title: '3'), remote: true, id: "tabs-title-3DS", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-3DS", class: "nav-link text-reset font-weight-bold" %>
+      </li>
+      <li class="nav-item">
+        <%= link_to "Wii U", user_title_character_path(user_id: @user, game_title: '4'), remote: true, id: "tabs-title-WiiU", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-WiiU", class: "nav-link text-reset font-weight-bold" %>
+      </li>
+      <li class="nav-item">
+        <%= link_to "SP", user_title_character_path(user_id: @user, game_title: '5'), remote: true, id: "tabs-title-SP", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-SP", class: "nav-link text-reset font-weight-bold" %>
+      </li>
+    </ul>
+    
+    <div id="title-character"></div>
+  </div>
+
+  <div class="tab-pane fade" id="tabs-contact" role="tabpanel" aria-labelledby="tabs-contact-tab">
+    <div id="user-contact" class="m-auto"></div>
+      <% if current_user == @user %>
+        <ul class="nav nav-tabs nav-fill" id="tabs-box" role="tablist">
+          <li class="nav-item">
+            <%= link_to "受信箱", "#tabs-inbox", id: "tabs-inbox-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-inbox", "aria-selected" => "true", class: "nav-link text-reset font-weight-bold" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "作成", "#tabs-create-mail", id: "tabs-inbox-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-inbox", "aria-selected" => "true", class: "nav-link text-reset font-weight-bold" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "送信箱", "#tabs-outbox", id: "tabs-outbox-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-outbox", class: "nav-link text-reset font-weight-bold" %>
+          </li>
+        </ul>
+          
+        <div class="col-md-10 offset-md-1">
+          <div class="tab-content" id="pills-tabContent-box">
+            <div class="tab-pane fade" id="tabs-inbox" role="tabpanel" aria-labelledby="tabs-contact-tab">
+              <%= render 'messages/search_inbox' %>
+              <div id="mails-inbox"></div>
             </div>
-            <div class="m-3 font-weight-bold">
-              <%= @user.name %>
+            
+            <div class="tab-pane fade" id="tabs-create-mail" role="tabpanel" aria-labelledby="tabs-contact-tab">
+              <%= form_with(model: @message, url: user_messages_path(@user), local: true, method: :post) do |f| %>
+                <%= f.hidden_field :user_id, value: @user.id %>
+                <div class="row">
+                  <div class="col-md-4 col-sm-6 col-8">
+                    <%= f.label "宛先" %>
+                    <%= select_tag :user_to, options_from_collection_for_select(User.where.not(id: @user), :id, :name), include_blank: true, class: "form-control searchable"%>
+                  </div>
+                  <div class="col-12">
+                    <%= f.label "本文" %>
+                    <%= f.text_area :text, class: "form-control" %>
+                  </div>
+                  <div class="col-12">
+                    <%= f.submit "メッセージを送信する", class: "btn btn-primary btn-block btn-login" %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            
+            <div class="tab-pane fade" id="tabs-outbox" role="tabpanel" aria-labelledby="tabs-contact-tab">
+              <%= form_with(url: user_path(@user), method: :get) do |fo| %>
+                <div class="row justify-content-between align-items-center">
+                  <div class="col-sm-5">
+                    <%= fo.label "From"%>
+                    <div class="input-group" data-target-input="nearest">
+                      <%= fo.text_field :from, id: "from_time", class: "form-control datepicker", data: {target: "#from_time"} %>
+                      <div class="input-group-append" data-target="#from_time" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-2 d-none d-sm-block text-center">～</div>
+                  <div class="col-sm-5">
+                    <%= fo.label "To" %>
+                    <div class="input-group" data-target-input="nearest">
+                      <%= fo.text_field :to, id: "to_time", class: "form-control datepicker", data: {target: "#to_time"} %>
+                      <div class="input-group-append" data-target="#to_time" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <%= fo.label "宛先" %><br>
+                    <%= select_tag :user_to, options_from_collection_for_select(User.where.not(id: @user), :id, :name), include_blank: true, class: "form-control searchable" %>
+                  </div>
+                  <div class="col-sm-8">
+                    <%= fo.label "本文" %>
+                    <%= fo.text_field :text, class: "form-control" %>
+                  </div>
+                  <div class="col-12">
+                    <%= fo.submit "検索する", class: "btn btn-primary btn-block my-2 mail_search" %>
+                  </div>
+                </div>
+                <%= fo.hidden_field :outbox, value: 'outbox_search' %>
+              <% end %>
+              <div id="mails-outbox"></div>
             </div>
           </div>
-          <div class="m-3">
-            <% unless @user.description.blank? %>
-              自己紹介<br><%= @user.description %>
-            <% else %>
-              <div class="text-center">
-                自己紹介文がありません。
-              </div>
+        </div><!-- col-lg-10 offset-lg-1 -->
+      <% else %>
+        <div class="container-fluid">    
+          <div class="col-lg-10 offset-lg-1">
+            <%= form_with(model: @message, url: user_messages_path(current_user), local: true, method: :post) do |f| %>
+                
+              <%= f.hidden_field :user_id, value: current_user.id %>
+              <%= hidden_field_tag :user_to, @user.id %>
+
+              <%= f.label "本文" %>
+              <%= f.text_area :text, class: "form-control" %>
+              
+              <%= f.submit "メッセージを送信する", class: "btn btn-primary btn-block btn-login" %>
             <% end %>
           </div>
         </div>
-      </div>
-    </div>
-    
-    <div class="tab-pane fade" id="tabs-profile" role="tabpanel" aria-labelledby="tabs-profile-tab">
-      <ul class="nav nav-tabs nav-justified" id="tabs-title" role="tablist">
-        <li class="nav-item">
-          <%= link_to "64", user_title_character_path(user_id: @user, game_title: '0'), remote: true, id: "tabs-title-64", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-64", class: "nav-link text-reset font-weight-bold" %>
-        </li>
-        <li class="nav-item">
-          <%= link_to "DX", user_title_character_path(user_id: @user, game_title: '1'), remote: true, id: "tabs-title-DX", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-DX", class: "nav-link text-reset font-weight-bold" %>
-        </li>
-        <li class="nav-item">
-          <%= link_to "X", user_title_character_path(user_id: @user, game_title: '2'), remote: true, id: "tabs-title-X", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-X", class: "nav-link text-reset font-weight-bold" %>
-        </li>
-        <li class="nav-item">
-          <%= link_to "3DS", user_title_character_path(user_id: @user, game_title: '3'), remote: true, id: "tabs-title-3DS", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-3DS", class: "nav-link text-reset font-weight-bold" %>
-        </li>
-        <li class="nav-item">
-          <%= link_to "Wii U", user_title_character_path(user_id: @user, game_title: '4'), remote: true, id: "tabs-title-WiiU", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-WiiU", class: "nav-link text-reset font-weight-bold" %>
-        </li>
-        <li class="nav-item">
-          <%= link_to "SP", user_title_character_path(user_id: @user, game_title: '5'), remote: true, id: "tabs-title-SP", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-title-SP", class: "nav-link text-reset font-weight-bold" %>
-        </li>
-      </ul>
-      
-      <div id="title-character"></div>
-    </div>
-
-    <div class="tab-pane fade" id="tabs-contact" role="tabpanel" aria-labelledby="tabs-contact-tab">
-      <div id="user-contact" class="m-auto"></div>
-        <% if current_user == @user %>
-          <ul class="nav nav-tabs nav-justified" id="tabs-box" role="tablist">
-            <li class="nav-item">
-              <%= link_to "受信箱", "#tabs-inbox", id: "tabs-inbox-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-inbox", "aria-selected" => "true", class: "nav-link text-reset font-weight-bold" %>
-            </li>
-            <li class="nav-item">
-              <%= link_to "メール作成", "#tabs-create-mail", id: "tabs-inbox-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-inbox", "aria-selected" => "true", class: "nav-link text-reset font-weight-bold" %>
-            </li>
-            <li class="nav-item">
-              <%= link_to "送信箱", "#tabs-outbox", id: "tabs-outbox-tab", "data-toggle" => "tab", role: "tab", "aria-controls" => "tabs-outbox", class: "nav-link text-reset font-weight-bold" %>
-            </li>
-          </ul>
-            
-          <div class="container-fluid">    
-            <div class="col-lg-10 offset-lg-1">
-              <div class="tab-content" id="pills-tabContent-box">
-                <div class="tab-pane fade" id="tabs-inbox" role="tabpanel" aria-labelledby="tabs-contact-tab">
-                  <%= render 'messages/search_inbox' %>
-                  <div id="mails-inbox"></div>
-                </div>
-                
-                <div class="tab-pane fade" id="tabs-create-mail" role="tabpanel" aria-labelledby="tabs-contact-tab">
-                  <%= form_with(model: @message, url: user_messages_path(@user), local: true, method: :post) do |f| %>
-                    <%= f.hidden_field :user_id, value: @user.id %>
-                    <div class="row">
-                      <div class="col-4">
-                        <%= f.label "宛先" %>
-                        <%= select_tag :user_to, options_from_collection_for_select(User.where.not(id: @user), :id, :name), include_blank: true, class: "form-control searchable"%>
-                      </div>
-                      <div class="col-12">
-                        <%= f.label "本文" %>
-                        <%= f.text_area :text, class: "form-control" %>
-                      </div>
-                      <div class="col-12">
-                        <%= f.submit "メッセージを送信する", class: "btn btn-primary btn-block btn-login" %>
-                      </div>
-                    </div>
-                  <% end %>
-                </div>
-                
-                <div class="tab-pane fade" id="tabs-outbox" role="tabpanel" aria-labelledby="tabs-contact-tab">
-                  <%= form_with(url: user_path(@user), method: :get) do |fo| %>
-                    <div class="m-auto row justify-content-between align-items-center col-lg">
-                      <div class="col-md-5">
-                        <%= fo.label "From"%>
-                        <div class="input-group" data-target-input="nearest">
-                          <%= fo.text_field :from, id: "from_time", class: "form-control datepicker", data: {target: "#from_time"} %>
-                          <div class="input-group-append" data-target="#from_time" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-2 d-none d-md-block text-center">～</div>
-                      <div class="col-md-5">
-                        <%= fo.label "To" %>
-                        <div class="input-group" data-target-input="nearest">
-                          <%= fo.text_field :to, id: "to_time", class: "form-control datepicker", data: {target: "#to_time"} %>
-                          <div class="input-group-append" data-target="#to_time" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <%= fo.label "宛先" %><br>
-                        <%= select_tag :user_to, options_from_collection_for_select(User.where.not(id: @user), :id, :name), include_blank: true, class: "form-control searchable" %>
-                      </div>
-                      <div class="col-md-8">
-                        <%= fo.label "本文" %>
-                        <%= fo.text_field :text, class: "form-control" %>
-                      </div>
-                      <div class="col-12">
-                        <%= fo.submit "検索する", class: "btn btn-primary btn-block my-2 mail_search" %>
-                      </div>
-                    </div>
-                    <%= fo.hidden_field :outbox, value: 'outbox_search' %>
-                  <% end %>
-                  <div id="mails-outbox"></div>
-                </div>
+      <% end %>
+  </div><!-- tabs-contact -->
+  <div class="tab-pane fade" id="tabs-result" role="tabpanel" aria-labelledby="tabs-result-tab">
+    <p class="my-2">
+      <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        検索オプション
+      </button>
+    </p>
+    <div class="collapse p-2 bg-dark my-2" id="collapseExample">
+      <%= form_with(url: user_path(@user), method: :get) do |fo| %>
+        <%= fo.hidden_field :tournaments, value: "tournaments_search" %>
+        <div class="m-auto row justify-content-between align-items-center">
+          <div class="col-md-5">
+            <%= fo.label Tournament.human_attribute_name :name %>
+            <%= fo.text_field :name, placeholder: "空白で全て検索", class: "form-control" %>
+          </div>
+          <div class="col-md-7">
+            <%= fo.label Tournament.human_attribute_name :game_title %>
+            <%= fo.select :game_title, Tournament.game_titles.keys.to_a, {prompt: "全タイトル"}, class: "form-control" %>
+          </div>
+          <div class="col-lg-8 col-sm-8">
+            <%= fo.label Tournament.human_attribute_name :master %><br>
+            <%= select_tag :master, options_from_collection_for_select(User.all, :id, :name), include_blank: true, class: "form-control searchable" %>
+          </div>
+          <div class="col-lg-4 col-sm-4">
+            <%= fo.label Tournament.human_attribute_name :status %>
+            <%= fo.select :status, Tournament.statuses.keys.to_a, {prompt: "全て"}, class: "form-control" %>
+          </div>
+          <div class="col-md-5">
+            <%= fo.label "From"%>
+            <div class="input-group" data-target-input="nearest">
+              <%= fo.text_field :from, placeholder: "アイコンで入力", id: "from_time_result", class: "form-control datepicker", data: {target: "#from_time_result"} %>
+              <div class="input-group-append" data-target="#from_time_result" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
               </div>
-            </div><!-- col-lg-10 offset-lg-1 -->
-          </div><!-- container-fluid -->
-        <% else %>
-          <div class="container-fluid">    
-            <div class="col-lg-10 offset-lg-1">
-              <%= form_with(model: @message, url: user_messages_path(current_user), local: true, method: :post) do |f| %>
-                  
-                <%= f.hidden_field :user_id, value: current_user.id %>
-                <%= hidden_field_tag :user_to, @user.id %>
-
-                <%= f.label "本文" %>
-                <%= f.text_area :text, class: "form-control" %>
-                
-                <%= f.submit "メッセージを送信する", class: "btn btn-primary btn-block btn-login" %>
-              <% end %>
             </div>
           </div>
-        <% end %>
-    </div><!-- tabs-contact -->
-    <div class="tab-pane fade" id="tabs-result" role="tabpanel" aria-labelledby="tabs-result-tab">
-      <div class="container-fluid">    
-        <div class="col-lg-10 offset-lg-1">
-          <p class="my-2">
-            <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-              検索オプション
-            </button>
-          </p>
-          <div class="collapse my-2" id="collapseExample">
-            <div class="card card-body bg-dark">
-              <%= form_with(url: user_path(@user), method: :get) do |fo| %>
-                <%= fo.hidden_field :tournaments, value: "tournaments_search" %>
-                <div class="m-auto row justify-content-between align-items-center col-lg">
-                  <div class="col-lg-12">
-                    <%= fo.label Tournament.human_attribute_name :name %>
-                    <%= fo.text_field :name, placeholder: "空白にすると全て検索します", class: "form-control" %>
-                  </div>
-                  <div class="col-lg-6">
-                    <%= fo.label Tournament.human_attribute_name :game_title %>
-                    <%= fo.select :game_title, Tournament.game_titles.keys.to_a, {prompt: "全タイトル"}, class: "form-control" %>
-                  </div>
-                  <div class="col-lg-4 col-sm-8">
-                    <%= fo.label Tournament.human_attribute_name :master %><br>
-                    <%= select_tag :master, options_from_collection_for_select(User.all, :id, :name), include_blank: true, class: "form-control searchable" %>
-                  </div>
-                  <div class="col-lg-2 col-sm-4">
-                    <%= fo.label Tournament.human_attribute_name :status %>
-                    <%= fo.select :status, Tournament.statuses.keys.to_a, {prompt: "全て"}, class: "form-control" %>
-                  </div>
-                  <div class="col-md-5">
-                    <%= fo.label "From"%>
-                    <div class="input-group" data-target-input="nearest">
-                      <%= fo.text_field :from, placeholder: "アイコンタッチで簡単入力", id: "from_time_result", class: "form-control datepicker", data: {target: "#from_time_result"} %>
-                      <div class="input-group-append" data-target="#from_time_result" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-2 d-none d-md-block text-center">～</div>
-                  <div class="col-md-5">
-                    <%= fo.label "To" %>
-                    <div class="input-group" data-target-input="nearest">
-                      <%= fo.text_field :to, placeholder: "アイコンタッチで簡単入力", id: "to_time_result", class: "form-control datepicker", data: {target: "#to_time_result"} %>
-                      <div class="input-group-append" data-target="#to_time_result" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-lg-12">
-                    <%= fo.submit "検索する", class: "btn btn-primary btn-block my-3" %>
-                  </div>
-                </div>
-              <% end %>
+          <div class="col-md-2 d-none d-md-block text-center">～</div>
+          <div class="col-md-5">
+            <%= fo.label "To" %>
+            <div class="input-group" data-target-input="nearest">
+              <%= fo.text_field :to, placeholder: "アイコンで入力", id: "to_time_result", class: "form-control datepicker", data: {target: "#to_time_result"} %>
+              <div class="input-group-append" data-target="#to_time_result" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+              </div>
             </div>
           </div>
-          <div class="table-responsive-md">
-            <table class="table table-hover text-nowrap table-responsive-md" id="table-users">
-              <thead>
-                <tr>
-                  <th colspan="3"><%= Tournament.human_attribute_name :name %></th>
-                  <th colspan="2"><%= Tournament.human_attribute_name :game_title %></th>
-                  <th colspan="4"><%= Tournament.human_attribute_name :master %></th>
-                  <th colspan="1"><%= Tournament.human_attribute_name :start_time %></th>
-                  <th colspan="1"><%= Tournament.human_attribute_name :status %></th>
-                  <th colspan="1"><%= "順位" %></th>
-                </tr>
-              </thead>
-              
-              <tbody id="tournaments_search_result">
-                <%= render 'result_search' %>
-              </tbody>
-            </table>
+          <div class="col-lg-12">
+            <%= fo.submit "検索する", class: "btn btn-primary btn-block my-3" %>
           </div>
         </div>
-      </div>
+      <% end %>
     </div>
-  </div>
+    <div class="table-responsive-md d-none d-md-block" id="tournaments_search_result"><!-- md以上の画面ではテーブルで表示 -->
+      <%= render 'result_search' %>
+    </div>
+    <div class="d-block d-md-none" id="tournaments_search_result_md"><!-- md未満の画面では専用表示 -->
+      <%= render 'result_search_md' %>
+    </div>
+  </div><!-- tabs-result -->
 </div>
 
 <div id="character-edit-page" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

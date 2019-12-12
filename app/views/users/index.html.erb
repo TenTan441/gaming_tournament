@@ -5,7 +5,7 @@
   <h1>検索結果</h1>
 <% end %>
 
-<div class="col-lg-10 offset-lg-1 table-responsive">
+<div class="table-responsive">
   <div class="text-right">
     <p>ユーザ検索</p>
     <%= form_tag(users_path, :method => 'get') do %>
@@ -17,8 +17,8 @@
   <table class="table text-nowrap table-hover" id="table-users">
     <thead>
       <tr>
-        <th style="width:30%;"><%= User.human_attribute_name :name %></th>
-        <th style="width:60%;"><%= User.human_attribute_name :description %></th>
+        <th style="width:25%;"><%= User.human_attribute_name :name %></th>
+        <th style="width:65%;"><%= User.human_attribute_name :description %></th>
         <th style="width:10%;"></th>
       </tr>
     </thead>
@@ -26,13 +26,13 @@
     <tbody>
     <% @users.each do |user| %>
       <tr>
-        <td style="width:30%;">
-          <div class="row align-items-center p-1">
-            <%= image_tag user.image.to_s, class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:100px;" %>
-            <%= link_to user.name, user, class: "text-reset font-weight-bold text-wrap m-1" %>
+        <td style="width:25%;">
+          <div class="flex-column align-self-start p-1">
+            <div><%= image_tag user.image.to_s, class: "img-fluid img-thumbnail rounded my-1", :style => "width: 100%; max-width: 100px; min-width: 60px" %></div>
+            <div><%= link_to user.name, user, class: "text-reset font-weight-bold text-nowrap my-1" %></div>
           </div>
         </td>
-        <td style="width:60%;"><p class="d-inline-block text-truncate" style="max-width:540px"><%= user.description %></p></td>
+        <td class="text-truncate"><%= user.description %></td>
         <td style="width:10%;">
           <% if current_user.admin? && !current_user?(user) %>
             <%= link_to "削除", user, method: :delete,

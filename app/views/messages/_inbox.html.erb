@@ -1,4 +1,4 @@
-<div class="mx-auto my-3">
+<div class="my-3">
   <% if !@message_inbox.blank? %>
     <%= will_paginate @message_inbox, {:param_name => 'inbox_page', :class => 'pagination'} %>
     <%= form_with(model: @messages_inbox, url: user_messages_destroys_path(@user), local: true, method: :delete) do |f| %>
@@ -6,27 +6,27 @@
         <% sendUser = send_user(message) %>
         <%= f.fields_for "messages[]", message do |msg| %>
           <div class="my-2 bg-dark <%= "border border-info" if message.read_at.nil? || message.edited_at > message.read_at %>">
-            <div class="m-auto row justify-content-between">
-              <div class="row m-1">
+            <div class="d-flex justify-content-between">
+              <div class="p-1">
                 <% if sendUser.present? %>
                   <div class="row m-1">
-                    <%= image_tag sendUser.image.to_s, class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
-                    <div class="m-1 font-weight-bold text-muted">From: <%= link_to sendUser.name, sendUser, class: "text-reset" %></div>
+                    <%= image_tag sendUser.image.to_s, class: "img-fluid img-thumbnail rounded mx-1", :style => "max-width:60px;" %>
+                    <div class="font-weight-bold text-muted mx-1">From: <%= link_to sendUser.name, sendUser, class: "text-reset" %></div>
                   </div>
                 <% else %>
-                  <div class="m-1">削除済みユーザ</div>
+                  <div>削除済みユーザ</div>
                 <% end %>
               </div>
               <div class="m-1"><%= msg.check_box :permit, :checked => false %></div>
             </div>
-            <div class="m-2"><%= message.text %></div>
+            <div class="m-2"><%= simple_format(message.text) %></div>
             <div class="m-2 text-right font-weight-bold text-muted"><%= link_to l(message.edited_at, format: :short), edit_user_message_path(@user, message), remote: true, class: "text-reset" %></div>
           </div>
           <% message.read_at = DateTime.now %>
           <% message.save %>
         <% end %>
       <% end %>
-    <div class="m-auto row justify-content-between">
+    <div class="d-flex justify-content-between">
       <div><%= will_paginate @message_inbox, {:param_name => 'inbox_page', :class => 'pagination'} %></div>
       <div><%= f.submit "まとめて削除する", data: { confirm: "削除してよろしいですか？（取消できません）" }, class: "btn btn-lg btn-primary" %></div>
     </div>

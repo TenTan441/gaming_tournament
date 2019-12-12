@@ -112,8 +112,8 @@
   <% end %>
   <% end %><!-- logged_in? -->
   
-  <h1><%= @tournament.name %></h1>
-  <h5><%= @tournament.game_title %></h5>
+  <div class="title"><%= @tournament.name %></div>
+  <div class="sub-title"><%= @tournament.game_title %></div>
   
   <div class="container-fluid">
     <div class="row justify-content-start">
@@ -190,13 +190,15 @@
         <div class="bg-dark border m-2">
           <div class="container-fluid">
             <div class="row p-1">
-              <div class="col-5">
-                <%= image_tag participant_to_user(participant).image.to_s, class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %>
+              <div class="col-5 flex-column align-self-start text-nowrap">
+                <div><%= image_tag participant_to_user(participant).image.to_s, class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %></div>
+                <div>
                 <% if logged_in? %>
                   <%= link_to participant_to_user(participant).name, participant_to_user(participant), class: "font-weight-bold text-reset" %>
                 <% else %>
                   <%= participant_to_user(participant).name %>
                 <% end %>
+                </div>
               </div>
               <div class="col-5">
                 <% unless @challonge["tournament"]["state"] == "complete" %>
@@ -219,7 +221,7 @@
                         class: "btn btn-danger" %>
                   <% end %>
                 <% else %>
-                  <p class="show-ranking font-weight-bold font-italic">
+                  <p class="show-ranking font-weight-bold font-italic float-right">
                     <% if rank = participant.ranking %>
                       <%= rank.ordinalize %>
                     <% else %>

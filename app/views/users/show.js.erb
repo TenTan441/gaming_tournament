@@ -4,4 +4,5 @@
   $('#mails-outbox').html('<%= escape_javascript( render 'messages/outbox') %>');
 <% elsif params[:tournaments].present? %>
   $('#tournaments_search_result').html('<%= escape_javascript( render 'result_search') %>')
+  $('#tournaments_search_result_md').html('<%= escape_javascript( render 'result_search_md') %>')
 <% end %>
