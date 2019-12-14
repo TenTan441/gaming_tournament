@@ -1,6 +1,6 @@
 class ParticipantsController < ApplicationController
   
-  before_action :set_tournament, only: [:new, :create, :reload, :randomize, :destroy, :update, :clear, :tournament_master]
+  before_action :set_tournament, only: [:new, :create, :creates, :reload, :randomize, :destroy, :update, :clear, :tournament_master]
   before_action :tournament_master, only: [:randomize, :destroy, :clear]
   
   def new
@@ -10,31 +10,37 @@ class ParticipantsController < ApplicationController
   end
   
   def create
-    #登録の処理を書き込む
-    players = params[:players]
-
-    if players.instance_of?(Array)
-      players.each do |player|
-        if !player.nil?
-          pa = Participant.new(tournament_id: @tournament.id, user_id: player)
-          bool, access_token = post_challonge_api({:participant => {:name => User.find(player).name}}, "/#{@tournament.id_number}/participants")
-          
-          if bool
-            pa.challonge_participant_id = access_token["participant"]["id"]
-            pa.save
-          end
-        end
-      end
-    else
-      pa = Participant.new(tournament_id: @tournament.id, user_id: players)
-      bool, access_token = post_challonge_api({:participant => {:name => User.find(players).name}}, "/#{@tournament.id_number}/participants")
-        
-      if bool
-        pa.challonge_participant_id = access_token["participant"]["id"]
-        pa.save
-      end
+    u_id = params[:players]
+    participant = Participant.new(tournament_id: @tournament.id, user_id: u_id)
+    bool, access_token = post_challonge_api({:participant => {:name => User.find(u_id).name}}, "/#{@tournament.id_number}/participants")
+      
+    if bool
+      participant.challonge_participant_id = access_token["participant"]["id"]
+      participant.save
+      flash[:success] = "参加しました。"
     end
     
+    redirect_to @tournament
+  end
+  
+  def creates
+    players = params[:players]
+    count = 0
+    players.each do |player|
+      if !player.nil?
+        pa = Participant.new(tournament_id: @tournament.id, user_id: player)
+        bool, access_token = post_challonge_api({:participant => {:name => User.find(player).name}}, "/#{@tournament.id_number}/participants")
+        
+        if bool
+          pa.challonge_participant_id = access_token["participant"]["id"]
+          pa.save
+          count += 1
+        end
+      end
+    end
+    if count > 0
+      flash[:success] = "#{count}人の作成に成功しました。"
+    end
     redirect_to @tournament
   end
   

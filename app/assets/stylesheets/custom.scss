@@ -1,7 +1,6 @@
 @import "bootstrap";
 
 /* universal */
-
 body {
   padding-top: 80px;
 }
@@ -77,6 +76,82 @@ p {
   line-height: 1.7em;
 }
 
+th, td {
+  color: #fff;
+}
+        
+a.dropdown-item, a.nav-link.drawer-menu-item {
+  color: #fff;
+  .font-weight-bold:hover {
+    color: #000;
+  }
+}
+
+a.nav-link.text-reset.font-weight-bold.active,
+#userpageDropdown[aria-expanded="true"],
+div.card,
+div.dropdown-menu.show {
+  background-color: #343A40;
+}
+/* datepiker */
+
+.dropdown-menu.usetwentyfour {
+  background-color: #111;
+  color: #fff;
+  width: 275px;
+}
+
+.datepicker-days th.dow:first-child,
+.datepicker-days td:first-child {
+    color: #f00;
+}
+
+.datepicker-days th.dow:last-child,
+.datepicker-days td:last-child {
+    color: #00f;
+}
+
+.bootstrap-datetimepicker-widget table td.active,
+.bootstrap-datetimepicker-widget table td.active:hover {
+  background-color: #444;
+  color: #888;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.datepicker-days table tbody tr td.day.active {
+  color: #ccc;
+  background-color: #888;
+}
+
+table.table thead tr th.prev:hover, 
+table.table-condensed thead tr th.prev:hover,
+table.table thead tr th.picker-switch:hover, 
+table.table-condensed thead tr th.picker-switch:hover, 
+table.table thead tr th.next:hover, 
+table.table-condensed thead tr th.next:hover, 
+table.table-condensed tbody tr td span:hover,
+table.table-condensed tr td a span.fa:hover,
+table.table-condensed tr td span:hover,
+table.table-condensed tr td.hour:hover,
+table.table-condensed tr td.minute:hover,
+table.table-condensed tr td.second:hover,
+.datepicker-days table tbody tr td.day:hover, 
+.timepicker-picker table tbody tr td.span:hover {
+  background-color: #444;
+}
+
+.select2-results,
+.select2-selection, 
+.select2-selection--single,
+.select2-selection--multiple,
+.select2-search,
+.select2-selection__rendered,
+.select2-container--focus,
+.select2-container--below,
+.select2-container--open,
+span.select2-selection.select2-selection--single,
+span#select2-user_id-container.select2-selection__rendered { background-color: #223; color: #fff; }
+
 /* header */
 
 #logo {
@@ -93,6 +168,8 @@ p {
   color: #fff;
   text-decoration: none;
 }
+
+
 
 /* debug */
 

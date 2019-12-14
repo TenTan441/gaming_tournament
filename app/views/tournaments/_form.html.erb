@@ -5,36 +5,37 @@
   
   <div class="form-group">
     <%= f.label :name, class: "label-#{yield(:class_text)}" %>
-    <%= f.text_field :name, class: "form-control" %>
+    <%= f.text_field :name, required: true, class: "form-control", id: "tournament_name" %>
+    <p id="tournament_name_count" class="pull-right"></p>
   </div>
   
   <div class="form-group">
       <%= f.label :private, class: "label-#{yield(:class_text)}" %>
     <div class="col-sm-12 btn-group" data-toggle="buttons">
-      <label class="btn btn-outline-secondary btn-success active" style="width:50%">
-        <%= f.radio_button :private, true, checked: true %> 公開
+      <label class="btn btn-outline-warning btn-secondary active" style="width:50%">
+        <%= f.radio_button :private, false, checked: true %> 公開
       </label>
-      <label class="btn btn-outline-secondary btn-success" style="width:50%">
-        <%= f.radio_button :private, false, {} %> 非公開
+      <label class="btn btn-outline-warning btn-secondary" style="width:50%">
+        <%= f.radio_button :private, true, checked: false %> 非公開
       </label>
     </div>
   </div>
 
   <div class="form-group">
     <%= f.label :game_title, class: "label-#{yield(:class_text)}" %>
-    <% if controller.action_name == 'new' %>
-      <%= f.select :game_title, Tournament.game_titles.keys.to_a, {:include_blank => true}, class: "form-control" %>
+    <% if controller.action_name == ('new' || 'create') %>
+      <%= f.select :game_title, Tournament.game_titles.keys.to_a, {}, class: "form-control" %>
     <% else %>
-      <%= f.select :game_title, Tournament.game_titles.keys.to_a, {:include_blank => true}, value: @tournament.game_title, class: "form-control" %>
+      <%= f.select :game_title, Tournament.game_titles.keys.to_a, {}, value: @tournament.game_title, class: "form-control" %>
     <% end %>
   </div>
   
   <div class="form-group">
     <%= f.label :url, class: "label-#{yield(:class_text)}" %>
-    <% if controller.action_name == 'new' %>
-      <%= f.text_field :url, value: (0...8).map{ ('a'..'z').to_a[rand(26)] }.join, class: "form-control" %>
+    <% if controller.action_name == 'new' || controller.action_name == 'create' %>
+      <%= f.text_field :url, value: (0...8).map{ ('a'..'z').to_a[rand(26)] }.join, required: true, class: "form-control", id: "tournament_url" %>
     <% else %>
-      <%= f.text_field :url, value: @challonge['tournament']['url'], class: "form-control" %>
+      <%= f.text_field :url, value: @challonge['tournament']['url'], required: true, class: "form-control", id: "tournament_url" %>
     <% end %>
   </div>
   
@@ -49,7 +50,7 @@
     <label><%= f.radio_button :group_stage_enabled, true, :value => true, :disabled => true, :onclick => "tournament_type();", class: "radio-control" %><span>2ステージトーナメント【API仕様により選択不可】</span></label>
   </div>
   
-  <% if controller.action_name == 'new' %>
+  <% if controller.action_name == 'new' || controller.action_name == 'create' # 新規作成 %>
     <div class="form-group" id="normal-tournament">
       <%= f.label :elimination_type, class: "label-#{yield(:class_text)}" %>
       <%= f.select :elimination_type, options_for_select([["シングルイリミネーション","single elimination"],["ダブルイリミネーション","double elimination"],["総当たり戦", "round robin"]]), {}, id: "elimination", class: "form-control" %>
@@ -88,14 +89,15 @@
     
     <%= f.label :start_time, class: "label-#{yield(:class_text)}" %>
     <div class="input-group" data-target-input="nearest">
-      <%= f.text_field :start_time, id: "start_time", class: "form-control datepicker", data: {target: "#start_time"} %>
+      <%= f.text_field :start_time, required: true, id: "start_time", class: "form-control datepicker", placeholder: "アイコンから入力", data: {target: "#start_time"} %>
       <div class="input-group-append" data-target="#start_time" data-toggle="datetimepicker">
           <div class="input-group-text"><i class="fa fa-calendar"></i></div>
       </div>
     </div>
     
-    <%= f.submit "新規作成", class: "btn btn-primary btn-block btn-#{yield(:class_text)} my-2" %>
-  <% else %>
+    <%= f.submit "新規作成", class: "btn btn-secondary btn-block btn-#{yield(:class_text)} my-2",
+                             id: "tournament_edit" %>
+  <% else # 編集時 %>
     <div class="form-group" id="normal-tournament">
       <%= f.label :elimination_type, class: "label-#{yield(:class_text)}" %>
       <% unless @started %>
@@ -139,9 +141,9 @@
       
       <%= f.label :start_time, class: "label-#{yield(:class_text)}" %>
       <div class="input-group" data-target-input="nearest">
-        <%= f.text_field :start_time, id: "start_time", class: "form-control datepicker", data: {target: "#start_time"} %>
+        <%= f.text_field :start_time, id: "start_time", class: "form-control datepicker", placeholder: "アイコンから入力", data: {target: "#start_time"} %>
         <div class="input-group-append" data-target="#start_time" data-toggle="datetimepicker">
-            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
         </div>
       </div>
     <% else %>
@@ -173,18 +175,79 @@
       
       <%= f.label :start_time, class: "label-#{yield(:class_text)}" %>
       <div class="input-group" data-target-input="nearest">
-        <%= f.text_field :start_time, disabled: true, id: "start_time", class: "form-control datepicker", data: {target: "#start_time"} %>
+        <%= f.text_field :start_time, disabled: true, id: "start_time", class: "form-control datepicker", placeholder: "アイコンから入力", data: {target: "#start_time"} %>
         <div class="input-group-append" data-target="#start_time" data-toggle="datetimepicker">
-            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
         </div>
       </div>
     <% end %>
-    <%= f.submit "更新", class: "btn btn-primary btn-block btn-#{yield(:class_text)} my-2" %>
+    <%= f.submit "更新", class: "btn btn-secondary btn-block btn-#{yield(:class_text)} my-2",
+                         id: "tournament_edit" %>
   <% end %>
 <% end %>
 
 <script>
   $(function () {
+    $('#tournament_edit').prop("disabled", true);
+    $('form input:required').each(function () {
+      $(this).prev("label").addClass("required");
+    });
+    const limit = 50;
+    var name_count = $('#tournament_name').val().length;
+    //残りの入力できる文字数を計算
+    var now_name_count = limit - name_count;
+    //文字数がオーバーしていたら文字色を赤にする
+
+    if (name_count > limit || name_count == 0) {
+      if (name_count > limit) {
+        //残りの入力できる文字数を表示
+        $("#tournament_name_count").text( "残り" + now_name_count + "文字");
+      } else if (name_count == 0) {
+        $("#tournament_name_count").text("入力してください。");
+      }
+      $("#tournament_name_count").css("color","red");
+    } else {
+      $("#tournament_name_count").text( "残り" + now_name_count + "文字");
+    }
+    
+    $('form input:required').on('input', function () {
+      //必須項目が空かどうかフラグ
+      let flag = true;
+      
+      var name_count = $("#tournament_name").val().length;
+      var now_name_count = limit - name_count;
+  
+      if (name_count > limit || name_count == 0) {
+        if (name_count > limit) {
+          $("#tournament_name_count").text( "残り" + now_name_count + "文字");
+        } else if (name_count == 0) {
+          $("#tournament_name_count").text("入力してください");
+        }
+        $("#tournament_name_count").css("color","red");
+        flag = false;
+      } else {
+        $("#tournament_name_count").text( "残り" + now_name_count + "文字");
+        $("#tournament_name_count").css("color","white");
+      }
+      
+      var url_text = $("#tournament_url").val();
+      if (!url_text.match(/^[A-Za-z0-9\s._]+$/)) {
+        alert('URLに使用できるのは半角英数字とアンダーバーのみです。');
+        flag = false;
+      } 
+      
+      var start_time_at = $("#start_time").val();
+      if (!start_time_at.match(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/)) {
+        flag = false;
+      }
+      
+      if (flag) {
+        $("#tournament_edit").prop('disabled', false);
+      } else {
+        $("#tournament_edit").prop('disabled', true);
+      }
+    });
+
     $('.datepicker').datetimepicker({
       format: 'YYYY-MM-DD HH:mm:00'
     });

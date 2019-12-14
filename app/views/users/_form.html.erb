@@ -5,12 +5,15 @@
     <%= f.label :image, class: "label-#{yield(:class_text)}" %>
     <%= f.file_field :image, class: "form-control-file" %>
     
-    <%= f.label :name, class: "label-#{yield(:class_text)}" %>
-    <%= f.text_field :name, class: "form-control" %>
+    <div class="form-group">
+      <%= f.label :name, class: "label-#{yield(:class_text)}" %>
+      <%= f.text_field :name, required: true, class: "form-control", id: "user_name" %>
+      <p id="user_name_count" class="pull-right"></p>
+    </div>
     
     <% if @user.email.present? || @user.provider.nil? %>
       <%= f.label :email, class: "label-#{yield(:class_text)}" %>
-      <%= f.email_field :email, class: "form-control" %>
+      <%= f.email_field :email, required: true, class: "form-control" %>
     
       <%= f.label :password, class: "label-#{yield(:class_text)}" %>
       <%= f.password_field :password, class: "form-control" %>
@@ -23,17 +26,17 @@
         <%= f.label :twitter_private, class: "label-#{yield(:class_text)}" %>
         <div class="col-sm-12 btn-group" data-toggle="buttons">
           <% if @user.twitter_private %>
-            <label class="btn btn-outline-secondary btn-success active" style="width:50%">
+            <label class="btn btn-outline-warning btn-secondary active" style="width:50%">
               <%= f.radio_button :twitter_private, true, checked: true %> 公開
             </label>
-            <label class="btn btn-outline-secondary btn-success" style="width:50%">
+            <label class="btn btn-outline-warning btn-secondary" style="width:50%">
               <%= f.radio_button :twitter_private, false, {} %> 非公開
             </label>
           <% else %>
-            <label class="btn btn-outline-secondary btn-success" style="width:50%">
+            <label class="btn btn-outline-warning btn-secondary" style="width:50%">
               <%= f.radio_button :twitter_private, true, {} %> 公開
             </label>
-            <label class="btn btn-outline-secondary btn-success active" style="width:50%">
+            <label class="btn btn-outline-warning btn-secondary active" style="width:50%">
               <%= f.radio_button :twitter_private, false, checked: true %> 非公開
             </label>
           <% end %>
@@ -44,6 +47,39 @@
     <%= f.label :description, class: "label-#{yield(:class_text)}" %>
     <%= f.text_area :description, class: "form-control" %>
   
-    <%= f.submit yield(:button_text), class: "btn btn-primary btn-block btn-#{yield(:class_text)}" %>
+    <%= f.submit yield(:button_text), class: "btn btn-secondary btn-block btn-#{yield(:class_text)}",
+                                      id: "edit_submit" %>
   <% end %>
 </div>
+
+<script>
+  $(function () {
+    const limit = 20;
+    var name_count = $("#user_name").val().length;
+    console.log(name_count);
+    //残りの入力できる文字数を計算
+    var now_name_count = limit - name_count;
+    //文字数がオーバーしていたら文字色を赤にする
+    if (name_count > limit || name_count == 0) {
+      $("#user_name_count").css("color","red");
+    }
+    //残りの入力できる文字数を表示
+    $("#user_name_count").text( "残り" + now_name_count + "文字");
+
+    $("#user_name").on("keyup", function() {
+      // 処理（キーボードを押した時、フォームに残り何文字入力できるかを数えて表示する）
+      //フォームのvalueの文字数を数える
+      var name_count = $(this).val().length;
+      var now_name_count = limit - name_count;
+  
+      if (name_count > limit || name_count == 0) {
+        $("#user_name_count").css("color","red");
+        $("#edit_submit").prop('disabled', true);
+      } else {
+        $("#user_name_count").css("color","white");
+        $("#edit_submit").prop('disabled', false);
+      }
+      $("#user_name_count").text( "残り" + now_name_count + "文字");
+    });
+  });
+</script>

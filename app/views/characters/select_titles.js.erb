@@ -1,7 +1,7 @@
 <% if @characters %>
   $('#using-character').show();
   $('#characters').show();
-  $('#using-character').html('<%= escape_javascript( render 'using_character', object: @character) %>');
+  $('#using-character').html('<%= escape_javascript( render 'users/title_character', object: @character) %>');
   $('#main-character').html('<%= escape_javascript( render 'select_main_character', object: @characters) %>');
   $('#sub-characters').html('<%= escape_javascript( render 'select_sub_characters', object: @characters) %>');
 <% else %>

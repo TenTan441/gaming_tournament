@@ -28,7 +28,7 @@
       <% end %>
     <div class="d-flex justify-content-between">
       <div><%= will_paginate @message_inbox, {:param_name => 'inbox_page', :class => 'pagination'} %></div>
-      <div><%= f.submit "まとめて削除する", data: { confirm: "削除してよろしいですか？（取消できません）" }, class: "btn btn-lg btn-primary" %></div>
+      <div><%= f.submit "まとめて削除する", data: { confirm: "削除してよろしいですか？（取消できません）" }, class: "btn btn-lg btn-warning" %></div>
     </div>
     <% end %>
   <% else %>

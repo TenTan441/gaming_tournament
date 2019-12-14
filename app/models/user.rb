@@ -3,12 +3,13 @@ class User < ApplicationRecord
   
   has_many :messages, dependent: :destroy
   
-  validates :name,  presence: true, length: { maximum: 16 }
-  has_secure_password validations: false
+  validate :auth_configed?
+  validates :name,  presence: true, length: { maximum: 20 }
   
   mount_uploader :image, PictureUploader
   
   with_options if: :email_auth? do
+    has_secure_password
     VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
     validates :email, presence: true, length: { maximum: 100 },
                       format: { with: VALID_EMAIL_REGEX },
@@ -97,5 +98,11 @@ class User < ApplicationRecord
     def twitter_auth?
       return true if (provider.present? && uid.present?)
       false
+    end
+    
+    def auth_configed?
+      if email_auth? == false && twitter_auth? == false
+        errors[:base] << "Eメール認証かTwitterで認証を行ってください。"
+      end
     end
 end

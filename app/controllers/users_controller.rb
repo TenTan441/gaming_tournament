@@ -21,7 +21,7 @@ class UsersController < ApplicationController
         else
           @tournaments = Tournament.where(id: Participant.where(user_id: @user.id)
                                                          .pluck(:tournament_id),
-                                          private: true)
+                                          private: false)
                                    .order(id: "DESC").paginate(page: params[:page], per_page: 10)
         end
       end
@@ -66,7 +66,7 @@ class UsersController < ApplicationController
           else
             @tournaments = Tournament.where(id: Participant.where(user_id: @user.id)
                                                            .pluck(:tournament_id),
-                                            private: true)
+                                            private: false)
                                      .name_search(params[:name])
                                      .master_search(params[:master])
                                      .title_search(params[:game_title])

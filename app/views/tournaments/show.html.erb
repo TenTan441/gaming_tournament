@@ -9,7 +9,7 @@
             <div class="card-header" role="tab" id="headingOne">
               <h5 class="mb-0">
                 <a class="text-body" data-toggle="collapse" href="#collapseOne" role="button" aria-expanded="true" aria-controls="collapseOne">
-                  <button type="button" class="btn btn-primary">
+                  <button type="button" class="btn btn-secondary">
                     <% if master?(@tournament) %>
                       参加者を追加する
                     <% else %>
@@ -22,14 +22,14 @@
             <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
               <div class="card-body">
                 <% if master?(@tournament) #開催者用追加フォーム %>
-                  <%= form_with(model: @participant, url: tournament_participants_path(@tournament), method: :post) do |f| %>
+                  <%= form_with(model: @participant, url: tournament_creates_path(@tournament), method: :post) do |f| %>
                     <%= select_tag :players, options_from_collection_for_select(@not_yet_users, :id, :name), multiple: true, class: "form-control search_participants" %>
-                    <%= f.submit "参加者追加", class: "btn btn-primary btn-block btn-login" %>
+                    <%= f.submit "参加者追加", class: "btn btn-secondary btn-block btn-login" %>
                   <% end %>
                 <% else #参加者用追加フォーム %>
                   <%= form_with(model: @participant, url: tournament_participants_path(@tournament), method: :post) do |f| %>
                     <%= hidden_field_tag :players, current_user.id %>
-                    <%= f.submit "この大会に参加する", data: { confirm: "大会に参加しますか？" }, class: "btn btn-primary btn-block btn-login" %>
+                    <%= f.submit "この大会に参加する", data: { confirm: "大会に参加しますか？" }, class: "btn btn-secondary btn-block btn-login" %>
                   <% end %>
                 <% end %>
               </div><!-- /.card-body -->
@@ -41,7 +41,7 @@
             <div class="card-header" role="tab" id="headingTwo">
               <h5 class="mb-0">
                 <a class="collapsed text-body" data-toggle="collapse" href="#collapseTwo" role="button" aria-expanded="false" aria-controls="collapseTwo">
-                  <button type="button" class="btn btn-primary">一括送信</button>
+                  <button type="button" class="btn btn-secondary">一括送信</button>
                 </a>
               </h5>
             </div><!-- /.card-header -->
@@ -58,7 +58,7 @@
                   <%= f.label "本文" %>
                   <%= f.text_area :text, class: "form-control" %>
                   
-                  <%= f.submit "メッセージを送信する", class: "btn btn-primary btn-block btn-login" %>
+                  <%= f.submit "メッセージを送信する", class: "btn btn-secondary btn-block btn-login" %>
                 <% end %>
               </div><!-- /.card-body -->
             </div><!-- /.collapse -->
@@ -68,7 +68,7 @@
             <div class="card-header" role="tab" id="headingThree">
               <h5 class="mb-0">
                 <a class="collapsed text-body" data-toggle="collapse" href="#collapseThree" role="button" aria-expanded="false" aria-controls="collapseThree">
-                  <button type="button" class="btn btn-primary">大会メニュー</button>
+                  <button type="button" class="btn btn-secondary">大会メニュー</button>
                 </a>
               </h5>
             </div><!-- /.card-header -->
@@ -77,17 +77,17 @@
                 <div class="row justify-content-around">
                   <% unless @started %>
                     <%= link_to "参加者を全て取り消す", tournament_participants_clear_path(@tournament), method: :delete, data: { confirm: "取り消ししてよろしいですか？" }, class: "btn btn-lg btn-primary" %>
-                    <%= link_to "参加者を並び替る", tournament_randomize_path(@tournament), data: { confirm: "並び替えてもいいですか？" }, class: "btn btn-lg btn-success" %>
+                    <%= link_to "参加者を並び替る", tournament_randomize_path(@tournament), data: { confirm: "並び替えてもいいですか？" }, class: "btn btn-lg btn-secondary" %>
                     <% if @participants.count >= 2 %>
-                      <%= link_to "大会を始める", tournament_start_path(@tournament), method: :get, data: { confirm: "大会を始めてもいいですか？" }, class: "btn btn-lg btn-success" %>
+                      <%= link_to "大会を始める", tournament_start_path(@tournament), method: :get, data: { confirm: "大会を始めてもいいですか？" }, class: "btn btn-lg btn-secondary" %>
                     <% end %>
                   <% else %>
-                    <%= link_to "大会をやり直す", tournament_reset_path(@tournament), method: :get, data: { confirm: "大会をやり直してもいいですか？" }, class: "btn btn-lg btn-success" %>
+                    <%= link_to "大会をやり直す", tournament_reset_path(@tournament), method: :get, data: { confirm: "大会をやり直してもいいですか？" }, class: "btn btn-lg btn-warning" %>
                     <% if @challonge["tournament"]["state"] == "awaiting_review" %>
-                      <%= link_to "大会を終了する", tournament_finalize_path(@tournament), method: :get, data: { confirm: "大会を終了させてもいいですか？" }, class: "btn btn-lg btn-success" %>
+                      <%= link_to "大会を終了する", tournament_finalize_path(@tournament), method: :get, data: { confirm: "大会を終了させてもいいですか？" }, class: "btn btn-lg btn-warning" %>
                     <% end %>
                   <% end %>
-                  <%= link_to "大会を削除する", tournament_path, method: :delete, data: { confirm: "削除してよろしいですか？" }, class: "btn btn-lg btn-primary" %>
+                  <%= link_to "大会を削除する", tournament_path, method: :delete, data: { confirm: "削除してよろしいですか？" }, class: "btn btn-lg btn-danger" %>
                 </div>
               </div><!-- /.card-body -->
             </div><!-- /.collapse -->
@@ -96,7 +96,7 @@
             <div class="card-header" role="tab" id="headingFour">
               <h5 class="mb-0">
                 <a class="collapsed text-body" data-toggle="collapse" href="#collapseFour" role="button" aria-expanded="false" aria-controls="collapseFour">
-                  <button type="button" class="btn btn-primary">オプション</button>
+                  <button type="button" class="btn btn-secondary">オプション</button>
                 </a>
               </h5>
             </div><!-- /.card-header -->
@@ -117,7 +117,7 @@
   
   <div class="container-fluid">
     <div class="row justify-content-start">
-      <div class="col-lg-8 bg-light border">
+      <div class="<%= @tournament.status == '完了' ? 'col-12' : 'col-lg-8' %> bg-light border">
         <% if @participants.count >= 2 %>
           <%= link_to image_tag(@challonge["tournament"]["live_image_url"], :width => "100%"), @challonge["tournament"]["full_challonge_url"], target: :_blank %>
         <% else %>
@@ -130,15 +130,16 @@
           </p>
         <% end %>
       </div>
+      <% unless @tournament.status == '完了' %>
       <div class="col-lg-4 bg-dark border" id="toggle-matches-opening-or-complete">
         <div class="row justify-content-between m-1">
-          <span>現在開催中のマッチ</span><p><%= link_to "終了済", tournament_toggle_path(@tournament, :state => 'complete'), remote: true, class: "btn btn-primary" %></p>
+          <span>現在開催中のマッチ</span><p><%= link_to "終了済", tournament_toggle_path(@tournament, :state => 'complete'), remote: true, class: "btn btn-secondary" %></p>
         </div>
         <div class="d-none d-lg-block"><!-- 画面幅lg以上で表示 -->
           <% if !@matches_opening.blank? %>
             <% @matches_opening.each do |matches| %>
               <%= return_user_from_participant(matches["match"]["player1_id"]).name + " vs " + return_user_from_participant(matches["match"]["player2_id"]).name + "  " %>
-              <%= link_to "報告", tournament_report_path(@tournament, matches), remote: true, class: "btn btn-success mb-2" if master_or_party?(@tournament, matches["match"]["player1_id"], matches["match"]["player2_id"]) %><br>
+              <%= link_to "報告", tournament_report_path(@tournament, matches), remote: true, class: "btn btn-warning mb-2" if master_or_party?(@tournament, matches["match"]["player1_id"], matches["match"]["player2_id"]) %><br>
             <% end %>
           <% else %>
             <p>なし</p>
@@ -160,6 +161,7 @@
             </div>
           </div>
         </div><!-- d-lg-none 画面幅lg未満で表示 -->
+        <% end %>
       </div>
     </div>
   </div>
@@ -180,7 +182,7 @@
         <p>ユーザ検索</p>
         <%= form_tag(tournament_path, :method => 'get') do %>
           <%= text_field_tag :search %>
-          <%= submit_tag '検索', :name => nil, :class => 'btn btn-primary' %>
+          <%= submit_tag '検索', :name => nil, :class => 'btn btn-secondary' %>
         <% end %>
       </div>
     </div>

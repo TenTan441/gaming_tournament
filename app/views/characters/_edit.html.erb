@@ -8,7 +8,7 @@
     </div>
     <div class="modal-body">
       <div class="row">
-        <div class="col-md-10 offset-md-1">
+        <div class="col-lg-10 offset-lg-1">
           <%= form_with(model: @character, url: user_characters_update_path, local: true, method: :put) do |f| %>
             <%= render 'shared/error_messages_character', object: @character %>
             
@@ -20,11 +20,9 @@
             <div id="characters" style="display:none">
               <%= f.label "メインキャラ" %>
               <div id="main-character"></div>
-              
-              <%= f.label "サブキャラ（3キャラまで）" %>
+              <%= f.label "サブキャラ（3キャラまで）", class: "mt-5" %>
               <div id="sub-characters"></div>
-              
-              <%= f.submit "キャラ編集", class: "btn btn-primary btn-block btn-login" %>
+              <%= f.submit "キャラ編集", class: "btn btn-secondary btn-block btn-login" %>
             </div>
           <% end %>
         </div>

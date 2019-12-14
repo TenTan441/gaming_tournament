@@ -35,6 +35,7 @@ Rails.application.routes.draw do
     delete 'participants/clear', to: 'participants#clear'
     resources :participants
     
+    post 'creates', to: 'participants#creates'
     get 'reload', to: 'participants#reload'
     get 'randomize', to: 'participants#randomize'
     

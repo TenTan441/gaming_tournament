@@ -14,10 +14,10 @@
         <%= f.check_box :remember_me, id: "remember-me" %>
         <span>ログイン情報を記憶する</span>
 
-      <%= f.submit "ログイン", class: "btn btn-primary btn-block btn-login" %>
+      <%= f.submit "ログイン", class: "btn btn-secondary btn-block btn-login" %>
     <% end %>
     <p>
-      ユーザー登録がまだの場合は<%= link_to "こちら", signup_path %>
+      ユーザー登録がまだの場合は<%= link_to "こちら", signup_path, class: "text-reset font-weight-bold" %>
     </p>
   </div>
   
