@@ -1,7 +1,8 @@
 class User < ApplicationRecord
   before_save { self.email = email.downcase } unless :twitter_auth?
   
-  has_many :messages, dependent: :destroy
+  has_many :tournaments, foreign_key: :user_id, dependent: :destroy
+  has_many :messages, foreign_key: :user_id, dependent: :destroy
   
   validate :auth_configed?
   validates :name,  presence: true, length: { maximum: 20 }
@@ -9,19 +10,20 @@ class User < ApplicationRecord
   mount_uploader :image, PictureUploader
   
   with_options if: :email_auth? do
-    has_secure_password
     VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
     validates :email, presence: true, length: { maximum: 100 },
                       format: { with: VALID_EMAIL_REGEX },
                       uniqueness: true
     
     validates :password, presence: true, 
+                         confirmation: true,
                          length: { minimum: 6 }, 
                          allow_nil: true
   end
   
   # twitter認証ではhas_secure_passwordのバリデーション機能をoffにする必要がある
   with_options if: :twitter_auth? do
+    has_secure_password validations: false
     validates :provider, presence: true
     validates :uid, presence: true
   end
@@ -67,13 +69,12 @@ class User < ApplicationRecord
     name = auth[:info][:name]
     twitter_url = auth[:info][:urls][:Twitter]
     #image_url = auth[:info][:image]
-    #description = auth[:info][:description]
+    description = auth[:info][:description]
     
     self.find_or_create_by(provider: provider, uid: uid) do |user|
-      #user.nickname = nickname
       user.name = name if user.name.nil?
       user.twitter_url = twitter_url
-      #user.description = description
+      user.description = description if user.description.nil?
     end
   end
   
@@ -91,7 +92,7 @@ class User < ApplicationRecord
   private
 
     def email_auth?
-      return true if (email.present? && password.present? && password_digest.present?)
+      return true if (email.present? && password_digest.present?)
       false
     end
     
@@ -102,7 +103,8 @@ class User < ApplicationRecord
     
     def auth_configed?
       if email_auth? == false && twitter_auth? == false
-        errors[:base] << "Eメール認証かTwitterで認証を行ってください。"
+        errors[:base] << "メール認証するかTwitterで認証を行ってください。"
       end
     end
+
 end

@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(version: 20191128112029) do
     t.datetime "start_time"
     t.string "url"
     t.text "description"
+    t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "private", default: true, null: false
@@ -75,6 +76,7 @@ ActiveRecord::Schema.define(version: 20191128112029) do
     t.integer "master"
     t.boolean "group_stage_enabled"
     t.boolean "hold_third_place_match", default: false, null: false
+    t.index ["user_id"], name: "index_tournaments_on_user_id"
   end
 
   create_table "twitter_apis", force: :cascade do |t|

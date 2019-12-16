@@ -95,7 +95,7 @@ div.dropdown-menu.show {
 }
 /* datepiker */
 
-.dropdown-menu.usetwentyfour {
+div.bootstrap-datetimepicker-widget.dropdown-menu.usetwentyfour {
   background-color: #111;
   color: #fff;
   width: 275px;
@@ -103,12 +103,12 @@ div.dropdown-menu.show {
 
 .datepicker-days th.dow:first-child,
 .datepicker-days td:first-child {
-    color: #f00;
+  color: #f00;
 }
 
 .datepicker-days th.dow:last-child,
 .datepicker-days td:last-child {
-    color: #00f;
+  color: #00f;
 }
 
 .bootstrap-datetimepicker-widget table td.active,
@@ -140,17 +140,34 @@ table.table-condensed tr td.second:hover,
   background-color: #444;
 }
 
+/* select2 */
+.select2-selection.select2-selection--single,
+.select2-selection.select2-selection--multiple,
+.selection.select2,
+.select2-container,
+.select2-choice,
 .select2-results,
 .select2-selection, 
+.select2-selection__choice,
+.select2-selection__rendered,
 .select2-selection--single,
 .select2-selection--multiple,
-.select2-search,
-.select2-selection__rendered,
-.select2-container--focus,
-.select2-container--below,
+.select2-search input,
 .select2-container--open,
-span.select2-selection.select2-selection--single,
-span#select2-user_id-container.select2-selection__rendered { background-color: #223; color: #fff; }
+.select2-container--default, 
+.select2-search--dropdown,
+.select2-results ul li,
+.select2-results .select2-highlighted {
+  background-color: #223;
+  color: #fff;
+}
+
+/* select2 選択された要素のタイトルはどうしてもidを指定しないと変化しない */
+#select2-user_id-container, 
+#select2-user_to-container,
+#select2-master-container {
+  color: #fff;
+}
 
 /* header */
 

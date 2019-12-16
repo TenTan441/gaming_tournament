@@ -8,7 +8,8 @@ class CreateTournaments < ActiveRecord::Migration[5.1]
       t.datetime :start_time
       t.string :url
       t.text :description
-
+      t.references :user, foreign_key: true
+      
       t.timestamps
     end
   end

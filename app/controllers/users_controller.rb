@@ -101,10 +101,10 @@ class UsersController < ApplicationController
   def update
     if @user.update_attributes(user_params)
       flash[:success] = "ユーザー情報を更新しました。"
-      redirect_to @user
     else
-      render :edit      
+      flash[:danger] = "更新に失敗しました。"
     end
+    redirect_to @user
   end
 
   def destroy

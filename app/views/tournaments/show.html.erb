@@ -76,10 +76,10 @@
               <div class="card-body">
                 <div class="row justify-content-around">
                   <% unless @started %>
-                    <%= link_to "参加者を全て取り消す", tournament_participants_clear_path(@tournament), method: :delete, data: { confirm: "取り消ししてよろしいですか？" }, class: "btn btn-lg btn-primary" %>
+                    <%= link_to "参加者を全て取り消す", tournament_participants_clear_path(@tournament), method: :delete, data: { confirm: "取り消ししてよろしいですか？" }, class: "btn btn-lg btn-warning" %>
                     <%= link_to "参加者を並び替る", tournament_randomize_path(@tournament), data: { confirm: "並び替えてもいいですか？" }, class: "btn btn-lg btn-secondary" %>
                     <% if @participants.count >= 2 %>
-                      <%= link_to "大会を始める", tournament_start_path(@tournament), method: :get, data: { confirm: "大会を始めてもいいですか？" }, class: "btn btn-lg btn-secondary" %>
+                      <%= link_to "大会を始める", tournament_start_path(@tournament), method: :get, data: { confirm: "大会を始めてもいいですか？" }, class: "btn btn-lg btn-success" %>
                     <% end %>
                   <% else %>
                     <%= link_to "大会をやり直す", tournament_reset_path(@tournament), method: :get, data: { confirm: "大会をやり直してもいいですか？" }, class: "btn btn-lg btn-warning" %>
@@ -181,8 +181,10 @@
       <div class="m-1">
         <p>ユーザ検索</p>
         <%= form_tag(tournament_path, :method => 'get') do %>
-          <%= text_field_tag :search %>
-          <%= submit_tag '検索', :name => nil, :class => 'btn btn-secondary' %>
+          <div class="d-flex flex-row">
+            <%= text_field_tag :search , nil, :class => "form-control" %>
+            <%= submit_tag '検索', :name => nil, :class => 'btn btn-secondary' %>
+          </div>
         <% end %>
       </div>
     </div>
@@ -192,7 +194,7 @@
         <div class="bg-dark border m-2">
           <div class="container-fluid">
             <div class="row p-1">
-              <div class="col-5 flex-column align-self-start text-nowrap">
+              <div class="col-3 col-md-4 flex-column align-self-start text-nowrap">
                 <div><%= image_tag participant_to_user(participant).image.to_s, class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %></div>
                 <div>
                 <% if logged_in? %>
@@ -202,20 +204,21 @@
                 <% end %>
                 </div>
               </div>
-              <div class="col-5">
-                <% unless @challonge["tournament"]["state"] == "complete" %>
+              <div class="col-6 col-md-6 d-flex align-items-center">
+                <% unless @tournament.status == '完了' %>
                   <% if master?(@tournament) %>
                     <%= form_with(model: @message, url: user_messages_path(current_user), local: true, method: :post) do |f| %>
                       <%= f.hidden_field :user_id, value: master_tournament(@tournament).id %>
                       <%= hidden_field_tag :user_to, participant.user_id %>
-                      
-                      <%= f.text_field :text, class: "form-control" %>
-                      <%= f.submit "送信", class: "btn btn-primary" %>
+                      <div class="d-flex justify-content-sm-center flex-column align-items-end">
+                        <%= f.text_field :text, class: "form-control" %>
+                        <%= f.submit "送信", class: "btn btn-secondary" %>
+                      </div>
                     <% end %>
                   <% end %>
                 <% end %>
               </div>
-              <div class="col-2">
+              <div class="col-3 col-md-2 d-flex align-items-center">
                 <% unless @tournament.status == '完了' %>
                   <% if master?(@tournament) %>
                     <%= link_to "削除", tournament_participant_path(@tournament, participant), method: :delete,

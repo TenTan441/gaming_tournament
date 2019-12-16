@@ -1,7 +1,7 @@
 <div class="my-3">
   <% if !@message_inbox.blank? %>
     <%= will_paginate @message_inbox, {:param_name => 'inbox_page', :class => 'pagination'} %>
-    <%= form_with(model: @messages_inbox, url: user_messages_destroys_path(@user), local: true, method: :delete) do |f| %>
+    <%= form_with(model: @message_inbox, url: user_messages_destroys_path(@user), local: true, method: :delete) do |f| %>
       <% @message_inbox.each do |message| %>
         <% sendUser = send_user(message) %>
         <%= f.fields_for "messages[]", message do |msg| %>

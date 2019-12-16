@@ -1,9 +1,9 @@
 <nav class="drawer-navbar navbar navbar-expand-lg fixed-top navbar-dark bg-dark border border-dark">
   <div class="drawer-container container">
     <%= link_to "スマトナ！(仮)", root_path, id: "logo" %>
-    <nav class="row">
+    <nav class="d-flex align-items-center">
       <% if logged_in? && (messages = Message.where(user_to: current_user).count - Message.where(user_to: current_user).where("edited_at < read_at").count) > 0 %>
-        <ul class="navbar-nav mr-2">
+        <ul class="navbar-nav pr-5 pr-lg-3">
           <li class="nav-item active">
             <%= link_to image_tag("arrived_message.png")+"#{messages}", current_user, class: "text-light text-decoration-none" %>
           </li>

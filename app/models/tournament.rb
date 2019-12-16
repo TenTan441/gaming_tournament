@@ -5,7 +5,8 @@ class Tournament < ApplicationRecord
   #validates :url, format: { with: /\A[a-zA-Z\d]+\z/ }, presence: true
   #validates :elimination_type, presence: true
   validates :start_time, presence: true
-  has_many :participants, dependent: :destroy
+  has_many :participants, foreign_key: :tournament_id, dependent: :destroy
+  belongs_to :user, optional: true
   enum status: {"準備中": 0, "進行中": 1, "完了": 2}
   enum game_title: { "大乱闘スマッシュブラザーズ64": 0, "大乱闘スマッシュブラザーズDX": 1, "大乱闘スマッシュブラザーズX": 2, "大乱闘スマッシュブラザーズ for Nintendo 3DS": 3, "大乱闘スマッシュブラザーズ for Wii U": 4, "大乱闘スマッシュブラザーズ SPECIAL": 5 }
 

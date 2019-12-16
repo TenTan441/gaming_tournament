@@ -1,7 +1,7 @@
 class MessagesController < ApplicationController
   
   before_action :set_message, only: [:edit, :update, :destroy]
-  before_action :only_send_or_destinate, except: [:create, :creates]
+  before_action :only_send_or_destinate, except: [:create, :creates, :destroys]
 
   #　メッセージ送信
   def create
@@ -19,13 +19,20 @@ class MessagesController < ApplicationController
   
   #　メッセージ一括送信
   def creates
+
     users = params[:user_to]
-    
+    sent = 0
     users.each do |user|
       message = Message.new(message_params)
       message.user_to = user
       message.edited_at = DateTime.now
-      message.save
+      if message.save
+        sent += 1
+      end
+    end
+    
+    if sent > 0
+      flash[:success] = "#{sent}件メッセージを送信しました"
     end
     
     @tournament = Tournament.find(params[:tournament_id])
@@ -57,14 +64,15 @@ class MessagesController < ApplicationController
   #　一括削除
   def destroys
     deleted = 0
-    params.require(:messages).each do |id, item|
+    params.require(:message).permit(messages: [:permit])[:messages].each do |id, item|
       if ActiveRecord::Type::Boolean.new.cast(item[:permit])
-        message = Message.find(id)
-        message.destroy
+        @message = Message.find(id)
+        only_send_or_destinate
+        @message.destroy
         deleted += 1
       end
     end
-    
+
     if deleted > 0
       flash[:success] = "メッセージを#{deleted}件削除しました。"
     end
