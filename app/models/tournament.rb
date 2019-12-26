@@ -1,10 +1,7 @@
 class Tournament < ApplicationRecord
   validates :name, presence: true, length: { maximum: 60 }
-  validates :master, presence: true
-  validates :id_number, presence: true
-  #validates :url, format: { with: /\A[a-zA-Z\d]+\z/ }, presence: true
-  #validates :elimination_type, presence: true
   validates :start_time, presence: true
+  validate :start_time_cannot_be_in_the_past
   has_many :participants, foreign_key: :tournament_id, dependent: :destroy
   belongs_to :user, optional: true
   enum status: {"準備中": 0, "進行中": 1, "完了": 2}
@@ -12,8 +9,10 @@ class Tournament < ApplicationRecord
 
   # 開始時間に過去日は設定不可
   def start_time_cannot_be_in_the_past
-    if start_time.present? && start_time < created_at
-      errors.add(:start_time, "は過去の日付に設定できません。")
+    if created_at.nil?
+      errors.add(:start_time, "は過去の日付に設定できません。") if start_time < DateTime.now
+    else
+      errors.add(:start_time, "は過去の日付に設定できません。") if start_time < created_at
     end
   end
   
@@ -28,7 +27,7 @@ class Tournament < ApplicationRecord
   # 開催者の検索
   def self.master_search(master)
     if !master.blank?
-      where(['master = ?', "#{master}"])
+      where(['user_id = ?', "#{master}"])
     else
       all
     end

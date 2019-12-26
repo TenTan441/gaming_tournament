@@ -1,4 +1,7 @@
 class SessionsController < ApplicationController
+  
+  before_action :logged_in_user, only: [:new, :create, :twitter_login]
+  
   def new
   end
   
@@ -7,6 +10,7 @@ class SessionsController < ApplicationController
     if user && user.authenticate(params[:session][:password])
       log_in user
       ActiveRecord::Type::Boolean.new.cast(params[:session][:remember_me]) ? remember(user) : forget(user)
+      flash[:success] = "ようこそ、#{user.name}さん。"
       redirect_back_or user
     else
       flash.now[:danger] = '認証に失敗しました。'
@@ -26,4 +30,12 @@ class SessionsController < ApplicationController
     flash[:success] = 'ログアウトしました。'
     redirect_to root_url
   end
+  
+  private
+    def logged_in_user
+      if !current_user.nil?
+        flash[:success] = "既にログイン済みです。"
+        redirect_to current_user
+      end
+    end
 end

@@ -1,1 +1,5 @@
-<%= select :main_character, :character_id, @characters, {:include_blank => true}, {:id => "main", :class => "image-picker show-html form-control"} %>
+<% if @character %>
+  <%= select :main_character, :character_id, @characters, {:selected => @character.main_character}, {:id => "main", :class => "image-picker show-html form-control"} %>
+<% else %>
+  <%= select :main_character, :character_id, @characters, {}, {:id => "main", :class => "image-picker show-html form-control"} %>
+<% end %>

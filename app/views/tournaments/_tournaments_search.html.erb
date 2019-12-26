@@ -4,7 +4,7 @@
     <tr>
       <th colspan="4"><%= Tournament.human_attribute_name :name %></th>
       <th colspan="2"><%= Tournament.human_attribute_name :game_title %></th>
-      <th colspan="2"><%= Tournament.human_attribute_name :master %></th>
+      <th colspan="2"><%= Tournament.human_attribute_name :user_id %></th>
       <th colspan="2"><%= Tournament.human_attribute_name :start_time %></th>
       <th colspan="2"><%= Tournament.human_attribute_name :status %></th>
     </tr>
@@ -16,11 +16,16 @@
         <td colspan="4"><%= link_to tournament.name, tournament, class: "text-reset font-weight-bold" %></td>
         <td colspan="2" class="text-wrap text-break"><%= tournament.game_title %></td>
         <td colspan="2">
-          <%= link_to image_tag(master.image.to_s, class: "img-fluid img-thumbnail rounded m-2", :style => "width:60px; height:60px;"), master %><br>
-          <% if logged_in? %>
-            <%= link_to "#{master.name}", master, class: "text-reset font-weight-bold" %>
+          <% if !master.nil? %>
+            <% if logged_in? %>
+              <%= link_to image_tag(master.image.to_s, class: "img-fluid img-thumbnail rounded m-2", :style => "width:60px; height:60px;"), master %><br>
+              <%= link_to "#{master.name}", master, class: "text-reset font-weight-bold" %>
+            <% else %>
+              <%= image_tag(master.image.to_s, class: "img-fluid img-thumbnail rounded m-2", :style => "width:60px; height:60px;") %><br>
+              <%= master.name %>
+            <% end %>
           <% else %>
-            <%= master.name %>
+            削除されたユーザ
           <% end %>
         </td>
         <td colspan="2"><%= l(tournament.start_time, format: :short) %></td>

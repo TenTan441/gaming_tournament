@@ -3,14 +3,36 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 div.thumbnail img {
-  width: 100px;
+  width: 60px;
 }
 
 div.thumbnail img:hover  {
-  width: 100px;
+  width: 60px;
   border-bottom-color: transparent;
   transform: scale(1.1);
   transition-duration: 0.3s;
+}
+
+@media (min-width: 640px) {
+
+  div.thumbnail img {
+    width: calc(60px + ((1vw - 6.4px)*7.14286));
+  }
+  
+  div.thumbnail img:hover  {
+    width: calc(60px + ((1vw - 6.4px)*7.14286));
+  }
+}
+
+@media (min-width: 1200px) {
+
+  div.thumbnail img {
+    width: 100px;
+  }
+  
+  div.thumbnail img:hover  {
+    width: 100px;
+  }
 }
 
 div.selected {

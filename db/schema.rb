@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191128112029) do
+ActiveRecord::Schema.define(version: 20191226052446) do
 
   create_table "character_images", force: :cascade do |t|
     t.string "name"
@@ -38,8 +38,6 @@ ActiveRecord::Schema.define(version: 20191128112029) do
 
   create_table "messages", force: :cascade do |t|
     t.integer "user_to"
-    t.boolean "read", default: false, null: false
-    t.boolean "show", default: true, null: false
     t.text "text"
     t.integer "user_id"
     t.datetime "created_at", null: false
@@ -64,18 +62,13 @@ ActiveRecord::Schema.define(version: 20191128112029) do
     t.integer "id_number"
     t.string "name"
     t.integer "game_title"
-    t.string "elimination_type"
     t.datetime "start_time"
-    t.string "url"
     t.text "description"
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "private", default: true, null: false
+    t.boolean "private", default: false, null: false
     t.integer "status"
-    t.integer "master"
-    t.boolean "group_stage_enabled"
-    t.boolean "hold_third_place_match", default: false, null: false
     t.index ["user_id"], name: "index_tournaments_on_user_id"
   end
 
@@ -86,9 +79,7 @@ ActiveRecord::Schema.define(version: 20191128112029) do
 
   create_table "users", force: :cascade do |t|
     t.string "name"
-    t.string "name_reading"
     t.string "email"
-    t.integer "slot"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "password_digest"
@@ -100,7 +91,6 @@ ActiveRecord::Schema.define(version: 20191128112029) do
     t.string "uid"
     t.string "image"
     t.text "description"
-    t.integer "onesignal_id"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

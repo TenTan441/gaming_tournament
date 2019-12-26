@@ -1,6 +1,6 @@
 <nav class="drawer-navbar navbar navbar-expand-lg fixed-top navbar-dark bg-dark border border-dark">
   <div class="drawer-container container">
-    <%= link_to "スマトナ！(仮)", root_path, id: "logo" %>
+    <%= link_to "スマトナ！", root_path, id: "logo" %>
     <nav class="d-flex align-items-center">
       <% if logged_in? && (messages = Message.where(user_to: current_user).count - Message.where(user_to: current_user).where("edited_at < read_at").count) > 0 %>
         <ul class="navbar-nav pr-5 pr-lg-3">

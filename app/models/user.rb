@@ -1,8 +1,12 @@
 class User < ApplicationRecord
+  # 「remember_token」という仮想の属性を作成します。
+  attr_accessor :remember_token
   before_save { self.email = email.downcase } unless :twitter_auth?
   
+  has_many :characters, foreign_key: :user_id, dependent: :destroy
   has_many :tournaments, foreign_key: :user_id, dependent: :destroy
   has_many :messages, foreign_key: :user_id, dependent: :destroy
+  has_many :participants, foreign_key: :user_id, dependent: :destroy
   
   validate :auth_configed?
   validates :name,  presence: true, length: { maximum: 20 }
@@ -65,17 +69,16 @@ class User < ApplicationRecord
   def self.find_or_create_from_auth(auth)
     provider = auth[:provider]
     uid = auth[:uid]
-    #nickname = auth[:info][:nickname]
     name = auth[:info][:name]
     twitter_url = auth[:info][:urls][:Twitter]
-    #image_url = auth[:info][:image]
     description = auth[:info][:description]
     
-    self.find_or_create_by(provider: provider, uid: uid) do |user|
-      user.name = name if user.name.nil?
-      user.twitter_url = twitter_url
-      user.description = description if user.description.nil?
-    end
+    user = self.find_or_initialize_by(provider: provider, uid: uid)
+    # ユーザIDを変更しても対処できるようにしている
+    user.update_attributes(name: user.name.nil? ? name : user.name,
+                           twitter_url: twitter_url,
+                           description: user.description.nil? ? description : user.description)
+    return user
   end
   
   # 検索ワードが含まれる場合は合致するuserを返し、含まれてない場合は全てのユーザを返します。

@@ -1,7 +1,7 @@
 class MessagesController < ApplicationController
   
   before_action :set_message, only: [:edit, :update, :destroy]
-  before_action :only_send_or_destinate, except: [:create, :creates, :destroys]
+  before_action :only_admin_send_or_destinate, except: [:create, :creates, :destroys]
 
   #　メッセージ送信
   def create
@@ -12,9 +12,11 @@ class MessagesController < ApplicationController
     if message.save
       flash[:success] = "メッセージを送信しました。"
     else
-      flash[:danger] = "メッセージ送信に失敗しました。"
+      flash[:danger] = "#{message.errors.full_messages.join(', ')}。"
     end
-    redirect_to current_user
+    
+    # メッセージ作成したページへリダイレクト
+    redirect_to params[:path]
   end
   
   #　メッセージ一括送信
@@ -49,7 +51,7 @@ class MessagesController < ApplicationController
     if @message.update_attributes(message_params)
       flash[:success] = "メッセージを更新しました。"
     else
-      flash[:danger] = "更新に失敗しました。"
+      flash[:danger] = "#{@message.errors.full_messages.join(', ')}。"
     end
     redirect_to current_user
   end
@@ -67,7 +69,7 @@ class MessagesController < ApplicationController
     params.require(:message).permit(messages: [:permit])[:messages].each do |id, item|
       if ActiveRecord::Type::Boolean.new.cast(item[:permit])
         @message = Message.find(id)
-        only_send_or_destinate
+        only_admin_send_or_destinate
         @message.destroy
         deleted += 1
       end
@@ -89,8 +91,8 @@ class MessagesController < ApplicationController
       @message = Message.find(params[:id])
     end
     
-    def only_send_or_destinate
-      if current_user != send_user(@message) && current_user != destinate_user(@message)
+    def only_admin_send_or_destinate
+      if current_user != send_user(@message) && current_user != destinate_user(@message) && !current_user.admin?
         flash[:danger] = "権限がありません。"
         redirect_to current_user
       end

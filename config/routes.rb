@@ -11,7 +11,8 @@ Rails.application.routes.draw do
   get '/auth/twitter/callback', to: 'sessions#twitter_login'
   delete '/logout', to: 'sessions#destroy'
   
-  
+  # 紹介ページ
+  get '/introduction', to: 'static_pages#introduction'
   
   resources :users do
     get 'characters/edit', to: 'characters#edit'

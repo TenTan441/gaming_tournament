@@ -20,13 +20,13 @@
               <div class="m-1"><%= msg.check_box :permit, :checked => false %></div>
             </div>
             <div class="m-2"><%= simple_format(message.text) %></div>
-            <div class="m-2 text-right font-weight-bold text-muted"><%= link_to l(message.edited_at, format: :short), edit_user_message_path(@user, message), remote: true, class: "text-reset" %></div>
+            <div class="m-2 d-flex justify-content-between font-weight-bold text-muted"><%= !message.read_at.nil? && message.edited_at < message.read_at ? "既読" : "未読" %><%= link_to l(message.edited_at, format: :short), edit_user_message_path(@user, message), remote: true, class: "text-reset" %></div>
           </div>
         <% end %>
       <% end %>
     <div class="d-flex justify-content-between">
       <div><%= will_paginate @message_outbox, {:param_name => 'outbox_page', :class => 'pagination'} %></div>
-      <div><%= f.submit "まとめて削除する", data: { confirm: "削除してよろしいですか？（取消できません）" }, class: "btn btn-lg btn-primary" %></div>
+      <div><%= f.submit "まとめて削除する", data: { confirm: "削除してよろしいですか？（取消できません）" }, class: "btn btn-lg btn-warning" %></div>
     </div>
     <% end %>
   <% else %>

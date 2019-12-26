@@ -23,9 +23,14 @@ ja:
         game_title: タイトル
         elimination_type: 対戦方式
         description: 大会説明
-        master: 開催者
+        user_id: 開催者
         status: ステータス
         particepants: 参加者
         group_stages_enabled: 形式
       participant:
-        
+      message:
+        user_to: 宛先
+        user_id: 差出人
+        text: 本文
+      character:
+        game_title: ゲームタイトル

@@ -1,7 +1,7 @@
 module TournamentsHelper
   
   def master_tournament(tournament)
-    return User.find(tournament.master)
+    return User.find_by(id: tournament.user_id)
   end
   
   def master?(tournament)

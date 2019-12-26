@@ -6,11 +6,16 @@
       <div class="p-2"><%= tournament.game_title %></div>
       <div class="p-2"><%= link_to tournament.name, tournament, class: "text-nowrap text-reset font-weight-bold" %></div>
       <div class="p-2">
-        <%= link_to image_tag(master.image.to_s, class: "img-fluid img-thumbnail rounded m-2", :style => "width:60px; height:60px;"), master %><br>
-        <% if logged_in? %>
-          <%= link_to "#{master.name}", master, class: "text-reset font-weight-bold" %>
+        <% if !master.nil? %>
+          <% if logged_in? %>
+            <%= link_to image_tag(master.image.to_s, class: "img-fluid img-thumbnail rounded m-2", :style => "width:60px; height:60px;"), master %><br>
+            <%= link_to "#{master.name}", master, class: "text-reset font-weight-bold" %>
+          <% else %>
+            <%= image_tag(master.image.to_s, class: "img-fluid img-thumbnail rounded m-2", :style => "width:60px; height:60px;") %><br>
+            <%= master.name %>
+          <% end %>
         <% else %>
-          <%= master.name %>
+          削除されたユーザ
         <% end %>
       </div>
     </div>
@@ -22,10 +27,12 @@
       <% if state = tournament.status == '完了' %>
         <div class="p-3 show-ranking font-weight-bold font-italic">
           <% if !(participant = Participant.where(tournament_id: tournament.id).find_by(user_id: @user.id)).nil? %>
-            <% if rank = participant.ranking %>
-              <%= rank.ordinalize %>
-            <% else %>
-              <%= Participant.where(tournament_id: tournament.id).count.ordinalize %>
+            <% if tournament.status == '完了' %>
+              <% if rank = participant.ranking %>
+                <%= rank.ordinalize %>
+              <% else %>
+                <%= Participant.where(tournament_id: tournament.id).count.ordinalize %>
+              <% end %>
             <% end %>
           <% else %>
             Mas

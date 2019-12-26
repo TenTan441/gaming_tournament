@@ -76,18 +76,18 @@
               <div class="card-body">
                 <div class="row justify-content-around">
                   <% unless @started %>
-                    <%= link_to "参加者を全て取り消す", tournament_participants_clear_path(@tournament), method: :delete, data: { confirm: "取り消ししてよろしいですか？" }, class: "btn btn-lg btn-warning" %>
-                    <%= link_to "参加者を並び替る", tournament_randomize_path(@tournament), data: { confirm: "並び替えてもいいですか？" }, class: "btn btn-lg btn-secondary" %>
+                    <%= link_to "参加者を全て取り消す", tournament_participants_clear_path(@tournament), method: :delete, data: { confirm: "取り消ししてよろしいですか？" }, class: "btn btn-lg btn-warning m-1" %>
+                    <%= link_to "参加者を並び替る", tournament_randomize_path(@tournament), data: { confirm: "並び替えてもいいですか？" }, class: "btn btn-lg btn-secondary m-1" %>
                     <% if @participants.count >= 2 %>
-                      <%= link_to "大会を始める", tournament_start_path(@tournament), method: :get, data: { confirm: "大会を始めてもいいですか？" }, class: "btn btn-lg btn-success" %>
+                      <%= link_to "大会を始める", tournament_start_path(@tournament), method: :get, data: { confirm: "大会を始めてもいいですか？" }, class: "btn btn-lg btn-success m-1" %>
                     <% end %>
                   <% else %>
-                    <%= link_to "大会をやり直す", tournament_reset_path(@tournament), method: :get, data: { confirm: "大会をやり直してもいいですか？" }, class: "btn btn-lg btn-warning" %>
+                    <%= link_to "大会をやり直す", tournament_reset_path(@tournament), method: :get, data: { confirm: "大会をやり直してもいいですか？" }, class: "btn btn-lg btn-warning m-1" %>
                     <% if @challonge["tournament"]["state"] == "awaiting_review" %>
-                      <%= link_to "大会を終了する", tournament_finalize_path(@tournament), method: :get, data: { confirm: "大会を終了させてもいいですか？" }, class: "btn btn-lg btn-warning" %>
+                      <%= link_to "大会を終了する", tournament_finalize_path(@tournament), method: :get, data: { confirm: "大会を終了させてもいいですか？" }, class: "btn btn-lg btn-success m-1" %>
                     <% end %>
                   <% end %>
-                  <%= link_to "大会を削除する", tournament_path, method: :delete, data: { confirm: "削除してよろしいですか？" }, class: "btn btn-lg btn-danger" %>
+                  <%= link_to "大会を削除する", tournament_path, method: :delete, data: { confirm: "削除してよろしいですか？" }, class: "btn btn-lg btn-danger m-1" %>
                 </div>
               </div><!-- /.card-body -->
             </div><!-- /.collapse -->
@@ -102,7 +102,9 @@
             </div><!-- /.card-header -->
             <div id="collapseFour" class="collapse" role="tabpanel" aria-labelledby="headingFour" data-parent="#accordion">
               <div class="card-body">
-                <%= render 'form' %>
+                <div class="col-md-8 offset-md-2">
+                  <%= render 'form' %>
+                </div>
               </div><!-- /.card-body -->
             </div><!-- /.collapse -->
           </div><!-- /.card -->
@@ -113,6 +115,7 @@
   <% end %><!-- logged_in? -->
   
   <div class="title"><%= @tournament.name %></div>
+  <p><%= @tournament.description %></p>
   <div class="sub-title"><%= @tournament.game_title %></div>
   
   <div class="container-fluid">
@@ -152,7 +155,7 @@
                 <% @matches_opening.each do |matches| %>
                   <div class="col-6">
                     <%= return_user_from_participant(matches["match"]["player1_id"]).name + " vs " + return_user_from_participant(matches["match"]["player2_id"]).name + "  " %>
-                    <%= link_to "報告", tournament_report_path(@tournament, matches), remote: true, class: "btn btn-success mb-2" if master_or_party?(@tournament, matches["match"]["player1_id"], matches["match"]["player2_id"]) %>
+                    <%= link_to "報告", tournament_report_path(@tournament, matches), remote: true, class: "btn btn-warning mb-2" if master_or_party?(@tournament, matches["match"]["player1_id"], matches["match"]["player2_id"]) %>
                   </div>
                 <% end %>
               <% else %>
@@ -191,50 +194,53 @@
     
     <% if !@participants_search.blank? %>
       <% @participants_search.each do |participant| %>
-        <div class="bg-dark border m-2">
-          <div class="container-fluid">
-            <div class="row p-1">
-              <div class="col-3 col-md-4 flex-column align-self-start text-nowrap">
-                <div><%= image_tag participant_to_user(participant).image.to_s, class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %></div>
-                <div>
-                <% if logged_in? %>
-                  <%= link_to participant_to_user(participant).name, participant_to_user(participant), class: "font-weight-bold text-reset" %>
-                <% else %>
-                  <%= participant_to_user(participant).name %>
-                <% end %>
-                </div>
+        <div class="bg-dark border m-2 clearfix">
+          <div class="row p-1">
+            <div class="col-3 col-md-2 flex-column align-self-start text-nowrap">
+              <div><%= image_tag participant_to_user(participant).image.to_s, class: "img-fluid img-thumbnail rounded m-1", :style => "max-width:60px;" %></div>
+              <div>
+              <% if logged_in? %>
+                <%= link_to participant_to_user(participant).name, participant_to_user(participant), class: "font-weight-bold text-reset" %>
+              <% else %>
+                <%= participant_to_user(participant).name %>
+              <% end %>
               </div>
-              <div class="col-6 col-md-6 d-flex align-items-center">
-                <% unless @tournament.status == '完了' %>
-                  <% if master?(@tournament) %>
-                    <%= form_with(model: @message, url: user_messages_path(current_user), local: true, method: :post) do |f| %>
-                      <%= f.hidden_field :user_id, value: master_tournament(@tournament).id %>
-                      <%= hidden_field_tag :user_to, participant.user_id %>
-                      <div class="d-flex justify-content-sm-center flex-column align-items-end">
-                        <%= f.text_field :text, class: "form-control" %>
-                        <%= f.submit "送信", class: "btn btn-secondary" %>
-                      </div>
-                    <% end %>
+            </div>
+            <div class="col-6 col-md-8 d-flex align-items-center">
+              <div class="d-none d-sm-block col-12">
+              <% unless @tournament.status == '完了' %>
+                <% if master?(@tournament) %>
+                  <%= form_with(model: @message, url: user_messages_path(current_user), local: true, method: :post) do |f| %>
+                    <%= hidden_field_tag :path, request.path %>
+                    <%= f.hidden_field :user_id, value: master_tournament(@tournament).id %>
+                    <%= hidden_field_tag :user_to, participant.user_id %>
+                    <div class="d-flex justify-content-center">
+                      <%= f.text_field :text, placeholder: "入力してください", class: "form-control" %>
+                      <%= f.submit "送信", class: "btn btn-secondary" %>
+                    </div>
                   <% end %>
                 <% end %>
+              <% end %>
               </div>
-              <div class="col-3 col-md-2 d-flex align-items-center">
-                <% unless @tournament.status == '完了' %>
-                  <% if master?(@tournament) %>
-                    <%= link_to "削除", tournament_participant_path(@tournament, participant), method: :delete,
-                        data: { confirm: "削除してよろしいですか？" },
-                        class: "btn btn-danger" %>
-                  <% end %>
-                <% else %>
-                  <p class="show-ranking font-weight-bold font-italic float-right">
-                    <% if rank = participant.ranking %>
-                      <%= rank.ordinalize %>
-                    <% else %>
-                      <%= @participants.count.ordinalize %>
-                    <% end %>
-                  </p>
+            </div>
+            <div class="col-3 col-md-2 d-flex flex-row-reverse align-items-center float-right">
+              <% unless @tournament.status == '完了' %>
+                <% if master?(@tournament) %>
+                  <div class="">
+                  <%= link_to "削除", tournament_participant_path(@tournament, participant), method: :delete,
+                      data: { confirm: "削除してよろしいですか？" },
+                      class: "btn btn-danger" %>
+                  </div>
                 <% end %>
-              </div>
+              <% else %>
+                <p class="show-ranking font-weight-bold font-italic m-2">
+                  <% if rank = participant.ranking %>
+                    <%= rank.ordinalize %>
+                  <% else %>
+                    <%= @participants.count.ordinalize %>
+                  <% end %>
+                </p>
+              <% end %>
             </div>
           </div>
         </div>

@@ -130,7 +130,7 @@ class ParticipantsController < ApplicationController
     end
     
     def tournament_master
-      unless User.find(@tournament.master) == current_user
+      unless User.find(@tournament.user_id) == current_user
         flash[:danger] = "権限がありません。"
         redirect_to current_user
       end

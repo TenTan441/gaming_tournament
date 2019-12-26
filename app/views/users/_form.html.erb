@@ -26,18 +26,18 @@
         <%= f.label :twitter_private, class: "label-#{yield(:class_text)}" %>
         <div class="col-sm-12 btn-group" data-toggle="buttons">
           <% if @user.twitter_private %>
-            <label class="btn btn-outline-warning btn-secondary active" style="width:50%">
-              <%= f.radio_button :twitter_private, true, checked: true %> 公開
-            </label>
             <label class="btn btn-outline-warning btn-secondary" style="width:50%">
-              <%= f.radio_button :twitter_private, false, {} %> 非公開
+              <%= f.radio_button :twitter_private, false, {} %> 公開
+            </label>
+            <label class="btn btn-outline-warning btn-secondary active" style="width:50%">
+              <%= f.radio_button :twitter_private, true, checked: true %> 非公開
             </label>
           <% else %>
-            <label class="btn btn-outline-warning btn-secondary" style="width:50%">
-              <%= f.radio_button :twitter_private, true, {} %> 公開
-            </label>
             <label class="btn btn-outline-warning btn-secondary active" style="width:50%">
-              <%= f.radio_button :twitter_private, false, checked: true %> 非公開
+              <%= f.radio_button :twitter_private, false, checked: true %> 公開
+            </label>
+            <label class="btn btn-outline-warning btn-secondary" style="width:50%">
+              <%= f.radio_button :twitter_private, true, {} %> 非公開
             </label>
           <% end %>
         </div>

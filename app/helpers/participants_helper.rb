@@ -31,7 +31,7 @@ module ParticipantsHelper
   
   # 大会の未参加者を抽出する
   def return_users_from_non_participants(participants)
-    users = User.all
+    users = User.where(admin: false)
 
     # 参加者がいる状態では未参加者のみを抽出する
     unless participants.blank?

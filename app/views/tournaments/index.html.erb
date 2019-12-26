@@ -21,8 +21,8 @@
           <%= fo.select :game_title, Tournament.game_titles.keys.to_a, {prompt: "全タイトル"}, class: "form-control" %>
         </div>
         <div class="col-lg-8 col-sm-8">
-          <%= fo.label Tournament.human_attribute_name :master %><br>
-          <%= select_tag :master, options_from_collection_for_select(User.all, :id, :name), include_blank: true, class: "form-control searchable" %>
+          <%= fo.label Tournament.human_attribute_name :user_id %><br>
+          <%= select_tag :user_id, options_from_collection_for_select(User.where(admin: false), :id, :name), include_blank: true, class: "form-control searchable" %>
         </div>
         <div class="col-lg-4 col-sm-4">
           <%= fo.label Tournament.human_attribute_name :status %>

@@ -18,10 +18,10 @@
           <% if current_user == send_user(@message) %>
             <%= form_with(model: @message, url: user_message_path, local: true, method: :put) do |f| %>
               
-              <%= f.label "To:#{destinate_user(@message).name}", class: "m-1" %>
+              <%= f.label "To: #{destinate_user(@message).name}", class: "m-1" %>
               <%= f.text_area :text, class: "form-control m-1" %>
             
-              <%= f.submit yield(:button_text), class: "btn btn-primary btn-block btn-#{yield(:class_text)} m-1" %>
+              <%= f.submit yield(:button_text), class: "btn btn-warning btn-block btn-#{yield(:class_text)} m-1" %>
             <% end %>
           <% else %>
             <div class="m-1 font-weight-bold">From:<%= send_user(@message).name %></div>

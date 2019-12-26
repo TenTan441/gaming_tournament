@@ -1,7 +1,7 @@
 <%= form_with(model: @tournament, local: true) do |f| %>
   <%= render 'shared/error_messages_tournament', object: @tournament %>
   
-  <%= f.hidden_field :master, :value => current_user.id %>
+  <%= f.hidden_field :user_id, :value => current_user.id %>
   
   <div class="form-group">
     <%= f.label :name, class: "label-#{yield(:class_text)}" %>
@@ -10,14 +10,23 @@
   </div>
   
   <div class="form-group">
-      <%= f.label :private, class: "label-#{yield(:class_text)}" %>
+    <%= f.label :private, class: "label-#{yield(:class_text)}" %>
     <div class="col-sm-12 btn-group" data-toggle="buttons">
-      <label class="btn btn-outline-warning btn-secondary active" style="width:50%">
-        <%= f.radio_button :private, false, checked: true %> 公開
-      </label>
-      <label class="btn btn-outline-warning btn-secondary" style="width:50%">
-        <%= f.radio_button :private, true, checked: false %> 非公開
-      </label>
+      <% if @tournament.private %>
+        <label class="btn btn-outline-warning btn-secondary" style="width:50%">
+          <%= f.radio_button :private, false, checked: false %> 公開
+        </label>
+        <label class="btn btn-outline-warning btn-secondary active" style="width:50%">
+          <%= f.radio_button :private, true, checked: true %> 非公開
+        </label>
+      <% else %>
+        <label class="btn btn-outline-warning btn-secondary active" style="width:50%">
+          <%= f.radio_button :private, false, checked: true %> 公開
+        </label>
+        <label class="btn btn-outline-warning btn-secondary" style="width:50%">
+          <%= f.radio_button :private, true, checked: false %> 非公開
+        </label>
+      <% end %>
     </div>
   </div>
 
@@ -42,12 +51,6 @@
   <div class="form-group">
     <%= f.label :description, class: "label-#{yield(:class_text)}" %>
     <%= f.text_area :description, class: "form-control" %>
-  </div>
-  
-  <%= f.label :group_stage_enabled, class: "label-#{yield(:class_text)}" %>
-  <div class="radio">
-    <label><%= f.radio_button :group_stage_enabled, false, :value => false, :checked => true, :onclick => "tournament_type();", class: "radio-control" %><span>通常の形式　</span></label>
-    <label><%= f.radio_button :group_stage_enabled, true, :value => true, :disabled => true, :onclick => "tournament_type();", class: "radio-control" %><span>2ステージトーナメント【API仕様により選択不可】</span></label>
   </div>
   
   <% if controller.action_name == 'new' || controller.action_name == 'create' # 新規作成 %>
@@ -141,7 +144,7 @@
       
       <%= f.label :start_time, class: "label-#{yield(:class_text)}" %>
       <div class="input-group" data-target-input="nearest">
-        <%= f.text_field :start_time, id: "start_time", class: "form-control datepicker", placeholder: "アイコンから入力", data: {target: "#start_time"} %>
+        <%= f.text_field :start_time, required: true, id: "start_time", class: "form-control datepicker", placeholder: "アイコンから入力", data: {target: "#start_time"} %>
         <div class="input-group-append" data-target="#start_time" data-toggle="datetimepicker">
           <div class="input-group-text"><i class="fa fa-calendar"></i></div>
         </div>
@@ -157,7 +160,7 @@
       </div>
       <div id="selected-robin" style="display:none">
         <%= f.label "順位付け方法" %>
-        <%= f.select :ranked_by, options_for_select([["マッチ勝数","match wins"], ["ゲームもしくはセットの勝数","game wins"], ["合計得点","points scored"], ["得失点差","points difference"], ["カスタム（ポイントシステム）","custom"]], :selected => @challonge["tournament"]["ranked_by"], :disabled => true), {}, id: "tournament_ranked_by", class: "form-control" %>
+        <%= f.select :ranked_by, options_for_select([["マッチ勝数","match wins"], ["ゲームもしくはセットの勝数","game wins"], ["合計得点","points scored"], ["得失点差","points difference"], ["カスタム（ポイントシステム）","custom"]], :selected => @challonge["tournament"]["ranked_by"]), {}, disabled: true, id: "tournament_ranked_by", class: "form-control" %>
         <div id="robin-custom" style="display:none">
           <%= f.number_field :rr_pts_for_match_win, disabled: true, value: @challonge["tournament"]["rr_pts_for_match_win"], class: "form-control" %>
           <%= f.label "ポイント（マッチ勝利毎に）" %>
@@ -188,7 +191,7 @@
 
 <script>
   $(function () {
-    $('#tournament_edit').prop("disabled", true);
+    //$('#tournament_edit').prop("disabled", true);
     $('form input:required').each(function () {
       $(this).prev("label").addClass("required");
     });

@@ -1,21 +1,22 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
   before_action :logged_in_user, only: [:index, :show, :edit, :update, :destroy]
-  before_action :correct_user, only: [:edit, :update]
-  before_action :admin_user, only: :destroy
+  before_action :ever_logged_in_user, only: [:new, :create]
+  before_action :admin_or_correct_user, only: [:edit, :update, :destroy]
+  before_action :admin_only, only: :show
 
   def index
-    @users = User.search(params[:search]).paginate(page: params[:page], per_page: 10)
+    @users = User.where(admin: false).search(params[:search]).paginate(page: params[:page], per_page: 10)
   end
 
   def show
     respond_to do |format|
       format.html do
         @message = Message.new()
-        if current_user == @user
+        if current_user?(@user) || current_user.admin?
           @tournaments = Tournament.where(id: Participant.where(user_id: current_user.id)
                                                          .pluck(:tournament_id))
-                                   .or(Tournament.where(master: current_user.id))
+                                   .or(Tournament.where(user_id: current_user.id))
                                    .distinct
                                    .order(id: "DESC").paginate(page: params[:page], per_page: 10)
         else
@@ -51,13 +52,13 @@ class UsersController < ApplicationController
                                    .order(edited_at: "DESC")
                                    .paginate(page: params[:outbox_page], per_page: 10)
         elsif params[:tournaments]
-          if current_user == @user
+          if current_user?(@user) || current_user.admin?
             @tournaments = Tournament.where(id: Participant.where(user_id: current_user.id)
                                                            .pluck(:tournament_id))
-                                     .or(Tournament.where(master: current_user.id))
+                                     .or(Tournament.where(user_id: current_user.id))
                                      .distinct
                                      .name_search(params[:name])
-                                     .master_search(params[:master])
+                                     .master_search(params[:user_id])
                                      .title_search(params[:game_title])
                                      .status_search(params[:status])
                                      .start_time_search(params[:from], params[:to])
@@ -68,7 +69,7 @@ class UsersController < ApplicationController
                                                            .pluck(:tournament_id),
                                             private: false)
                                      .name_search(params[:name])
-                                     .master_search(params[:master])
+                                     .master_search(params[:user_id])
                                      .title_search(params[:game_title])
                                      .status_search(params[:status])
                                      .start_time_search(params[:from], params[:to])
@@ -110,15 +111,7 @@ class UsersController < ApplicationController
   def destroy
     @user.destroy
     flash[:success] = "#{@user.name}のデータを削除しました。"
-    redirect_to users_url
-  end
-  
-  def send_dm
-    user = User.find(params[:user_id])
-    text = params[:user][:text]
-    result = TwitterApi.new(user.uid, text).call
-    result ? flash[:success] = "DM送信に成功しました。" : flash[:danger] = "DM送信に失敗しました。繰り返される場合は管理者へ連絡してください。"
-    redirect_to user
+    redirect_to root_url
   end
   
   def title_character
@@ -143,7 +136,7 @@ class UsersController < ApplicationController
       @user = User.find(params[:id])
     end
 
-    # ログイン済みのユーザーか確認します。
+    # 未ログインユーザーか確認します。
     def logged_in_user
       unless logged_in?
         store_location
@@ -151,15 +144,22 @@ class UsersController < ApplicationController
         redirect_to login_url
       end
     end
-
-    # アクセスしたユーザーが現在ログインしているユーザーか確認します。
-    def correct_user
-      redirect_to(root_url) unless current_user?(@user)
+    
+    # ログイン済みユーザか確認
+    def ever_logged_in_user
+      if logged_in?
+        flash[:success] = "既にログイン済みです。"
+        redirect_to current_user
+      end
     end
 
-    # システム管理権限所有かどうか判定します。
-    def admin_user
-      redirect_to root_url unless current_user.admin?
+    # アクセスしたユーザーがシステム管理権限所有かマイページの所有者かどうか判定します。
+    def admin_or_correct_user
+      redirect_to root_url unless (current_user.admin? || current_user?(@user))
+    end
+    
+    def admin_only
+      redirect_to root_url if (!current_user.admin? && @user.admin? )
     end
     
     def user_image_params

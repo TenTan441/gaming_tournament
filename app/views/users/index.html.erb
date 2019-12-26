@@ -5,14 +5,17 @@
   <h1>検索結果</h1>
 <% end %>
 
-<div class="table-responsive">
-  <div class="text-right">
-    <p>ユーザ検索</p>
-    <%= form_tag(users_path, :method => 'get') do %>
-      <%= text_field_tag :search %>
-      <%= submit_tag '検索', :name => nil, :class => 'btn btn-secondary' %>
-    <% end %>
+<div class="d-flex flex-column align-items-end my-2">
+  <p>ユーザ検索</p>
+  <%= form_tag(users_path, :method => 'get') do %>
+  <div class="d-flex flex-row">
+    <%= text_field_tag :search, nil, class: "form-control" %>
+    <%= submit_tag '検索', :name => nil, :class => 'btn btn-secondary' %>
   </div>
+  <% end %>
+</div>
+
+<div class="table-responsive">
   <%= will_paginate %>
   <table class="table text-nowrap table-hover" id="table-users">
     <thead>

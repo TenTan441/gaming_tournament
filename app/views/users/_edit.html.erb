@@ -15,6 +15,11 @@
           <%= render 'form' %>
         </div>
       </div>
+      <div class="text-right">
+        <%= link_to "退会する", @user, method: :delete,
+                                       data: { confirm: "本当に退会しますか？（元に戻せません）" },
+                                       class: "btn btn-danger m-3" %>
+      </div>
     </div>
   </div>
 </div>

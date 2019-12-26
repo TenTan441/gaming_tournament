@@ -1,1 +1,5 @@
-<%= select :sub_characters, :character_ids, @characters, {:include_blank => true}, {:multiple => true, :size => 2, :id => "subs", :class => "image-picker show-html form-control"} %>
+<% if @character %>
+  <%= select :sub_characters, :character_ids, @characters, {:selected => [@character.sub_character1, @character.sub_character2, @character.sub_character3]}, {:multiple => true, :size => 2, :id => "subs", :class => "image-picker show-html form-control"} %>
+<% else %>
+  <%= select :sub_characters, :character_ids, @characters, {:include_blank => true}, {:multiple => true, :size => 2, :id => "subs", :class => "image-picker show-html form-control"} %>
+<% end %>
