@@ -23,4 +23,3 @@
 .byebug_history
 
 # Ignore .evv files.
-/.env
