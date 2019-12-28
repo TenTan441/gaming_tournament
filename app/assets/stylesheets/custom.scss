@@ -186,7 +186,20 @@ table.table-condensed tr td.second:hover,
   text-decoration: none;
 }
 
+/* footer */
 
+.hoge_footer {
+  position: fixed;
+  margin-top: 60px;
+  bottom: 0;
+  margin-bottom: 0;
+  width: 100%;
+
+  /* フッタの高さ */
+  height: 60px;
+  background: #112;
+  color: #fff;
+}
 
 /* debug */
 
