@@ -9,11 +9,11 @@ class CharactersController < ApplicationController
       when '大乱闘スマッシュブラザーズDX'  
         @characters = CharacterImage.where(two:   true).map { |fi| [fi.name, fi.id, { 'data-img-src' => "/Character/#{fi.image}.png"}] }
       when '大乱闘スマッシュブラザーズX'
-        @characters = CharacterImage.where(three:   true).map { |fi| [fi.name, fi.id, { 'data-img-src' => "/Character/#{fi.image}.png"}] }
+        @characters = CharacterImage.where(three: true).map { |fi| [fi.name, fi.id, { 'data-img-src' => "/Character/#{fi.image}.png"}] }
       when '大乱闘スマッシュブラザーズ for Nintendo 3DS', '大乱闘スマッシュブラザーズ for Wii U'
-        @characters = CharacterImage.where(four:   true).map { |fi| [fi.name, fi.id, { 'data-img-src' => "/Character/#{fi.image}.png"}] }
+        @characters = CharacterImage.where(four:  true).map { |fi| [fi.name, fi.id, { 'data-img-src' => "/Character/#{fi.image}.png"}] }
       when '大乱闘スマッシュブラザーズ SPECIAL'
-        @characters = CharacterImage.where(five:   true).map { |fi| [fi.name, fi.id, { 'data-img-src' => "/Character/#{fi.image}.png"}] }
+        @characters = CharacterImage.where(five:  true).map { |fi| [fi.name, fi.id, { 'data-img-src' => "/Character/#{fi.image}.png"}] }
       else
         @characters = nil
     end
