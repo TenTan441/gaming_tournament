@@ -136,7 +136,7 @@
       <% unless @tournament.status == '完了' %>
       <div class="col-lg-4 bg-dark border" id="toggle-matches-opening-or-complete">
         <div class="row justify-content-between m-1">
-          <span>現在開催中のマッチ</span><p><%= link_to "終了済", tournament_toggle_path(@tournament, :state => 'complete'), remote: true, class: "btn btn-secondary" %></p>
+          <span>現在開催中のマッチ</span><p><%= link_to "終了", tournament_toggle_path(@tournament, :state => 'complete'), remote: true, class: "btn btn-secondary" %></p>
         </div>
         <div class="d-none d-lg-block"><!-- 画面幅lg以上で表示 -->
           <% if !@matches_opening.blank? %>
