@@ -1,4 +1,4 @@
-<% if !@characters.nil? %>
+<% if @characters %>
   $('#using-character').show();
   $('#characters').show();
   $('#using-character').html('<%= escape_javascript( render 'users/title_character', object: @character) %>');
