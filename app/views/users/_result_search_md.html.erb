@@ -1,7 +1,7 @@
 <%= will_paginate @tournaments, {:param_name => 'tournaments', :class => 'pagination'} %>
 <% @tournaments.each do |tournament| %>
   <% master = master_tournament(tournament) %>
-  <div class="d-flex justify-content-between bg-dark my-2">
+  <div class="d-flex justify-content-between bg-light border my-2">
     <div class="d-flex flex-column" style="width:60%;">
       <div class="p-2"><%= tournament.game_title %></div>
       <div class="p-2"><%= link_to tournament.name, tournament, class: "text-nowrap text-reset font-weight-bold" %></div>

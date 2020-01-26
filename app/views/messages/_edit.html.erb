@@ -11,7 +11,7 @@
     </div>
     <div class="modal-body">
       <div class="row">
-        <div class="col-lg-10 offset-lg-1 bg-dark rounded p-2">
+        <div class="col-lg-10 offset-lg-1 bg-light border rounded p-2">
           <div class="m-auto text-right">
             <div class="m-2"><%= link_to "削除する", user_message_path(@user, @message), method: :delete, data: { confirm: "削除しますか？" }, class: "btn btn-danger text-right m-2" %></div>
           </div>
@@ -21,7 +21,7 @@
               <%= f.label "To: #{destinate_user(@message).name}", class: "m-1" %>
               <%= f.text_area :text, class: "form-control m-1" %>
             
-              <%= f.submit yield(:button_text), class: "btn btn-warning btn-block btn-#{yield(:class_text)} m-1" %>
+              <%= f.submit yield(:button_text), class: "btn btn-primary btn-block btn-#{yield(:class_text)} m-1" %>
             <% end %>
           <% else %>
             <div class="m-1 font-weight-bold">From:<%= send_user(@message).name %></div>

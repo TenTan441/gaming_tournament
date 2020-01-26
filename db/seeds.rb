@@ -310,4 +310,5 @@ CharacterImage.create!(name: "バンジョー&カズーイ",
                        image: "BanjoKazooie")
 CharacterImage.create!(name: "テリー",
                        image: "Terry")
-
+CharacterImage.create!(name: "ベレト",
+                       image: "Byleth")

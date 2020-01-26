@@ -13,17 +13,17 @@
     <%= f.label :private, class: "label-#{yield(:class_text)}" %>
     <div class="col-sm-12 btn-group" data-toggle="buttons">
       <% if @tournament.private %>
-        <label class="btn btn-outline-warning btn-secondary" style="width:50%">
+        <label class="btn btn-outline-primary btn-secondary" style="width:50%">
           <%= f.radio_button :private, false, checked: false %> 公開
         </label>
-        <label class="btn btn-outline-warning btn-secondary active" style="width:50%">
+        <label class="btn btn-outline-primary btn-secondary active" style="width:50%">
           <%= f.radio_button :private, true, checked: true %> 非公開
         </label>
       <% else %>
-        <label class="btn btn-outline-warning btn-secondary active" style="width:50%">
+        <label class="btn btn-outline-primary btn-secondary active" style="width:50%">
           <%= f.radio_button :private, false, checked: true %> 公開
         </label>
-        <label class="btn btn-outline-warning btn-secondary" style="width:50%">
+        <label class="btn btn-outline-primary btn-secondary" style="width:50%">
           <%= f.radio_button :private, true, checked: false %> 非公開
         </label>
       <% end %>
@@ -184,7 +184,7 @@
         </div>
       </div>
     <% end %>
-    <%= f.submit "更新", class: "btn btn-secondary btn-block btn-#{yield(:class_text)} my-2",
+    <%= f.submit "更新", class: "btn btn-primary btn-block btn-#{yield(:class_text)} my-2",
                          id: "tournament_edit" %>
   <% end %>
 <% end %>
@@ -230,7 +230,7 @@
         flag = false;
       } else {
         $("#tournament_name_count").text( "残り" + now_name_count + "文字");
-        $("#tournament_name_count").css("color","white");
+        $("#tournament_name_count").css("color","black");
       }
       
       var url_text = $("#tournament_url").val();

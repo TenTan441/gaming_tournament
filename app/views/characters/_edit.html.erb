@@ -22,7 +22,7 @@
               <div id="main-character"></div>
               <%= f.label "サブキャラ（3キャラまで）", class: "mt-5" %>
               <div id="sub-characters"></div>
-              <%= f.submit "キャラ編集", class: "btn btn-secondary btn-block btn-login" %>
+              <%= f.submit "キャラ編集", class: "btn btn-primary btn-block btn-login" %>
               <p class="text-right"><%= link_to "大乱闘スマッシュブラザーズSPECIAL", 'https://www.smashbros.com/ja_JP/fighter/index.html', target: :_blank %>より引用</p>
             </div>
           <% end %>
@@ -45,8 +45,8 @@ $(function(){
     mutations.forEach((mutation) => {
       // 一度監視を中止
       observer.disconnect();
-      $("#main-character").find(".image-picker").imagepicker();
-      $("#sub-characters").find(".image-picker").imagepicker({limit: 3, limit_reached: function(){alert('選べるのは3キャラまでです。')}});
+      $("#main-character").find(".image-picker").imagepicker({show_label: true});
+      $("#sub-characters").find(".image-picker").imagepicker({show_label: true, limit: 3, limit_reached: function(){alert('選べるのは3キャラまでです。')}});
       // 監視再開
       observer.observe(target, config);
     });    

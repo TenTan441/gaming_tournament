@@ -103,6 +103,7 @@ class UsersController < ApplicationController
     if @user.update_attributes(user_params)
       flash[:success] = "ユーザー情報を更新しました。"
     else
+      debugger
       flash[:danger] = "更新に失敗しました。"
     end
     redirect_to @user

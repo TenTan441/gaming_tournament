@@ -5,7 +5,7 @@
       <% @message_outbox.each do |message| %>
         <% receiveUser = destinate_user(message) %>
         <%= f.fields_for "messages[]", message do |msg| %>
-          <div class="my-2 bg-dark">
+          <div class="my-2 bg-light border">
             <div class="d-flex justify-content-between">
               <div class="p-1">
                 <% if receiveUser.present? %>
@@ -26,7 +26,7 @@
       <% end %>
     <div class="d-flex justify-content-between">
       <div><%= will_paginate @message_outbox, {:param_name => 'outbox_page', :class => 'pagination'} %></div>
-      <div><%= f.submit "まとめて削除する", data: { confirm: "削除してよろしいですか？（取消できません）" }, class: "btn btn-lg btn-warning" %></div>
+      <div><%= f.submit "まとめて削除する", data: { confirm: "削除してよろしいですか？（取消できません）" }, class: "btn btn-lg btn-danger" %></div>
     </div>
     <% end %>
   <% else %>
