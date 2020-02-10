@@ -1,7 +1,9 @@
-<div class="modal-dialog modal-sm modal-dialog-center">
+<div class="modal-dialog modal-md modal-dialog-center">
   <div class="modal-content">
     <div class="modal-header">
       <h3 class="modal-title center">【勝敗報告】</h3>
+      <%= @underway_at.blank? ? (link_to "対戦中にする", tournament_mark_underway_path({:challonge_tournament_id => @tournament_id, :challonge_match_id => @match_id}), class: "btn btn-success") 
+                              : (link_to "対戦中を取消す", tournament_unmark_underway_path({:challonge_tournament_id => @tournament_id, :challonge_match_id => @match_id}), class: "btn btn-warning") %>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>

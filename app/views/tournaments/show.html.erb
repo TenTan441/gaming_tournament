@@ -141,8 +141,11 @@
         <div class="d-none d-lg-block"><!-- 画面幅lg以上で表示 -->
           <% if !@matches_opening.blank? %>
             <% @matches_opening.each do |matches| %>
-              <%= return_user_from_participant(matches["match"]["player1_id"]).name + " vs " + return_user_from_participant(matches["match"]["player2_id"]).name + "  " %>
-              <%= link_to "報告", tournament_report_path(@tournament, matches), remote: true, class: "btn btn-success mb-2" if master_or_party?(@tournament, matches["match"]["player1_id"], matches["match"]["player2_id"]) %><br>
+              <span class="d-inline-block m-1 p-1 <%= "border border-primary" unless matches["match"]["underway_at"].blank? %>">
+                <%= return_user_from_participant(matches["match"]["player1_id"]).name + " vs " + return_user_from_participant(matches["match"]["player2_id"]).name + "  " %>
+                <%= link_to "報告", tournament_report_path(@tournament, matches), remote: true, class: "btn btn-success" if master_or_party?(@tournament, matches["match"]["player1_id"], matches["match"]["player2_id"]) %>
+              </span>
+              <%#= render partial: 'matches/opening', collection: matches, as: :matches %>
             <% end %>
           <% else %>
             <p>なし</p>
@@ -154,8 +157,10 @@
               <% if !@matches_opening.blank? %>
                 <% @matches_opening.each do |matches| %>
                   <div class="col-6">
-                    <%= return_user_from_participant(matches["match"]["player1_id"]).name + " vs " + return_user_from_participant(matches["match"]["player2_id"]).name + "  " %>
-                    <%= link_to "報告", tournament_report_path(@tournament, matches), remote: true, class: "btn btn-success mb-2" if master_or_party?(@tournament, matches["match"]["player1_id"], matches["match"]["player2_id"]) %>
+                    <span class="d-inline-block m-1 p-1 <%= "border border-primary" unless matches["match"]["underway_at"].blank? %>">
+                      <%= return_user_from_participant(matches["match"]["player1_id"]).name + " vs " + return_user_from_participant(matches["match"]["player2_id"]).name + "  " %>
+                      <%= link_to "報告", tournament_report_path(@tournament, matches), remote: true, class: "btn btn-success" if master_or_party?(@tournament, matches["match"]["player1_id"], matches["match"]["player2_id"]) %>
+                    </span>
                   </div>
                 <% end %>
               <% else %>

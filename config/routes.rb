@@ -48,6 +48,8 @@ Rails.application.routes.draw do
     get 'report', to: 'matches#report'
     post 'update', to: 'matches#update'
     get 'reset_match', to: 'matches#reset'
+    get 'mark_underway', to: 'matches#mark_underway'
+    get 'unmark_underway', to: 'matches#unmark_underway'
   end
   
   resources :fileuploads, only: [:index, :create, :new]

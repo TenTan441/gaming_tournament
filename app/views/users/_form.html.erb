@@ -47,7 +47,7 @@
     <%= f.label :description, class: "label-#{yield(:class_text)}" %>
     <%= f.text_area :description, class: "form-control" %>
   
-    <%= f.submit yield(:button_text), class: "btn btn-secondary btn-block btn-#{yield(:class_text)}",
+    <%= f.submit yield(:button_text), class: "btn btn-primary btn-block btn-#{yield(:class_text)}",
                                       id: "edit_submit" %>
   <% end %>
 </div>

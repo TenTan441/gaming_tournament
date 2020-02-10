@@ -41,13 +41,31 @@ class MatchesController < ApplicationController
   def reset
     t_id = params[:match][:tournament_id]
     m_id = params[:match][:id]
-    bool, access_token = post_challonge_api({}, "/#{t_id}/matches/#{m_id}/reopen")
+    bool = post_challonge_api({}, "/#{t_id}/matches/#{m_id}/reopen")
     if bool
       flash[:success] = "マッチがやり直されました。"
     else
       flash[:danger] = "マッチのやり直しに失敗しました。繰り返される場合は管理者へ問い合わせてください。"
     end
     
+    @tournament = Tournament.find(params[:tournament_id])
+    redirect_to @tournament
+  end
+  
+  def mark_underway
+    t_id = params[:challonge_tournament_id]
+    m_id = params[:challonge_match_id]
+    bool = post_challonge_api({}, "/#{t_id}/matches/#{m_id}/mark_as_underway")
+    bool ? flash[:success] = "進行中にしました" : "ステータス変更に失敗しました。"
+    @tournament = Tournament.find(params[:tournament_id])
+    redirect_to @tournament
+  end
+  
+  def unmark_underway
+    t_id = params[:challonge_tournament_id]
+    m_id = params[:challonge_match_id]
+    bool = post_challonge_api({}, "/#{t_id}/matches/#{m_id}/unmark_as_underway")
+    bool ? flash[:success] = "進行中を取り消しました" : "ステータス変更に失敗しました。"
     @tournament = Tournament.find(params[:tournament_id])
     redirect_to @tournament
   end

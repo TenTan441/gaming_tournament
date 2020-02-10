@@ -6,27 +6,29 @@
   <div class="d-none d-lg-block"><!-- 画面幅lg以上で表示 -->
     <% if !@matches_opening.blank? %>
       <% @matches_opening.each do |matches| %>
-        <%= return_user_from_participant(matches["match"]["player1_id"]).name + " vs " + return_user_from_participant(matches["match"]["player2_id"]).name + "  " %>
-        <%= link_to "報告", tournament_report_path(@tournament, matches), remote: true, class: "btn btn-success mb-2" if master_or_party?(@tournament, matches["match"]["player1_id"], matches["match"]["player2_id"]) %><br>
+        <span class="d-inline-block m-1 p-1 <%= "border border-primary" unless matches["match"]["underway_at"].blank? %>">
+          <%= return_user_from_participant(matches["match"]["player1_id"]).name + " vs " + return_user_from_participant(matches["match"]["player2_id"]).name + "  " %>
+          <%= link_to "報告", tournament_report_path(@tournament, matches), remote: true, class: "btn btn-success" if master_or_party?(@tournament, matches["match"]["player1_id"], matches["match"]["player2_id"]) %>
+        </span>
       <% end %>
     <% else %>
       <p>なし</p>
     <% end %>
   </div>
   <div class="d-lg-none"><!-- 画面幅lg未満で表示 -->
-    <div class="container-fluid">
-      <div class="row justify-content-between">
-        <% if !@matches_opening.blank? %>
-          <% @matches_opening.each do |matches| %>
-            <div class="col-6">
+    <div class="row justify-content-between">
+      <% if !@matches_opening.blank? %>
+        <% @matches_opening.each do |matches| %>
+          <div class="col-6">
+            <span class="d-inline-block m-1 p-1 <%= "border border-primary" unless matches["match"]["underway_at"].blank? %>">
               <%= return_user_from_participant(matches["match"]["player1_id"]).name + " vs " + return_user_from_participant(matches["match"]["player2_id"]).name + "  " %>
-              <%= link_to "報告", tournament_report_path(@tournament, matches), remote: true, class: "btn btn-success mb-2" if master_or_party?(@tournament, matches["match"]["player1_id"], matches["match"]["player2_id"]) %>
-            </div>
-          <% end %>
-        <% else %>
-          <p>なし</p>
+              <%= link_to "報告", tournament_report_path(@tournament, matches), remote: true, class: "btn btn-success" if master_or_party?(@tournament, matches["match"]["player1_id"], matches["match"]["player2_id"]) %>
+            </span>
+          </div>
         <% end %>
-      </div>
+      <% else %>
+        <p>なし</p>
+      <% end %>
     </div>
   </div><!-- d-lg-none 画面幅lg未満で表示 -->
 <% when 'complete' %>
@@ -36,32 +38,31 @@
   <div class="d-none d-lg-block"><!-- 画面幅lg以上で表示 -->
     <% if !@matches_complete.blank? %>
       <% @matches_complete.each do |matches| %>
-        <%= return_user_from_participant(matches["match"]["player1_id"]).name + " vs " + return_user_from_participant(matches["match"]["player2_id"]).name + "  " %>
-        <% unless @challonge["tournament"]["state"] == "complete" %>
-          <%= link_to "やり直し", tournament_reset_match_path(@tournament, matches), method: :get, data: { confirm: "やり直しをしてもいいですか？" }, class: "btn btn-danger mb-2" if master?(@tournament) %>
-        <% end %>
-        <br>
+        <span class="m-1 p-1">
+          <%= return_user_from_participant(matches["match"]["player1_id"]).name + " vs " + return_user_from_participant(matches["match"]["player2_id"]).name + "  " %>
+          <% unless @challonge["tournament"]["state"] == "complete" %>
+            <%= link_to "やり直し", tournament_reset_match_path(@tournament, matches), method: :get, data: { confirm: "やり直しをしてもいいですか？" }, class: "btn btn-danger" if master?(@tournament) %>
+          <% end %>
+        </span>
       <% end %>
     <% else %>
       <p>なし</p>
     <% end %>
   </div>
   <div class="d-lg-none"><!-- 画面幅lg未満で表示 -->
-    <div class="container-fluid">
-      <div class="row justify-content-between">
-        <% if !@matches_complete.blank? %>
-          <% @matches_complete.each do |matches| %>
-            <div class="col-6">
-              <%= return_user_from_participant(matches["match"]["player1_id"]).name + " vs " + return_user_from_participant(matches["match"]["player2_id"]).name + "  " %>
-              <% unless @challonge["tournament"]["state"] == "complete" %>
-                <%= link_to "やり直し", tournament_reset_match_path(@tournament, matches), method: :get, data: { confirm: "やり直しをしてもいいですか？" }, class: "btn btn-danger mb-2" if master?(@tournament) %>
-              <% end %>
-            </div>
-          <% end %>
-        <% else %>
-          <p>なし</p>
+    <div class="row justify-content-between">
+      <% if !@matches_complete.blank? %>
+        <% @matches_complete.each do |matches| %>
+          <div class="col-6">
+            <%= return_user_from_participant(matches["match"]["player1_id"]).name + " vs " + return_user_from_participant(matches["match"]["player2_id"]).name + "  " %>
+            <% unless @challonge["tournament"]["state"] == "complete" %>
+              <%= link_to "やり直し", tournament_reset_match_path(@tournament, matches), method: :get, data: { confirm: "やり直しをしてもいいですか？" }, class: "btn btn-danger mb-2" if master?(@tournament) %>
+            <% end %>
+          </div>
         <% end %>
-      </div>
+      <% else %>
+        <p>なし</p>
+      <% end %>
     </div>
   </div><!-- d-lg-none 画面幅lg未満で表示 -->
 <% end %>

@@ -29,6 +29,7 @@ gem 'dotenv-rails'
 gem 'jquery-ui-rails'
 gem 'carrierwave'
 gem 'mini_magick'
+gem 'pusher'
 
 group :development, :test do
   gem 'sqlite3', '1.3.13'

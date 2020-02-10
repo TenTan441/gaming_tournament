@@ -1,0 +1,4 @@
+<span class="d-inline-block m-1 p-1 <%= "border border-primary" unless matches[1]["underway_at"].blank? %>">
+  <%= return_user_from_participant(matches[1]["player1_id"]).name + " vs " + return_user_from_participant(matches[1]["player2_id"]).name + "  " %>
+  <%= link_to "報告", tournament_report_path(@tournament, matches[1]), remote: true, class: "btn btn-success" if master_or_party?(@tournament, matches[1]["player1_id"], matches[1]["player2_id"]) %>
+</span>
