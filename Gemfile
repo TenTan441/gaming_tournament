@@ -31,6 +31,11 @@ gem 'carrierwave'
 gem 'mini_magick'
 gem 'pusher'
 
+# rspec導入
+gem 'rspec-rails', '~> 3.6.0'
+gem 'spring-commands-rspec'
+
+
 group :development, :test do
   gem 'sqlite3', '1.3.13'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

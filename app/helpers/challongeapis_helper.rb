@@ -16,6 +16,7 @@ module ChallongeapisHelper
       http.request(req)
     }
     access_token = nil
+    
     if res.is_a?(Net::HTTPSuccess)
       access_token = JSON.parse(res.body)
     else
