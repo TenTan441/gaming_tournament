@@ -56,7 +56,7 @@ class MatchesController < ApplicationController
     t_id = params[:challonge_tournament_id]
     m_id = params[:challonge_match_id]
     bool = post_challonge_api({}, "/#{t_id}/matches/#{m_id}/mark_as_underway")
-    bool ? flash[:success] = "進行中にしました" : "ステータス変更に失敗しました。"
+    bool ? flash[:success] = "進行中にしました" : flash[:danger] = "ステータス変更に失敗しました。"
     @tournament = Tournament.find(params[:tournament_id])
     redirect_to @tournament
   end
@@ -65,7 +65,7 @@ class MatchesController < ApplicationController
     t_id = params[:challonge_tournament_id]
     m_id = params[:challonge_match_id]
     bool = post_challonge_api({}, "/#{t_id}/matches/#{m_id}/unmark_as_underway")
-    bool ? flash[:success] = "進行中を取り消しました" : "ステータス変更に失敗しました。"
+    bool ? flash[:success] = "進行中を取り消しました" : flash[:danger] = "ステータス変更に失敗しました。"
     @tournament = Tournament.find(params[:tournament_id])
     redirect_to @tournament
   end

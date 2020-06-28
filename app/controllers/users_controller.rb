@@ -1,3 +1,6 @@
+require 'net/http'
+require 'uri'
+
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
   before_action :logged_in_user, only: [:index, :show, :edit, :update, :destroy]
@@ -100,10 +103,10 @@ class UsersController < ApplicationController
   end
 
   def update
+    debugger
     if @user.update_attributes(user_params)
       flash[:success] = "ユーザー情報を更新しました。"
     else
-      debugger
       flash[:danger] = "更新に失敗しました。"
     end
     redirect_to @user
