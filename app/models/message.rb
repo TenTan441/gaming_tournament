@@ -4,6 +4,26 @@ class Message < ApplicationRecord
   validates :user_to, presence: true
   validates :text, presence: true
   
+  scope :inbox,       -> (user, messages) { where(user_to: user.id)
+                                            .from_search(messages[:user_id])
+                                            .text_search(messages[:text])
+                                            .edited_at_search(messages[:from], messages[:to])
+                                            .order(edited_at: "DESC")
+                                            .paginate(page: messages[:inbox_page], per_page: 10) }
+  scope :inbox_page,  -> (user, messages) { where(user_to: user.id)
+                                            .order(edited_at: "DESC")
+                                            .paginate(page: messages[:indox_page], per_page: 10) }
+  scope :outbox,      -> (user, messages) { where(user_id: user.id)
+                                            .to_search(messages[:user_to])
+                                            .text_search(messages[:text])
+                                            .edited_at_search(messages[:from], messages[:to])
+                                            .order(edited_at: "DESC")
+                                            .paginate(page: messages[:outbox_page], per_page: 10) }
+  scope :outbox_page, -> (user, messages) { where(user_id: user.id)
+                                            .order(edited_at: "DESC")
+                                            .paginate(page: messages[:outbox_page], per_page: 10) }
+                                      
+  
   # 宛名ユーザIDが含まれる場合は合致するメッセージを返し、含まれてない場合は全てのメッセージを返します。
   def self.from_search(user)
     if !user.blank?

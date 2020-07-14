@@ -10,9 +10,7 @@ class TournamentsController < ApplicationController
         if current_user.admin?
           @tournaments = Tournament.all.order(id: "DESC").paginate(page: params[:page], per_page: 10)
         elsif !current_user.nil? 
-          @tournaments = Tournament.where(private: false).or(Tournament.where(id: Participant.where(user_id: current_user.id)
-                                                                                             .pluck(:tournament_id),
-                                                                              private: true))
+          @tournaments = Tournament.where(private: false).or(Tournament.where(id: current_user.participants.pluck(:tournament_id), private: true))
                                                          .or(Tournament.where(user_id: current_user.id))
                                                          .distinct #　重複を消す
                                                          .order(id: "DESC")
@@ -24,34 +22,14 @@ class TournamentsController < ApplicationController
       format.js do
         if params[:tournaments].present?
           if current_user.admin?
-            @tournaments = Tournament.all.name_search(params[:name])
-                                         .master_search(params[:user_id])
-                                         .title_search(params[:game_title])
-                                         .status_search(params[:status])
-                                         .start_time_search(params[:from], params[:to])
-                                         .order(id: "DESC")
-                                         .paginate(page: params[:page], per_page: 10)
+            @tournaments = Tournament.tournaments_search(params)
           elsif !current_user.nil?
-            @tournaments = Tournament.where(private: false).or(Tournament.where(id: Participant.where(user_id: current_user.id)
-                                                                                               .pluck(:tournament_id),
-                                                                                private: true))
+            @tournaments = Tournament.where(private: false).or(Tournament.where(id: current_user.participants.pluck(:tournament_id), private: true))
                                                            .or(Tournament.where(user_id: current_user.id))
                                                            .distinct #　重複を消す
-                                                           .name_search(params[:name])
-                                                           .master_search(params[:user_id])
-                                                           .title_search(params[:game_title])
-                                                           .status_search(params[:status])
-                                                           .start_time_search(params[:from], params[:to])
-                                                           .order(id: "DESC")
-                                                           .paginate(page: params[:page], per_page: 10)
+                                                           .tournaments_search(params)
           else
-            @tournaments = Tournament.where(private: false).name_search(params[:name])
-                                                           .master_search(params[:user_id])
-                                                           .title_search(params[:game_title])
-                                                           .status_search(params[:status])
-                                                           .start_time_search(params[:from], params[:to])
-                                                           .order(id: "DESC")
-                                                           .paginate(page: params[:page], per_page: 10)
+            @tournaments = Tournament.where(private: false).tournaments_search(params)
           end
         end
       end

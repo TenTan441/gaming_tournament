@@ -7,6 +7,13 @@ class Tournament < ApplicationRecord
   enum status: {"準備中": 0, "進行中": 1, "完了": 2}
   enum game_title: { "大乱闘スマッシュブラザーズ64": 0, "大乱闘スマッシュブラザーズDX": 1, "大乱闘スマッシュブラザーズX": 2, "大乱闘スマッシュブラザーズ for Nintendo 3DS": 3, "大乱闘スマッシュブラザーズ for Wii U": 4, "大乱闘スマッシュブラザーズ SPECIAL": 5 }
 
+  scope :tournaments_search, -> (tournaments) { name_search(tournaments[:name])
+                                                .master_search(tournaments[:user_id])
+                                                .title_search(tournaments[:game_title])
+                                                .status_search(tournaments[:status])
+                                                .start_time_search(tournaments[:from], tournaments[:to])
+                                                .order(id: "DESC")
+                                                .paginate(page: tournaments[:page], per_page: 10) }
   # 開始時間に過去日は設定不可
   def start_time_cannot_be_in_the_past
     if created_at.nil?
